@@ -7,5 +7,6 @@ app.get("/", (req, res) => {
 })
 
 app.use("/user", require("./routes/user"));
+app.use("/fc", require("./routes/fc"));
 
 app.listen(port, () => console.log("Serveur lancé sur le port " + port + "."));
