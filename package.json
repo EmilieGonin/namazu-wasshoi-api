@@ -17,6 +17,7 @@
     "@xivapi/js": "^0.3.2",
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.25.1",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
