@@ -8,6 +8,19 @@ const sequelize = new Sequelize(process.env.LOCAL_DATABASE_URL, {
 
 //Add models
 const User = require("../models/User")(sequelize);
+const Festival = require("../models/Festival")(sequelize);
+const Screenshot = require("../models/Screenshot")(sequelize);
+
+User.hasMany(Screenshot, {
+  onDelete: "CASCADE",
+  foreignKey: {
+    allowNull: false
+  }
+});
+Screenshot.belongsTo(User);
+
+Festival.hasMany(Screenshot);
+Screenshot.belongsTo(Festival);
 
 User.beforeCreate(async (user) => {
   user.password = await bcrypt.hash(user.password, 10);
