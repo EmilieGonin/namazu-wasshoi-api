@@ -53,4 +53,4 @@ User.findOrCreate({
 })
 .catch((error) => console.error(error));
 
-module.exports = { User }
+module.exports = { User, Festival, Screenshot }
