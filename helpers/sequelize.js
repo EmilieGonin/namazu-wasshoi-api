@@ -7,9 +7,13 @@ const sequelize = new Sequelize(process.env.LOCAL_DATABASE_URL, {
 });
 
 //Add models
+const Team = require("../models/Team")(sequelize);
 const User = require("../models/User")(sequelize);
 const Festival = require("../models/Festival")(sequelize);
 const Screenshot = require("../models/Screenshot")(sequelize);
+
+Team.hasMany(User);
+User.belongsTo(Team);
 
 User.hasMany(Screenshot, {
   onDelete: "CASCADE",
