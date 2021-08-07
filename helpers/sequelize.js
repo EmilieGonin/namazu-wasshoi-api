@@ -11,6 +11,12 @@ const Team = require("../models/Team")(sequelize);
 const User = require("../models/User")(sequelize);
 const Festival = require("../models/Festival")(sequelize);
 const Screenshot = require("../models/Screenshot")(sequelize);
+const Parameter = require("../models/Parameter")(sequelize);
+
+//Site default parameters
+const parameters = [
+  { name: "recruiting", data: "true" }
+]
 
 Team.hasMany(User);
 User.belongsTo(Team);
@@ -48,12 +54,26 @@ User.findOrCreate({
       email: process.env.ADMIN_EMAIL
     },
     defaults: {
-    character: process.env.ADMIN_CHARACTER,
-    email: process.env.ADMIN_EMAIL,
-    password: process.env.ADMIN_PASSWORD,
-    isAdmin: true
-  }})
+      character: process.env.ADMIN_CHARACTER,
+      email: process.env.ADMIN_EMAIL,
+      password: process.env.ADMIN_PASSWORD,
+      isAdmin: true
+    }
+  })
+
+  //Create Parameters
+  for (const parameter of parameters) {
+    Parameter.findOrCreate({
+      where: {
+        name: parameter.name
+      },
+      defaults: {
+        name: parameter.name,
+        data: parameter.data
+      }
+    })
+  }
 })
 .catch((error) => console.error(error));
 
-module.exports = { User, Festival, Screenshot }
+module.exports = { Team, User, Festival, Screenshot, Parameter }
