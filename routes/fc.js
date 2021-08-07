@@ -20,5 +20,26 @@ router.get("/", (req, res, next) => {
   })
   .catch((error) => res.status(500).json({ error: "Impossible de récupérer les données de la compagnie libre." }));
 });
+router.post("/character", (req, res, next) => {
+  xivapi.character.search(req.body.character, {server: "Moogle"})
+  .then((response) => {
+    const character = response.Results[0];
+
+    if (character) {
+      xivapi.character.get(character.ID, {data: "FC"})
+      .then((response) => {
+        const fc = response.FreeCompany;
+        if (fc && fc.ID == fcId) {
+          res.status(200).json({ character });
+        } else {
+          res.status(404).json({ error: "Personnage non trouvé." });
+        }
+      })
+    } else {
+      res.status(404).json({ error: "Personnage non trouvé." });
+    }
+  })
+  .catch((error) => res.status(500).json({ error: "Impossible de récupérer les données de la compagnie libre." }));
+});
 
 module.exports = router;
