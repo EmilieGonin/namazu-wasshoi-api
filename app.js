@@ -15,5 +15,6 @@ app.use(cors({
 app.use(express.json());
 app.use("/user", require("./routes/user"));
 app.use("/fc", require("./routes/fc"));
+app.use("/parameters", require("./routes/parameters"));
 
 app.listen(port, () => console.log("Serveur lancé sur le port " + port + "."));
