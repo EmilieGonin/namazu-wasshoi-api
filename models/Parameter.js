@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
       unique: true
     },
     data: {
-      type: DataTypes.STRING,
+      type: DataTypes.BOOLEAN,
       allowNull: false
     }
   }, {
