@@ -2,7 +2,7 @@ const { Sequelize } = require("sequelize");
 const bcrypt = require("bcrypt");
 
 //Connect to database
-const sequelize = new Sequelize(process.env.LOCAL_DATABASE_URL, {
+const sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, {
   logging: false
 });
 
