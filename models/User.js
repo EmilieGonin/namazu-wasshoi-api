@@ -11,13 +11,15 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    firstName: {
+    character: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false
+    discord: {
+      type: DataTypes.STRING
+    },
+    birthday: {
+      type: DataTypes.DATE
     },
     avatar: {
       type: DataTypes.STRING

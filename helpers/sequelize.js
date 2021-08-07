@@ -48,8 +48,7 @@ User.findOrCreate({
       email: process.env.ADMIN_EMAIL
     },
     defaults: {
-    firstName: process.env.ADMIN_FIRST_NAME,
-    lastName: process.env.ADMIN_LAST_NAME,
+    character: process.env.ADMIN_CHARACTER,
     email: process.env.ADMIN_EMAIL,
     password: process.env.ADMIN_PASSWORD,
     isAdmin: true
