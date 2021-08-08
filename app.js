@@ -16,5 +16,6 @@ app.use(express.json());
 app.use("/user", require("./routes/user"));
 app.use("/fc", require("./routes/fc"));
 app.use("/parameters", require("./routes/parameters"));
+app.use("/applicants", require("./routes/applicants"));
 
 app.listen(port, () => console.log("Serveur lancé sur le port " + port + "."));

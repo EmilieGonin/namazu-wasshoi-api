@@ -7,6 +7,7 @@ const sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, {
 });
 
 //Add models
+const Applicant = require("../models/Applicant")(sequelize);
 const Team = require("../models/Team")(sequelize);
 const User = require("../models/User")(sequelize);
 const Festival = require("../models/Festival")(sequelize);
@@ -76,4 +77,4 @@ User.findOrCreate({
 })
 .catch((error) => console.error(error));
 
-module.exports = { Team, User, Festival, Screenshot, Parameter }
+module.exports = { Applicant, Team, User, Festival, Screenshot, Parameter }
