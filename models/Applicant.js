@@ -37,7 +37,7 @@ module.exports = (sequelize) => {
       unique: true
     },
     mainClass: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     playtime: {
