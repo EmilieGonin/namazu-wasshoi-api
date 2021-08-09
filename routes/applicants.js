@@ -1,8 +1,10 @@
 const { Applicant } = require("../helpers/sequelize");
 const express = require('express');
 const router = express.Router();
+const auth = require("../middlewares/auth");
 
-router.get("/", (req, res, next) => {
+//Get all applicants
+router.get("/", auth, (req, res, next) => {
   Applicant.findAll()
   .then((applicants) => {
     res.status(200).json({ applicants });
@@ -11,6 +13,7 @@ router.get("/", (req, res, next) => {
     res.status(500).json({ error: "Une erreur s'est produite." });
   });
 });
+//Post new applicant
 router.post("/new", (req, res, next) => {
   const applicant = {}
 
