@@ -50,7 +50,7 @@ sequelize.sync({ force: true })
   console.log("Base de données synchronisée avec succès !");
 
   //Create admin user
-User.findOrCreate({
+  User.findOrCreate({
     where: {
       email: process.env.ADMIN_EMAIL
     },
