@@ -77,7 +77,7 @@ User.findOrCreate({
 
   //Applicant for testing
   Applicant.create({
-    name: "Test",
+    name: "Emilie",
     birthday: "1996-05-27",
     discord: "Yuuna#5839",
     mic: true,
@@ -94,6 +94,24 @@ User.findOrCreate({
     savageRequired: process.env.LOREM,
     team: "Carbuncle"
     })
+    Applicant.create({
+      name: "Laurent",
+      birthday: "1995-06-26",
+      discord: "Rabyte#9615",
+      mic: false,
+      availability: process.env.LOREM,
+      about: "Test",
+      character: "Rabyte Tsukisagi",
+      characterId: 12177390,
+      mainClass: process.env.LOREM,
+      playtime: process.env.LOREM,
+      gameActivities: process.env.LOREM,
+      cl: process.env.LOREM,
+      clRequired: process.env.LOREM,
+      exp: process.env.LOREM,
+      savageRequired: process.env.LOREM,
+      team: "Pampa"
+      })
 })
 .catch((error) => console.error(error));
 
