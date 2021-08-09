@@ -4,8 +4,14 @@ const jwt = require("jsonwebtoken");
 
 exports.getUser = (req, res, next) => {
   User.findByPk(req.params.id)
-  .then((user) => res.status(200).json({ user }))
-  .catch((error) => res.status(500).json({ error: "Impossible d'afficher l'utilisateur." }));
+  .then((user) => {
+    if (user) {
+      res.status(200).json({ user });
+    } else {
+      res.status(404).json({ error: "Utilisateur introuvable." });
+    }
+  })
+  .catch((error) => res.status(500).json({ error: "Une erreur s'est produite." }));
 };
 exports.userSignup = (req, res, next) => {
   const user = User.create({
