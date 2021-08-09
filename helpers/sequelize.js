@@ -90,6 +90,7 @@ User.findOrCreate({
     gameActivities: process.env.LOREM,
     cl: process.env.LOREM,
     clRequired: process.env.LOREM,
+    currentCl: process.env.LOREM,
     exp: process.env.LOREM,
     savageRequired: process.env.LOREM,
     team: "Carbuncle"
@@ -108,6 +109,7 @@ User.findOrCreate({
       gameActivities: process.env.LOREM,
       cl: process.env.LOREM,
       clRequired: process.env.LOREM,
+      currentCl: process.env.LOREM,
       exp: process.env.LOREM,
       savageRequired: process.env.LOREM,
       team: "Pampa"

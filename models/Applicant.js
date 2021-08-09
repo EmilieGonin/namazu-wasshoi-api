@@ -56,6 +56,10 @@ module.exports = (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: false
     },
+    currentCl: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
     exp: {
       type: DataTypes.TEXT,
       allowNull: false
