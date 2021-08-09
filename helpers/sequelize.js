@@ -74,6 +74,26 @@ User.findOrCreate({
       }
     })
   }
+
+  //Applicant for testing
+  Applicant.create({
+    name: "Test",
+    birthday: "1996-05-27",
+    discord: "Yuuna#5839",
+    mic: true,
+    availability: process.env.LOREM,
+    about: "Test",
+    character: "Yuuna Tsukisagi",
+    characterId: 12177359,
+    mainClass: process.env.LOREM,
+    playtime: process.env.LOREM,
+    gameActivities: process.env.LOREM,
+    cl: process.env.LOREM,
+    clRequired: process.env.LOREM,
+    exp: process.env.LOREM,
+    savageRequired: process.env.LOREM,
+    team: "Carbuncle"
+    })
 })
 .catch((error) => console.error(error));
 
