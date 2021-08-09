@@ -15,6 +15,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    characterId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     discord: {
       type: DataTypes.STRING
     },

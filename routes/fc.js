@@ -20,6 +20,17 @@ router.get("/", (req, res, next) => {
   })
   .catch((error) => res.status(500).json({ error: "Impossible de récupérer les données de la compagnie libre." }));
 });
+router.get("/character/:id", (req, res, next) => {
+  xivapi.character.get(req.params.id)
+  .then((character) => {
+    if (character) {
+      res.status(200).json({ character });
+    } else {
+      res.status(404).json({ error: "Personnage non trouvé." });
+    }
+  })
+  .catch((error) => res.status(500).json({ error: "Impossible de récupérer les données du personnage." }));
+});
 router.post("/character", (req, res, next) => {
   xivapi.character.search(req.body.character, {server: "Moogle"})
   .then((response) => {
