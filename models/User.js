@@ -13,11 +13,13 @@ module.exports = (sequelize) => {
     },
     character: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     characterId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     discord: {
       type: DataTypes.STRING
