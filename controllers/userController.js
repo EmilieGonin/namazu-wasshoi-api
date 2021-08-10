@@ -17,7 +17,8 @@ exports.userSignup = (req, res, next) => {
   const user = User.create({
     email: req.body.email,
     password: req.body.password,
-    character: req.body.character,
+    character: req.body.character_cl,
+    characterId: req.body.characterId,
     discord: req.body.discord
   })
   .then((user) => res.status(201).json({

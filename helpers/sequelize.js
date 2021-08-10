@@ -56,6 +56,7 @@ sequelize.sync({ force: true })
     },
     defaults: {
       character: process.env.ADMIN_CHARACTER,
+      characterId: process.env.ADMIN_CHARACTER_ID,
       email: process.env.ADMIN_EMAIL,
       password: process.env.ADMIN_PASSWORD,
       isAdmin: true
