@@ -18,6 +18,12 @@ const Parameter = require("../models/Parameter")(sequelize);
 const parameters = [
   { name: "recruiting", data: "true" }
 ]
+const teams = [
+  { name: "Mog", slogan: "Pas de coups sous le pompon !" },
+  { name: "Chocobo", slogan: "On est chaud... cobo !" },
+  { name: "Pampa", slogan: "Qui s'y frotte s'y pique !" },
+  { name: "Carbuncle", slogan: "Que la poussière de diamant vous réduise en éclat !" }
+]
 
 Team.hasMany(User);
 User.belongsTo(Team);
@@ -72,6 +78,19 @@ sequelize.sync({ force: true })
       defaults: {
         name: parameter.name,
         data: parameter.data
+      }
+    })
+  }
+
+  //Create Teams
+  for (const team of teams) {
+    Team.findOrCreate({
+      where: {
+        name: team.name
+      },
+      defaults: {
+        name: team.name,
+        slogan: team.slogan
       }
     })
   }
