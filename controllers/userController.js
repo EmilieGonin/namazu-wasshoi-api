@@ -1,4 +1,5 @@
 const { User, Team } = require("../helpers/sequelize");
+const { transport, mailTemplate } = require("../helpers/nodemailer");
 const jwt = require("jsonwebtoken");
 // const fs = require('fs');
 
@@ -23,14 +24,22 @@ exports.userSignup = (req, res, next) => {
       characterId: req.body.characterId,
       discord: req.body.discord
     })
-    .then((user) => res.status(201).json({
-      user: user,
-      token: jwt.sign(
-        { userId: user.id },
-        process.env.SECRET,
-        { expiresIn: "24h" }
-      )
-    }))
+    .then((user) => {
+      const message = `
+        Bienvenue parmi nous, ${req.body.character_cl} !<br/><br/>Tu peux désormais te connecter à ton compte en utilisant l'adresse email et le mot de passe que tu as renseigné lors de ton inscription.<br/><br/>En cas de problème, n'hésites pas à contacter la GM sur Discord ! (Yuuna#5839)
+      `;
+      const mail = mailTemplate(req.body.email, "Bienvenue sur Namazu Wasshoi !", message);
+      transport.sendMail(mail);
+
+      res.status(201).json({
+        user: user,
+        token: jwt.sign(
+          { userId: user.id },
+          process.env.SECRET,
+          { expiresIn: "24h" }
+        )
+      })
+    })
     .catch(() => res.status(400).json({ error: "Vérifiez que vos données soient exactes ou que votre adresse email ne soit pas déjà utilisée." }));
   })
   .catch((error) => res.status(500).json({ error: "Une erreur s'est produite." }));

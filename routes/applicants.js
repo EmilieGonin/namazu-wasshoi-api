@@ -1,4 +1,5 @@
 const { Applicant } = require("../helpers/sequelize");
+const { transport, mailTemplate } = require("../helpers/nodemailer");
 const express = require('express');
 const router = express.Router();
 const auth = require("../middlewares/auth");
@@ -27,7 +28,18 @@ router.post("/new", (req, res, next) => {
   }
 
   Applicant.create(applicant)
-  .then((applicant) => res.status(201).json({ applicant }))
+  .then((applicant) => {
+    const staffMails = process.env.STAFF_MAILS.split(",");
+    const message = `
+      ${applicant.character} (${applicant.discord}) a posté sa candidature sur le site !
+    `
+    for (const staffMail of staffMails) {
+      const mail = mailTemplate(staffMail, "Une nouvelle candidature est disponible sur Namazu Wasshoi !", message);
+      transport.sendMail(mail);
+    }
+
+    res.status(201).json({ applicant });
+  })
   .catch(() => res.status(400).json({ error: "Une erreur s'est produite." }));
 });
 
