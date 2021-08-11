@@ -24,7 +24,18 @@ router.get("/character/:id", (req, res, next) => {
   xivapi.character.get(req.params.id)
   .then((character) => {
     if (character) {
-      res.status(200).json({ character });
+      character = character.Character;
+      xivapi.data.get("title", character.Title)
+      .then((title) => {
+        if (title && character.Gender == 1) {
+          character.Title = title.Name_fr;
+        } else if (title && character.Gender == 2) {
+          character.Title = title.NameFemale_fr
+        } else {
+          character.Title = ""
+        }
+        res.status(200).json({ character });
+      })
     } else {
       res.status(404).json({ error: "Personnage non trouvé." });
     }
