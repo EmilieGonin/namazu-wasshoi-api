@@ -65,7 +65,8 @@ sequelize.sync({ force: true })
       characterId: process.env.ADMIN_CHARACTER_ID,
       email: process.env.ADMIN_EMAIL,
       password: process.env.ADMIN_PASSWORD,
-      isAdmin: true
+      isAdmin: true,
+      team: "Carbuncle"
     }
   })
 
