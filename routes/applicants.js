@@ -40,7 +40,7 @@ router.post("/new", (req, res, next) => {
 
     res.status(201).json({ applicant });
   })
-  .catch(() => res.status(400).json({ error: "Une erreur s'est produite." }));
+  .catch(() => res.status(400).json({ error: "Une erreur s'est produite. Si vous aviez déjà postulé, vous ne pourrez pas le faire une seconde fois. " }));
 });
 
 module.exports = router;
