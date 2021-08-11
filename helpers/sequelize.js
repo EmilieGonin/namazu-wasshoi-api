@@ -25,8 +25,8 @@ const teams = [
   { name: "Carbuncle", slogan: "Que la poussière de diamant vous réduise en éclat !" }
 ]
 
-Team.hasMany(User);
-User.belongsTo(Team);
+Team.hasMany(User, { sourceKey: "name", foreignKey: "team" });
+User.belongsTo(Team, { targetKey: "name", foreignKey: "team" });
 
 User.hasMany(Screenshot, {
   onDelete: "CASCADE",
