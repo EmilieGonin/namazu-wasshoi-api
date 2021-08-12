@@ -3,6 +3,20 @@ const { transport, mailTemplate } = require("../helpers/nodemailer");
 const jwt = require("jsonwebtoken");
 // const fs = require('fs');
 
+//Get all users
+exports.getAllUsers = (req, res, next) => {
+  User.findAll()
+  .then((members) => {
+    if (members.length > 0) {
+      res.status(200).json({ members });
+    } else {
+      res.status(404).json({ error: "Aucun membre trouvé." });
+    }
+  })
+  .catch(() => {
+    res.status(500).json({ error: "Une erreur s'est produite." });
+  });
+};
 exports.getUser = (req, res, next) => {
   User.findByPk(req.params.id)
   .then((user) => {
