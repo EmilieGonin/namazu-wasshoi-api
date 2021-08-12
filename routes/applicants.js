@@ -8,7 +8,11 @@ const auth = require("../middlewares/auth");
 router.get("/", auth, (req, res, next) => {
   Applicant.findAll()
   .then((applicants) => {
-    res.status(200).json({ applicants });
+    if (applicants.length > 0) {
+      res.status(200).json({ applicants });
+    } else {
+      res.status(404).json({ error: "Aucune candidature disponible." });
+    }
   })
   .catch(() => {
     res.status(500).json({ error: "Une erreur s'est produite." });
