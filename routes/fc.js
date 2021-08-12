@@ -4,7 +4,7 @@ const { xivapi, fcId } = require("../helpers/xivapi");
 
 router.get("/", (req, res, next) => {
   const staffRoles = ["Maître", "Bras droit", "Officier"];
-  const staff = [];
+  const staffMembers = [];
 
   xivapi.freecompany.get(fcId, {data: "FCM"})
   .then((response) => {
@@ -13,10 +13,10 @@ router.get("/", (req, res, next) => {
 
     for (const member of fcMembers) {
       if (staffRoles.includes(member.Rank)) {
-        staff.push(member.Name);
+        staffMembers.push(member.Name);
       }
     }
-    res.status(200).json({ fc, fcMembers, staff });
+    res.status(200).json({ fc, fcMembers, staffMembers });
   })
   .catch((error) => res.status(500).json({ error: "Impossible de récupérer les données de la compagnie libre." }));
 });
