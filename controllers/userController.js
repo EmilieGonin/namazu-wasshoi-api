@@ -54,7 +54,7 @@ exports.userSignup = (req, res, next) => {
         )
       })
     })
-    .catch(() => res.status(400).json({ error: "Vérifiez que vos données soient exactes ou que votre adresse email ne soit pas déjà utilisée." }));
+    .catch(() => res.status(400).json({ error: "Vérifiez que vos données soient exactes ou que vous ne possédez pas déjà un compte associé à ce personnage." }));
   })
   .catch((error) => res.status(500).json({ error: "Une erreur s'est produite." }));
 };
