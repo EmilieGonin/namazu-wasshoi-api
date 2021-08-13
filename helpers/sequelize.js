@@ -9,6 +9,7 @@ const sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, {
 //Add models
 const Applicant = require("../models/Applicant")(sequelize);
 const Team = require("../models/Team")(sequelize);
+const Roster = require("../models/Roster")(sequelize);
 const User = require("../models/User")(sequelize);
 const Festival = require("../models/Festival")(sequelize);
 const Screenshot = require("../models/Screenshot")(sequelize);
@@ -24,9 +25,21 @@ const teams = [
   { name: "Pampa", slogan: "Qui s'y frotte s'y pique !" },
   { name: "Carbuncle", slogan: "Que la poussière de diamant vous réduise en éclat !" }
 ]
+const rosters= [
+  { name: "Pleine Lune", startHour: "16:00", endHour: "19:00" },
+  { name: "Nouvelle Lune", startHour: "21:00", endHour: "00:00" },
+  { name: "Croissant de Lune", startHour: "21:00", endHour: "23:30" }
+]
 
 Team.hasMany(User, { sourceKey: "name", foreignKey: "team" });
+Team.belongsTo(User, {
+  scope: { isAdmin: true }, as: "Leader", constraints: false });
 User.belongsTo(Team, { targetKey: "name", foreignKey: "team" });
+
+Roster.hasMany(User, { sourceKey: "name", foreignKey: "roster" });
+User.belongsTo(Roster, { as: "Tank", targetKey: "name", foreignKey: "roster" });
+User.belongsTo(Roster, { as: "Healer", targetKey: "name", foreignKey: "roster" });
+User.belongsTo(Roster, { as: "DPS", targetKey: "name", foreignKey: "roster" });
 
 User.hasMany(Screenshot, {
   onDelete: "CASCADE",
@@ -91,6 +104,20 @@ sequelize.sync({ force: true })
       defaults: {
         name: team.name,
         slogan: team.slogan
+      }
+    })
+  }
+
+  //Create Rosters
+  for (const roster of rosters) {
+    Roster.findOrCreate({
+      where: {
+        name: roster.name
+      },
+      defaults: {
+        name: roster.name,
+        startHour: roster.startHour,
+        endHour: roster.endHour
       }
     })
   }

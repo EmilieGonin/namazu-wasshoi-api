@@ -33,6 +33,18 @@ module.exports = (sequelize) => {
     isAdmin: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    isGolden: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    isLunar: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    isFail: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   })
 }
