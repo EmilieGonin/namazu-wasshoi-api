@@ -1,19 +1,19 @@
-const { Sequelize } = require("sequelize");
-const bcrypt = require("bcrypt");
+// const { Sequelize } = require("sequelize");
+// const bcrypt = require("bcrypt");
 
 //Connect to database
-const sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, {
-  logging: false
-});
+// const sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, {
+//   logging: false
+// });
 
 //Add models
-const Applicant = require("../models/Applicant")(sequelize);
-const Team = require("../models/Team")(sequelize);
-const Roster = require("../models/Roster")(sequelize);
-const User = require("../models/User")(sequelize);
-const Festival = require("../models/Festival")(sequelize);
-const Screenshot = require("../models/Screenshot")(sequelize);
-const Parameter = require("../models/Parameter")(sequelize);
+// const Applicant = require("../models/Applicant")(sequelize);
+// const Team = require("../models/Team")(sequelize);
+// const Roster = require("../models/Roster")(sequelize);
+// const User = require("../models/User")(sequelize);
+// const Festival = require("../models/Festival")(sequelize);
+// const Screenshot = require("../models/Screenshot")(sequelize);
+// const Parameter = require("../models/Parameter")(sequelize);
 
 //Site default parameters
 // const parameters = [
@@ -31,38 +31,38 @@ const Parameter = require("../models/Parameter")(sequelize);
 //   { name: "Croissant de Lune", startHour: "21:00", endHour: "23:30" }
 // ]
 
-Team.hasMany(User, { sourceKey: "name", foreignKey: "team" });
-Team.belongsTo(User, {
-  scope: { isAdmin: true }, as: "Leader", constraints: false });
-User.belongsTo(Team, { targetKey: "name", foreignKey: "team" });
+// Team.hasMany(User, { sourceKey: "name", foreignKey: "team" });
+// Team.belongsTo(User, {
+//   scope: { isAdmin: true }, as: "Leader", constraints: false });
+// User.belongsTo(Team, { targetKey: "name", foreignKey: "team" });
+//
+// Roster.hasMany(User, { sourceKey: "name", foreignKey: "roster" })
+// User.belongsTo(Roster, { as: "Tank", targetKey: "name", foreignKey: "roster" });
+// User.belongsTo(Roster, { as: "Healer", targetKey: "name", foreignKey: "roster" });
+// User.belongsTo(Roster, { as: "DPS", targetKey: "name", foreignKey: "roster" });
+//
+// User.hasMany(Screenshot, {
+//   onDelete: "CASCADE",
+//   foreignKey: {
+//     allowNull: false
+//   }
+// });
+// Screenshot.belongsTo(User);
+//
+// Festival.hasMany(Screenshot);
+// Screenshot.belongsTo(Festival);
 
-Roster.hasMany(User, { sourceKey: "name", foreignKey: "roster" })
-User.belongsTo(Roster, { as: "Tank", targetKey: "name", foreignKey: "roster" });
-User.belongsTo(Roster, { as: "Healer", targetKey: "name", foreignKey: "roster" });
-User.belongsTo(Roster, { as: "DPS", targetKey: "name", foreignKey: "roster" });
-
-User.hasMany(Screenshot, {
-  onDelete: "CASCADE",
-  foreignKey: {
-    allowNull: false
-  }
-});
-Screenshot.belongsTo(User);
-
-Festival.hasMany(Screenshot);
-Screenshot.belongsTo(Festival);
-
-User.beforeCreate(async (user) => {
-  user.password = await bcrypt.hash(user.password, 10);
-})
-
-User.prototype.passwordIsValid = function(password) {
-  return bcrypt.compareSync(password, this.password);
+// User.beforeCreate(async (user) => {
+//   user.password = await bcrypt.hash(user.password, 10);
+// })
+//
+// User.prototype.passwordIsValid = function(password) {
+//   return bcrypt.compareSync(password, this.password);
 }
 
-sequelize.authenticate()
-.then(() => console.log("Connexion à la base de données MySQL terminée !"))
-.catch((error) => console.error("Impossible de se connecter à la base de données :", error));
+// sequelize.authenticate()
+// .then(() => console.log("Connexion à la base de données MySQL terminée !"))
+// .catch((error) => console.error("Impossible de se connecter à la base de données :", error));
 
 // sequelize.sync()
 // .then(() => {
@@ -124,4 +124,4 @@ sequelize.authenticate()
 // })
 // .catch((error) => console.error(error));
 
-module.exports = { Applicant, Team, User, Festival, Screenshot, Parameter }
+// module.exports = { Applicant, Team, User, Festival, Screenshot, Parameter }

@@ -1,7 +1,19 @@
-const { DataTypes } = require("sequelize");
-
-module.exports = (sequelize) => {
-  return sequelize.define("User", {
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class User extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  };
+  User.init({
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -22,14 +34,11 @@ module.exports = (sequelize) => {
       unique: true
     },
     discord: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      unique: true
     },
-    birthday: {
-      type: DataTypes.DATEONLY
-    },
-    avatar: {
-      type: DataTypes.STRING
-    },
+    birthday: DataTypes.DATEONLY,
+    avatar: DataTypes.STRING,
     isAdmin: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
@@ -46,5 +55,9 @@ module.exports = (sequelize) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     }
-  })
-}
+  }, {
+    sequelize,
+    modelName: 'User',
+  });
+  return User;
+};

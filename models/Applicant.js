@@ -1,10 +1,20 @@
-const { DataTypes } = require("sequelize");
-
-module.exports = (sequelize) => {
-  return sequelize.define("Applicant", {
-    name: {
-      type: DataTypes.STRING
-    },
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Applicant extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  };
+  Applicant.init({
+    name: DataTypes.STRING,
     birthday: {
       type: DataTypes.DATEONLY,
       allowNull: false
@@ -71,6 +81,10 @@ module.exports = (sequelize) => {
     team: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-  })
-}
+    }
+  }, {
+    sequelize,
+    modelName: 'Applicant',
+  });
+  return Applicant;
+};
