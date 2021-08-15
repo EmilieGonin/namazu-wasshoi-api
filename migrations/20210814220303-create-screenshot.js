@@ -16,22 +16,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      UserId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        onDelete: "CASCADE",
-        references: {
-          model: "Users",
-          key: "id",
-        }
-      },
-      FestivalId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Festivals",
-          key: "id",
-        }
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

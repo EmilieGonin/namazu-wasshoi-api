@@ -53,14 +53,6 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
-      team: {
-        type: Sequelize.STRING,
-        references: {
-          model: "Teams",
-          key: "name",
-          as: "team"
-        }
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
