@@ -57,7 +57,8 @@ module.exports = {
         type: Sequelize.STRING,
         references: {
           model: "Teams",
-          key: "name"
+          key: "name",
+          as: "team"
         }
       },
       createdAt: {
