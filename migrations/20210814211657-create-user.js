@@ -60,13 +60,6 @@ module.exports = {
           key: "name"
         }
       },
-      roster: {
-        type: Sequelize.STRING,
-        references: {
-          model: "Rosters",
-          key: "name"
-        }
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

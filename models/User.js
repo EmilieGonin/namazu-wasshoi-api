@@ -16,10 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: {
           allowNull: false
         }
-      }),
-      User.belongsTo(models.Roster, { as: "Tank", targetKey: "name", foreignKey: "roster" }),
-      User.belongsTo(models.Roster, { as: "Healer", targetKey: "name", foreignKey: "roster" }),
-      User.belongsTo(models.Roster, { as: "DPS", targetKey: "name", foreignKey: "roster" })
+      })
     }
   };
   User.init({
