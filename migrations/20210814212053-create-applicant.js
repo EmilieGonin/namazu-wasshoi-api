@@ -12,70 +12,70 @@ module.exports = {
         type: Sequelize.STRING
       },
       birthday: {
-        type: DataTypes.DATEONLY,
+        type: Sequelize.DATEONLY,
         allowNull: false
       },
       discord: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
       mic: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         allowNull: false
       },
       availability: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       about: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       character: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
       characterId: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
         unique: true
       },
       mainClass: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       playtime: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       gameActivities: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       cl: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       clRequired: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       currentCl: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       exp: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       savageRequired: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       team: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false
       },
       createdAt: {
