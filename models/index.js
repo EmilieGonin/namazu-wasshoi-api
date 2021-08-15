@@ -15,6 +15,10 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
+sequelize.authenticate()
+.then(() => console.log("Connexion à la base de données MySQL terminée !"))
+.catch((error) => console.error("Impossible de se connecter à la base de données :", error));
+
 fs
   .readdirSync(__dirname)
   .filter(file => {
