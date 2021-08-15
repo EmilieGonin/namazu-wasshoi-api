@@ -18,6 +18,8 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete("Users", null, {});
+    await queryInterface.bulkDelete("Users", [{
+      character: process.env.ADMIN_CHARACTER
+    }]);
   }
 };
