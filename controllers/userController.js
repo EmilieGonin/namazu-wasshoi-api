@@ -75,7 +75,7 @@ exports.userLogin = (req, res, next) => {
       return res.status(401).json({ error: "Mot de passe incorrect." });
     }
   })
-  .catch(() => res.status(401).json({ error: "Utilisateur non trouvé." }));
+  .catch(() => res.status(401).json({ error: "Connexion impossible." }));
 };
 exports.userUpdate = (req, res, next) => {
   //
