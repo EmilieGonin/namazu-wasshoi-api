@@ -10,25 +10,25 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Roster.hasMany(models.User, { sourceKey: "name", foreignKey: "roster" })
     }
   };
   Roster.init({
     name: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true
     },
     startHour: {
-      type: Sequelize.TIME,
+      type: DataTypes.TIME,
       allowNull: false
     },
     endHour: {
-      type: Sequelize.TIME,
+      type: DataTypes.TIME,
       allowNull: false
     },
     isRecruiting: {
-      type: Sequelize.BOOLEAN,
+      type: DataTypes.BOOLEAN,
       defaultValue: false
     }
   }, {

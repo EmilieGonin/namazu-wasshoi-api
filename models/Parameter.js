@@ -15,12 +15,12 @@ module.exports = (sequelize, DataTypes) => {
   };
   Parameter.init({
     name: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true
     },
     data: {
-      type: Sequelize.BOOLEAN,
+      type: DataTypes.BOOLEAN,
       allowNull: false
     }
   }, {

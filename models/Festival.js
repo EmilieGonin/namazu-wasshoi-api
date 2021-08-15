@@ -10,22 +10,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Festival.hasMany(models.Screenshot);
     }
   };
   Festival.init({
     theme: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true
     },
     submit_date: {
-      type: Sequelize.DATE,
+      type: DataTypes.DATE,
       allowNull: false,
       unique: true
     },
     vote_date: {
-      type: Sequelize.DATE,
+      type: DataTypes.DATE,
       allowNull: false,
       unique: true
     }

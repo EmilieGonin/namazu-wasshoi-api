@@ -1,4 +1,4 @@
-const { Applicant } = require("../helpers/sequelize");
+const { Applicant } = require("../models/index");
 const { transport, mailTemplate } = require("../helpers/nodemailer");
 const express = require('express');
 const router = express.Router();

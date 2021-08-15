@@ -1,4 +1,4 @@
-const { User } = require("../helpers/sequelize");
+const { User } = require("../models/index");
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {

@@ -1,4 +1,4 @@
-const { User, Team } = require("../helpers/sequelize");
+const { User, Team } = require("../models/index");
 const { transport, mailTemplate } = require("../helpers/nodemailer");
 const jwt = require("jsonwebtoken");
 // const fs = require('fs');
