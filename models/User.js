@@ -50,6 +50,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     birthday: DataTypes.DATEONLY,
     avatar: DataTypes.STRING,
+    bio: DataTypes.TEXT,
     isAdmin: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

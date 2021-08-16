@@ -37,6 +37,9 @@ module.exports = {
       avatar: {
         type: Sequelize.STRING
       },
+      bio: {
+        type: Sequelize.TEXT
+      },
       isAdmin: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
