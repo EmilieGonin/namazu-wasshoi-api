@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Festival.hasMany(models.Screenshot);
+      Festival.hasMany(models.Screenshot.scope("winner"), { as: "winners" });
     }
   };
   Festival.init({

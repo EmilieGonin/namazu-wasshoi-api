@@ -31,5 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Screenshot',
   });
+  Screenshot.addScope("winner", {
+    where: { isWinner: true }
+  });
   return Screenshot;
 };
