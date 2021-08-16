@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Festival',
+    timestamps: false
   });
   return Festival;
 };
