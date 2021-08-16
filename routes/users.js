@@ -8,16 +8,8 @@ const auth = require("../middlewares/auth");
 //Get all users
 router.get("/", auth, (req, res, next) => {
   User.findAll()
-  .then((members) => {
-    if (members.length > 0) {
-      res.status(200).json({ members });
-    } else {
-      res.status(404).json({ error: "Aucun membre trouvé." });
-    }
-  })
-  .catch(() => {
-    res.status(500).json({ error: "Une erreur s'est produite." });
-  });
+  .then((members) => res.status(200).json({ members }))
+  .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
 });
 
 //Gel user by id (params)
