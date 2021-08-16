@@ -79,7 +79,7 @@ router.post("/login", (req, res, next) => {
   .catch(() => res.status(401).json({ error: "Connexion impossible." }));
 });
 
-//Update user
+//Edit user
 router.put("/:id", auth, (req, res, next) => {
   //Get data from request
   const data = req.file ?
@@ -87,8 +87,6 @@ router.put("/:id", auth, (req, res, next) => {
     ...JSON.parse(req.body.user),
     avatar: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
   } : req.body;
-
-  console.log(data);
 
   User.findByPk(req.params.id)
   .then((user) => {
