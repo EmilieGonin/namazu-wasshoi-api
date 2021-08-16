@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    submit_date: {
+    start_date: {
       type: DataTypes.DATE,
       allowNull: false,
       unique: true
@@ -28,7 +28,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
       unique: true
-    }
+    },
+    end_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      unique: true
+    },
   }, {
     sequelize,
     modelName: 'Festival',

@@ -13,12 +13,17 @@ module.exports = {
         allowNull: false,
         unique: true
       },
-      submit_date: {
+      start_date: {
         type: Sequelize.DATE,
         allowNull: false,
         unique: true
       },
       vote_date: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        unique: true
+      },
+      end_date: {
         type: Sequelize.DATE,
         allowNull: false,
         unique: true
