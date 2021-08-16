@@ -13,9 +13,10 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use("/users", require("./routes/users"));
-app.use("/fc", require("./routes/fc"));
-app.use("/parameters", require("./routes/parameters"));
 app.use("/applicants", require("./routes/applicants"));
+app.use("/fc", require("./routes/fc"));
+app.use("/festivals", require("./routes/festivals"));
+app.use("/parameters", require("./routes/parameters"));
+app.use("/users", require("./routes/users"));
 
 app.listen(port, () => console.log("Serveur lancé sur le port " + port + "."));
