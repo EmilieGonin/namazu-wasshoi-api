@@ -85,6 +85,10 @@ module.exports = (sequelize, DataTypes) => {
     team: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    isArchived: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }, {
     sequelize,
