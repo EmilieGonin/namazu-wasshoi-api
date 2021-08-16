@@ -1,4 +1,4 @@
-const { Festival } = require("../models/index");
+const { Festival, Screenshot } = require("../models/index");
 const { Op } = require("sequelize");
 const express = require('express');
 const router = express.Router();
@@ -23,7 +23,7 @@ router.get("/now", (req, res, next) => {
       end_date: {
         [Op.gte]: now
       }
-    }
+    }, include: Screenshot
   })
   .then((festival) => {
     const current = festival;
@@ -33,7 +33,8 @@ router.get("/now", (req, res, next) => {
     Festival.findByPk(previousId)
     .then((festival) => {
       const previous = festival;
-      res.status(200).json({ current, previous });
+      previous.getWinners()
+      .then((winners) => res.status(200).json({ current, previous, winners }))
     })
   })
   .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
