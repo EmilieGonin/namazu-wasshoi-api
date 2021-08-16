@@ -1,6 +1,7 @@
 const { User, Team } = require("../models/index");
 const { transport, mailTemplate } = require("../helpers/nodemailer");
 const jwt = require("jsonwebtoken");
+const fs = require('fs');
 const express = require('express');
 const router = express.Router();
 const auth = require("../middlewares/auth");
@@ -80,7 +81,39 @@ router.post("/login", (req, res, next) => {
 
 //Update user
 router.put("/:id", auth, (req, res, next) => {
-  //
+  //Get data from request
+  const data = req.file ?
+  {
+    ...JSON.parse(req.body.user),
+    avatar: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
+  } : req.body;
+
+  console.log(data);
+
+  User.findByPk(req.params.id)
+  .then((user) => {
+    //Delete previous user avatar if necessary
+    if ((req.file || data.deletefile) && user.avatar) {
+      try {
+        const filename = user.avatar.split("/uploads")[1];
+        fs.unlinkSync(`uploads/${filename}`);
+      } catch (e) {
+        res.status(500).json({ error: "Impossible de supprimer l'ancien avatar." })
+      }
+    }
+
+    //Update user
+    user.update(data)
+    .then((user) => {
+      if (user) {
+        res.status(200).json({ message: "Utilisateur mis à jour !", user: user });
+      }
+      else {
+        res.status(500).json({ error: "Impossible de mettre à jour l'utilisateur'." });
+      }
+    })
+  })
+  .catch((error) => res.status(500).json({ error: "Une erreur s'est produite pendant la mise à jour." }));
 });
 
 //Delete user
