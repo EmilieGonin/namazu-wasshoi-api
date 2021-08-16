@@ -46,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
+    msq: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
     mainClass: {
       type: DataTypes.TEXT,
       allowNull: false

@@ -42,6 +42,10 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+      msq: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+      },
       mainClass: {
         type: Sequelize.TEXT,
         allowNull: false
