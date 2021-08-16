@@ -14,6 +14,7 @@ router.get("/", auth, (req, res, next) => {
     res.status(500).json({ error: "Une erreur s'est produite." });
   });
 });
+
 //Post new applicant
 router.post("/new", (req, res, next) => {
   const applicant = {}
@@ -41,6 +42,17 @@ router.post("/new", (req, res, next) => {
     res.status(201).json({ applicant });
   })
   .catch(() => res.status(400).json({ error: "Une erreur s'est produite. Si vous aviez déjà postulé, vous ne pourrez pas le faire une seconde fois. " }));
+});
+
+//Delete applicant
+router.delete("/:id", auth, (req, res, next) => {
+  Applicant.findByPk(req.params.id)
+  .then((applicant) => {
+    applicant.destroy()
+    .then(() => res.status(200).json({ message: "Candidature supprimée !" }))
+    .catch((error) => res.status(500).json({ error: "Impossible de supprimer la candidature." }));
+  })
+  .catch((error) => res.status(500).json({ error: "Une erreur s'est produite." }));
 });
 
 module.exports = router;
