@@ -8,13 +8,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      description: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       url: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      description: {
+        type: Sequelize.STRING
       },
       isWinner: {
         type: Sequelize.BOOLEAN,
