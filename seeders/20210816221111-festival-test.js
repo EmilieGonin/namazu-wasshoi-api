@@ -16,7 +16,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    const Op = Sequelize.Op;
     await queryInterface.bulkDelete("Festivals", [{
       theme: ["Soirée chic et cocktail", "Plage paradisiaque"]
     }]);
