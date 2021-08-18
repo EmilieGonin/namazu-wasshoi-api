@@ -6,23 +6,21 @@ module.exports = {
       description: "Test - 1",
       url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
       isWinner: true,
-      UserId: 1,
-      FestivalId: 1,
+      FestivalId: 13,
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
       description: "Test - 2",
-      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
+      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629291960/sample_2_hjyqow.png",
       isWinner: true,
-      UserId: 1,
-      FestivalId: 1,
+      FestivalId: 13,
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
       description: "Test - 3",
       url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
       UserId: 1,
-      FestivalId: 2,
+      FestivalId: 14,
       createdAt: new Date(),
       updatedAt: new Date()
     }])
@@ -30,7 +28,7 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete("Screenshots", [{
-      url: ["https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png"]
+      url: ["https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png", "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629291960/sample_2_hjyqow.png"]
     }]);
   }
 };
