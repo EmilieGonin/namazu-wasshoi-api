@@ -15,13 +15,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Screenshot.init({
+    public_id: DataTypes.STRING,
     url: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    description: {
-      type: DataTypes.STRING
-    },
+    character: DataTypes.STRING,
+    description: DataTypes.STRING,
     isWinner: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

@@ -8,9 +8,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      public_id: {
+        type: Sequelize.STRING
+      },
       url: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      character: {
+        type: Sequelize.STRING
       },
       description: {
         type: Sequelize.STRING

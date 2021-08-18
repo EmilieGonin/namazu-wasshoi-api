@@ -13,7 +13,6 @@ module.exports = {
 
     await queryInterface.addColumn("Screenshots", "UserId", {
       type: Sequelize.INTEGER,
-      allowNull: false,
       onDelete: "CASCADE",
       references: {
         model: "Users",

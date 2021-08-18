@@ -13,12 +13,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.belongsTo(models.Team, { targetKey: "name", foreignKey: "team" }),
-      User.hasMany(models.Screenshot, {
-        onDelete: "CASCADE",
-        foreignKey: {
-          allowNull: false
-        }
-      })
+      User.hasMany(models.Screenshot, { onDelete: "CASCADE" })
     }
     passwordIsValid(password) {
       return bcrypt.compareSync(password, this.password);
