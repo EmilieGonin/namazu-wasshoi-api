@@ -22,17 +22,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     start_date: {
       type: DataTypes.DATE,
-      allowNull: false,
       unique: true
     },
     vote_date: {
       type: DataTypes.DATE,
-      allowNull: false,
       unique: true
     },
     end_date: {
       type: DataTypes.DATE,
-      allowNull: false,
       unique: true
     },
   }, {
