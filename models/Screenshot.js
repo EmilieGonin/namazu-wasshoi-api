@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    character: DataTypes.STRING,
     description: DataTypes.STRING,
     isWinner: {
       type: DataTypes.BOOLEAN,
