@@ -28,10 +28,10 @@ router.get("/now", (req, res, next) => {
   .then((festival) => {
     const current = festival;
     const voting = now > current.vote_date;
-    const previousId = festival.id - 1;
+    const previousEdition = festival.edition - 1;
 
-    //Find previous festival with current festival id
-    Festival.findByPk(previousId)
+    //Find previous festival with current festival edition
+    Festival.findOne({ where: { edition: previousEdition } })
     .then((festival) => {
       const previous = festival;
       previous.getWinners({ include: User })
@@ -45,6 +45,13 @@ router.get("/now", (req, res, next) => {
 router.get("/:id", (req, res, next) => {
   Festival.findByPk(req.params.id)
   .then((festival) => res.status(200).json({ festival }))
+  .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
+});
+
+//Create new festival
+router.post("/", (req, res, next) => {
+  Festival.create(req.body)
+  .then(() => res.status(200).json({ message: "Le festival a bien été créé !" }))
   .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
 });
 
