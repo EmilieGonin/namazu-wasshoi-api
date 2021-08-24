@@ -20,11 +20,12 @@ module.exports = {
       }
     })
 
-    await queryInterface.addColumn("Screenshots", "FestivalId", {
+    await queryInterface.addColumn("Screenshots", "festival", {
       type: Sequelize.INTEGER,
       references: {
         model: "Festivals",
-        key: "id",
+        key: "edition",
+        as: "festival"
       }
     })
   },
@@ -32,6 +33,6 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     await queryInterface.removeColumn("Users", "team");
     await queryInterface.removeColumn("Screenshots", "UserId");
-    await queryInterface.removeColumn("Screenshots", "FestivalId");
+    await queryInterface.removeColumn("Screenshots", "festival");
   }
 };

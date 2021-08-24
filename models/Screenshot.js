@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Screenshot.belongsTo(models.User),
-      Screenshot.belongsTo(models.Festival)
+      Screenshot.belongsTo(models.Festival, { targetKey: "edition", foreignKey: "festival" })
     }
   };
   Screenshot.init({
