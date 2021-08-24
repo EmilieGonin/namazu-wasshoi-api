@@ -8,6 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      edition: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        unique: true
+      },
       theme: {
         type: Sequelize.STRING,
         allowNull: false,

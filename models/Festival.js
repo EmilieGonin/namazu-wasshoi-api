@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Festival.init({
+    edition: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true
+    },
     theme: {
       type: DataTypes.STRING,
       allowNull: false,
