@@ -18,6 +18,9 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
+      votes: {
+        type: Sequelize.INTEGER
+      },
       isWinner: {
         type: Sequelize.BOOLEAN,
         defaultValue: false

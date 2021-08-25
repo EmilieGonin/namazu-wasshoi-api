@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     description: DataTypes.STRING,
+    votes: DataTypes.INTEGER,
     isWinner: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
