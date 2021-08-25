@@ -16,7 +16,7 @@ router.get("/:id", (req, res, next) => {
 router.post("/", multer, (req, res, next) => {
   const file = "./temp/" + req.file.filename;
 
-  User.findByPk(req.body.user.id)
+  User.findByPk(req.body.userId)
   .then((user) => {
     if (user) {
       cloudinary.uploader.upload(file, {
@@ -25,11 +25,13 @@ router.post("/", multer, (req, res, next) => {
         if (e) {
           res.status(500).json(e)
         } else {
-          User.createScreenshot({
+          user.createScreenshot({
             url: upload.url,
             public_id: upload.public_id,
+            description: req.body.description,
+            festival: req.body.festival ? req.body.festival : null
           })
-          .then(() => res.status(200).json("Le Screenshot a bien été enregistré !"))
+          .then(() => res.status(200).json({ message: "Le screenshot a bien été enregistré !" }))
         }
       })
     } else {
