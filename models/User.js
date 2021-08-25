@@ -12,8 +12,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.belongsTo(models.Team, { targetKey: "name", foreignKey: "team" }),
+      User.belongsTo(models.Team, { targetKey: "name", foreignKey: "team" })
       User.hasMany(models.Screenshot, { onDelete: "CASCADE" })
+      User.hasMany(models.Vote)
     }
     passwordIsValid(password) {
       return bcrypt.compareSync(password, this.password);

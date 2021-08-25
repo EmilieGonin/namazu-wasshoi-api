@@ -10,8 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Screenshot.belongsTo(models.User),
+      Screenshot.belongsTo(models.User)
       Screenshot.belongsTo(models.Festival, { targetKey: "edition", foreignKey: "festival" })
+      Screenshot.hasMany(models.Vote)
     }
   };
   Screenshot.init({
