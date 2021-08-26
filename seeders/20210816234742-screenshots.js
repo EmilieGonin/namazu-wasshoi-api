@@ -22,7 +22,24 @@ module.exports = {
       UserId: 1,
       festival: 14,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      votes: 10
+    }, {
+      description: "Test - 4",
+      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
+      UserId: 1,
+      festival: 14,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      votes: 1
+    }, {
+      description: "Test - 4",
+      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
+      UserId: 1,
+      festival: 14,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      votes: 7
     }])
   },
 
