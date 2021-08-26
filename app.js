@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || "3000";
+require('./helpers/festivalJobs');
 
 //Hello World Test
 app.get("/", (req, res) => {
