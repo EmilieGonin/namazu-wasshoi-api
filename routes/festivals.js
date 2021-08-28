@@ -49,15 +49,8 @@ router.get("/:id", (req, res, next) => {
   .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
 });
 
-//Create new festival
-router.post("/", auth, (req, res, next) => {
-  Festival.create(req.body)
-  .then(() => res.status(200).json({ message: "Le festival a bien été créé !" }))
-  .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
-});
-
 //Add vote
-router.put("/vote", auth, (req, res, next) => {
+router.post("/vote", auth, (req, res, next) => {
   User.findByPk(req.body.userId, { include: Vote })
   .then((user) => {
     //Check if user has already vote
@@ -81,6 +74,13 @@ router.put("/vote", auth, (req, res, next) => {
       })
     })
   })
+  .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
+});
+
+//Create new festival
+router.post("/", auth, (req, res, next) => {
+  Festival.create(req.body)
+  .then(() => res.status(200).json({ message: "Le festival a bien été créé !" }))
   .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
 });
 
