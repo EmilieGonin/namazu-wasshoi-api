@@ -1,7 +1,8 @@
-const { Festival, Screenshot, User } = require("../models/index");
+const { Festival, Screenshot, User, Vote } = require("../models/index");
 const { Op } = require("sequelize");
 const express = require('express');
 const router = express.Router();
+const auth = require("../middlewares/auth");
 
 //Get all festivals
 router.get("/", (req, res, next) => {
@@ -49,9 +50,37 @@ router.get("/:id", (req, res, next) => {
 });
 
 //Create new festival
-router.post("/", (req, res, next) => {
+router.post("/", auth, (req, res, next) => {
   Festival.create(req.body)
   .then(() => res.status(200).json({ message: "Le festival a bien été créé !" }))
+  .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
+});
+
+//Add vote
+router.put("/vote", auth, (req, res, next) => {
+  User.findByPk(req.body.userId, { include: Vote })
+  .then((user) => {
+    //Check if user has already vote
+    for (let vote of user.Votes) {
+      if (vote.ScreenshotId == req.body.screenshotId) {
+        return res.status(401).json({ error: "Vous ne pouvez voter qu'une seule fois." })
+      }
+    }
+
+    //Update screenshot votes count
+    Screenshot.findByPk(req.body.screenshotId)
+    .then((screenshot) => {
+      screenshot.update({votes: screenshot.votes + 1})
+      .then(() => {
+        //Create vote instance
+        Vote.create({
+          UserId: req.body.userId,
+          ScreenshotId: req.body.screenshotId
+        })
+        .then(() => res.status(200).json({ message: "Merci ! Votre vote a bien été pris en compte." }));
+      })
+    })
+  })
   .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
 });
 
