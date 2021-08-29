@@ -27,14 +27,16 @@ module.exports = {
     }, {
       description: "Test - 4",
       url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
+      isWinner: true,
       UserId: 1,
       festival: 14,
       createdAt: new Date(),
       updatedAt: new Date(),
       votes: 1
     }, {
-      description: "Test - 4",
-      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
+      description: "Test - 5",
+      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629291960/sample_2_hjyqow.png",
+      isWinner: true,
       UserId: 1,
       festival: 14,
       createdAt: new Date(),
