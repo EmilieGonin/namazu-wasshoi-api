@@ -4,6 +4,7 @@ const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const express = require('express');
 const router = express.Router();
+const auth = require("../middlewares/auth");
 
 //Get screenshot by id
 router.get("/:id", (req, res, next) => {
@@ -13,7 +14,7 @@ router.get("/:id", (req, res, next) => {
 });
 
 //Upload screenshot
-router.post("/", multer, (req, res, next) => {
+router.post("/", auth, multer, (req, res, next) => {
   const filename = req.file.filename;
   const file = "./temp/" + filename;
 
@@ -33,7 +34,7 @@ router.post("/", multer, (req, res, next) => {
 });
 
 //Delete screenshot by model id and public_id
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", auth, (req, res, next) => {
   Screenshot.findByPk(req.params.id)
   .then((screenshot) => {
     cloudinary.uploader.destroy(screenshot.public_id, (e, result) => {
