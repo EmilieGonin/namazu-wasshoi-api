@@ -7,18 +7,14 @@ router.get("/", (req, res, next) => {
   .then((parameters) => {
     res.status(200).json({ parameters });
   })
-  .catch(() => {
-    res.status(500).json({ error: "Une erreur s'est produite." });
-  });
+  .catch((e) => next(e));
 });
 router.get("/:name", (req, res, next) => {
   Parameter.findOne({ where: { name: req.params.name }})
   .then((parameter) => {
     res.status(200).json({ parameter });
   })
-  .catch(() => {
-    res.status(500).json({ error: "Une erreur s'est produite." });
-  });
+  .catch((e) => next(e));
 });
 
 module.exports = router;

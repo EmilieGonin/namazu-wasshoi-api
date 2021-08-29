@@ -10,9 +10,7 @@ router.get("/", auth, (req, res, next) => {
   .then((applicants) => {
     res.status(200).json({ applicants });
   })
-  .catch(() => {
-    res.status(500).json({ error: "Une erreur s'est produite." });
-  });
+  .catch((e) => next(e));
 });
 
 //Post new applicant
@@ -52,7 +50,7 @@ router.delete("/:id", auth, (req, res, next) => {
     .then(() => res.status(200).json({ message: "Candidature supprimée !" }))
     .catch((error) => res.status(500).json({ error: "Impossible de supprimer la candidature." }));
   })
-  .catch((error) => res.status(500).json({ error: "Une erreur s'est produite." }));
+  .catch((e) => next(e));
 });
 
 module.exports = router;

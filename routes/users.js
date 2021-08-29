@@ -10,7 +10,7 @@ const auth = require("../middlewares/auth");
 router.get("/", auth, (req, res, next) => {
   User.findAll()
   .then((members) => res.status(200).json({ members }))
-  .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
+  .catch((e) => next(e));
 });
 
 //Gel user by id (params)
@@ -23,7 +23,7 @@ router.get("/:id", auth, (req, res, next) => {
       res.status(404).json({ error: "Utilisateur introuvable." });
     }
   })
-  .catch((error) => res.status(500).json({ error: "Une erreur s'est produite." }));
+  .catch((e) => next(e));
 });
 
 //Signup
@@ -55,7 +55,7 @@ router.post("/signup", (req, res, next) => {
     })
     .catch(() => res.status(400).json({ error: "Vérifiez que vos données soient exactes ou que vous ne possédez pas déjà un compte associé à ce personnage." }));
   })
-  .catch((error) => res.status(500).json({ error: "Une erreur s'est produite." }));
+  .catch((e) => next(e));
 });
 
 //Login
@@ -111,7 +111,7 @@ router.put("/:id", auth, (req, res, next) => {
       }
     })
   })
-  .catch((error) => res.status(500).json({ error: "Une erreur s'est produite pendant la mise à jour." }));
+  .catch((e) => next(e));
 });
 
 //Delete user
@@ -122,7 +122,7 @@ router.delete("/:id", auth, (req, res, next) => {
     .then(() => res.status(200).json({ message: "Utilisateur supprimé !" }))
     .catch((error) => res.status(500).json({ error: "Impossible de supprimer l'utilisateur." }));
   })
-  .catch((error) => res.status(500).json({ error: "Une erreur s'est produite." }));
+  .catch((e) => next(e));
 });
 
 module.exports = router;
