@@ -23,6 +23,14 @@ module.exports = {
           model: "Screenshots",
           key: "id",
         }
+      },
+      FestivalId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Festivals",
+          key: "id",
+        }
       }
     });
   },

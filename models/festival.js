@@ -10,8 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Festival.hasMany(models.Screenshot, { sourceKey: "edition", foreignKey: "festival" });
-      Festival.hasMany(models.Screenshot.scope("winner"), { as: "winners", sourceKey: "edition", foreignKey: "festival" });
+      Festival.hasMany(models.Screenshot, { sourceKey: "edition", foreignKey: "festival" })
+      Festival.hasMany(models.Screenshot.scope("winner"), { as: "winners", sourceKey: "edition", foreignKey: "festival" })
+      Festival.hasMany(models.Vote)
     }
   };
   Festival.init({

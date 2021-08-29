@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Vote.belongsTo(models.User);
       Vote.belongsTo(models.Screenshot);
+      Vote.belongsTo(models.Festival);
     }
   };
   Vote.init({
