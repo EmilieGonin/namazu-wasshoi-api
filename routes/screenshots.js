@@ -1,4 +1,4 @@
-const { Screenshot, User } = require("../models/index");
+const { Screenshot, User, Festival } = require("../models/index");
 const multer = require("../middlewares/multer");
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
@@ -13,11 +13,26 @@ router.get("/:id", (req, res, next) => {
   .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
 });
 
-//Upload screenshot
-router.post("/", auth, multer, (req, res, next) => {
+//Upload screenshot (file, UserId, FestivalId ?, description ?)
+router.post("/", auth, multer, async (req, res, next) => {
   const filename = req.file.filename;
   const file = "./temp/" + filename;
+  let message = "Le screenshot a bien été enregistré !";
+  let festival = false;
 
+  if (req.body.FestivalId) {
+    message = "Merci ! Votre participation a bien été enregistrée.";
+    festival = await Festival.findByPk(req.body.FestivalId, { include: Screenshot }).catch(next);
+
+    //Check if user has already submit screenshot on festival
+    for (let screenshot of festival.Screenshots) {
+      if (screenshot.UserId == req.body.UserId) {
+        return res.status(401).json({ error: "Vous ne pouvez participer qu'une seule fois." })
+      }
+    }
+  }
+
+  //Upload screenshot
   cloudinary.uploader.upload(file, { public_id: filename }, (e, upload) => {
     if (e) {
       return res.status(500).json(e);
@@ -26,9 +41,10 @@ router.post("/", auth, multer, (req, res, next) => {
         url: upload.url,
         public_id: upload.public_id,
         description: req.body.description ? req.body.description : null,
-        UserId: req.body.userId
+        festival: festival ? festival.edition : null,
+        UserId: req.body.UserId
       })
-      .then(() => res.status(200).json({ message: "Le screenshot a bien été enregistré !" }))
+      .then(() => res.status(200).json({ message: message }))
     }
   })
 });
