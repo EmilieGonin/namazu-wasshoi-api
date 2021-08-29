@@ -49,7 +49,7 @@ router.get("/:id", (req, res, next) => {
   .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
 });
 
-//Add vote
+//Add vote (FestivalId, UserId, ScreenshotId)
 router.post("/vote", auth, (req, res, next) => {
   Festival.findByPk(req.body.FestivalId, { include: Vote })
   .then((festival) => {
@@ -60,15 +60,21 @@ router.post("/vote", auth, (req, res, next) => {
       }
     }
 
-    //Update screenshot votes count
+    //Get Screenshot infos
     Screenshot.findByPk(req.body.ScreenshotId)
     .then((screenshot) => {
-      screenshot.update({votes: screenshot.votes + 1})
-      .then(() => {
-        //Create vote instance
-        Vote.create(req.body)
-        .then(() => res.status(200).json({ message: "Merci ! Votre vote a bien été pris en compte." }));
-      })
+      //Check if user isn't voting for itself
+      if (screenshot.UserId == req.body.UserId) {
+        res.status(401).json({ error: "Vous ne pouvez pas voter pour votre propre participation." })
+      } else {
+        //Update screenshot votes count
+        screenshot.update({votes: screenshot.votes + 1})
+        .then(() => {
+          //Create vote instance
+          Vote.create(req.body)
+          .then(() => res.status(200).json({ message: "Merci ! Votre vote a bien été pris en compte." }));
+        })
+      }
     })
   })
   .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
