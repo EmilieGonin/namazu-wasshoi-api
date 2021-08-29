@@ -21,5 +21,8 @@ app.use("/festivals", require("./routes/festivals"));
 app.use("/parameters", require("./routes/parameters"));
 app.use("/screenshots", require("./routes/screenshots"));
 app.use("/users", require("./routes/users"));
+app.use((error, req, res, next) => {
+	return res.status(500).json({ error: "Une erreur s'est produite." });
+})
 
 app.listen(port, () => console.log("Serveur lancé sur le port " + port + "."));
