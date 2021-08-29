@@ -14,28 +14,20 @@ router.get("/:id", (req, res, next) => {
 
 //Upload screenshot
 router.post("/", multer, (req, res, next) => {
-  const file = "./temp/" + req.file.filename;
+  const filename = req.file.filename;
+  const file = "./temp/" + filename;
 
-  User.findByPk(req.body.userId)
-  .then((user) => {
-    if (user) {
-      cloudinary.uploader.upload(file, {
-        public_id: req.file.filename },
-        (e, upload) => {
-        if (e) {
-          res.status(500).json(e)
-        } else {
-          user.createScreenshot({
-            url: upload.url,
-            public_id: upload.public_id,
-            description: req.body.description,
-            festival: req.body.festival ? req.body.festival : null
-          })
-          .then(() => res.status(200).json({ message: "Le screenshot a bien été enregistré !" }))
-        }
-      })
+  cloudinary.uploader.upload(file, { public_id: filename }, (e, upload) => {
+    if (e) {
+      return res.status(500).json(e);
     } else {
-      res.status(404).json({ error: "Utilisateur introuvable." });
+      Screenshot.create({
+        url: upload.url,
+        public_id: upload.public_id,
+        description: req.body.description ? req.body.description : null,
+        UserId: req.body.userId
+      })
+      .then(() => res.status(200).json({ message: "Le screenshot a bien été enregistré !" }))
     }
   })
 });
