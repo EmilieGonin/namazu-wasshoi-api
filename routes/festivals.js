@@ -51,25 +51,22 @@ router.get("/:id", (req, res, next) => {
 
 //Add vote
 router.post("/vote", auth, (req, res, next) => {
-  User.findByPk(req.body.userId, { include: Vote })
-  .then((user) => {
-    //Check if user has already vote
-    for (let vote of user.Votes) {
-      if (vote.ScreenshotId == req.body.screenshotId) {
+  Festival.findByPk(req.body.FestivalId, { include: Vote })
+  .then((festival) => {
+    //Check if user has already vote on festival
+    for (let vote of festival.Votes) {
+      if (vote.UserId == req.body.UserId) {
         return res.status(401).json({ error: "Vous ne pouvez voter qu'une seule fois." })
       }
     }
 
     //Update screenshot votes count
-    Screenshot.findByPk(req.body.screenshotId)
+    Screenshot.findByPk(req.body.ScreenshotId)
     .then((screenshot) => {
       screenshot.update({votes: screenshot.votes + 1})
       .then(() => {
         //Create vote instance
-        Vote.create({
-          UserId: req.body.userId,
-          ScreenshotId: req.body.screenshotId
-        })
+        Vote.create(req.body)
         .then(() => res.status(200).json({ message: "Merci ! Votre vote a bien été pris en compte." }));
       })
     })
