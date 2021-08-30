@@ -1,4 +1,4 @@
-const { Applicant } = require("../models/index");
+const { Applicant, Profile } = require("../models/index");
 const { transport, mailTemplate } = require("../helpers/nodemailer");
 const express = require('express');
 const router = express.Router();
@@ -6,10 +6,13 @@ const auth = require("../middlewares/auth");
 
 //Get all applicants
 router.get("/", auth, (req, res, next) => {
-  Applicant.findAll()
-  .then((applicants) => {
-    res.status(200).json({ applicants });
+  Applicant.findAll({
+    include: {
+      model: Profile,
+      attributes: { exclude: ["ApplicantId"] }
+    }
   })
+  .then((applicants) => res.status(200).json({ applicants }))
   .catch((e) => next(e));
 });
 
