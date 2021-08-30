@@ -31,43 +31,73 @@ module.exports = (sequelize, DataTypes) => {
     },
     availability: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      get() {
+        return { label: "Disponibilités", value: this.getDataValue("availability") }
+      }
     },
     about: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      get() {
+        return { label: "À propos", value: this.getDataValue("about") }
+      }
     },
     mainClass: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      get() {
+        return { label: "Classe principale", value: this.getDataValue("mainClass") }
+      }
     },
     playtime: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      get() {
+        return { label: "Temps de jeu", value: this.getDataValue("playtime") }
+      }
     },
     gameActivities: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      get() {
+        return { label: "Activités préférées", value: this.getDataValue("gameActivities") }
+      }
     },
     cl: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      get() {
+        return { label: "Choix de CL", value: this.getDataValue("cl") }
+      }
     },
     clRequired: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      get() {
+        return { label: "Critères obligatoires", value: this.getDataValue("clRequired") }
+      }
     },
     currentCl: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      get() {
+        return { label: "CL actuelle", value: this.getDataValue("currentCl") }
+      }
     },
     exp: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      get() {
+        return { label: "Expérience HL", value: this.getDataValue("exp") }
+      }
     },
     savageRequired: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      get() {
+        return { label: "Roster sadique", value: this.getDataValue("savageRequired") }
+      }
     }
   }, {
     sequelize,
