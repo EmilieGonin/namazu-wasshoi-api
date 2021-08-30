@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Applicant.belongsTo(models.Team, { targetKey: "name", foreignKey: "team" })
     }
   };
   Applicant.init({
@@ -80,10 +80,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     savageRequired: {
       type: DataTypes.TEXT,
-      allowNull: false
-    },
-    team: {
-      type: DataTypes.STRING,
       allowNull: false
     },
     isArchived: {

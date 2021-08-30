@@ -78,10 +78,6 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false
       },
-      team: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       isArchived: {
         type: Sequelize.BOOLEAN,
         defaultValue: false

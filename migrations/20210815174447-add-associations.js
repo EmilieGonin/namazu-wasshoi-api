@@ -11,6 +11,15 @@ module.exports = {
       }
     })
 
+    await queryInterface.addColumn("Applicants", "team", {
+      type: Sequelize.STRING,
+      references: {
+        model: "Teams",
+        key: "name",
+        as: "team"
+      }
+    })
+
     await queryInterface.addColumn("Screenshots", "UserId", {
       type: Sequelize.INTEGER,
       onDelete: "CASCADE",
@@ -32,6 +41,7 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.removeColumn("Users", "team");
+    await queryInterface.removeColumn("Applicants", "team");
     await queryInterface.removeColumn("Screenshots", "UserId");
     await queryInterface.removeColumn("Screenshots", "festival");
   }
