@@ -16,7 +16,6 @@ module.exports = {
       },
       discord: {
         type: Sequelize.STRING,
-        allowNull: false,
         unique: true
       },
       birthday: {

@@ -19,7 +19,6 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     discord: {
       type: DataTypes.STRING,
-      allowNull: false,
       unique: true
     },
     birthday: DataTypes.DATEONLY,

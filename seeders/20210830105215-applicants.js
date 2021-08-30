@@ -1,12 +1,10 @@
 'use strict';
+const models = require('../models');
+const Applicant = models.Applicant;
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert("Applicants", [{
-      name: "Test",
-      birthday: "1111-11-11",
-      discord: "Test#0000",
-      mic: true,
       character: "Test Test",
       characterId: 1,
       team: "Mog",
@@ -24,10 +22,26 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date()
     }])
+
+    const applicant = await Applicant.findOne({
+      where: { character: "Test Test" }
+    });
+
+    await queryInterface.bulkInsert("Profiles", [{
+      name: "Test",
+      birthday: "1111-11-11",
+      discord: "Test#0000",
+      mic: true,
+      ApplicantId: applicant.id
+    }])
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete("Applicants", [{
+      character: "Test Test"
+    }]);
+
+    await queryInterface.bulkDelete("Profiles", [{
       name: "Test"
     }]);
   }
