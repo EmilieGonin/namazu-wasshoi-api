@@ -8,30 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
-      },
-      birthday: {
-        type: Sequelize.DATEONLY,
-        allowNull: false
-      },
-      discord: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      mic: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
-      },
-      availability: {
-        type: Sequelize.TEXT,
-        allowNull: false
-      },
-      about: {
-        type: Sequelize.TEXT,
-        allowNull: false
-      },
       character: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -44,6 +20,14 @@ module.exports = {
       },
       msq: {
         type: Sequelize.BOOLEAN,
+        allowNull: false
+      },
+      availability: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
+      about: {
+        type: Sequelize.TEXT,
         allowNull: false
       },
       mainClass: {

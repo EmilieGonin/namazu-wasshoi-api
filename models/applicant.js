@@ -11,31 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Applicant.belongsTo(models.Team, { targetKey: "name", foreignKey: "team" })
+      Applicant.hasOne(models.Profile)
     }
   };
   Applicant.init({
-    name: DataTypes.STRING,
-    birthday: {
-      type: DataTypes.DATEONLY,
-      allowNull: false
-    },
-    discord: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    mic: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false
-    },
-    availability: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    about: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
     character: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -48,6 +27,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     msq: {
       type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
+    availability: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    about: {
+      type: DataTypes.TEXT,
       allowNull: false
     },
     mainClass: {

@@ -27,19 +27,6 @@ module.exports = {
         allowNull: false,
         unique: true
       },
-      discord: {
-        type: Sequelize.STRING,
-        unique: true
-      },
-      birthday: {
-        type: Sequelize.DATEONLY
-      },
-      avatar: {
-        type: Sequelize.STRING
-      },
-      bio: {
-        type: Sequelize.TEXT
-      },
       isAdmin: {
         type: Sequelize.BOOLEAN,
         defaultValue: false

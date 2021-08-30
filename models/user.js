@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Team, { targetKey: "name", foreignKey: "team" })
       User.hasMany(models.Screenshot, { onDelete: "CASCADE" })
       User.hasMany(models.Vote)
+      User.hasOne(models.Profile)
     }
     passwordIsValid(password) {
       return bcrypt.compareSync(password, this.password);
@@ -40,13 +41,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    discord: {
-      type: DataTypes.STRING,
-      unique: true
-    },
-    birthday: DataTypes.DATEONLY,
-    avatar: DataTypes.STRING,
-    bio: DataTypes.TEXT,
     isAdmin: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
