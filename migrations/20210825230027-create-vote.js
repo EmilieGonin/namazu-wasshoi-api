@@ -19,6 +19,7 @@ module.exports = {
       ScreenshotId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        onDelete: "CASCADE",
         references: {
           model: "Screenshots",
           key: "id",
@@ -27,6 +28,7 @@ module.exports = {
       FestivalId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        onDelete: "CASCADE",
         references: {
           model: "Festivals",
           key: "id",
