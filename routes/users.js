@@ -20,6 +20,20 @@ router.get("/", auth, (req, res, next) => {
   .catch((e) => next(e));
 });
 
+//Update user character
+router.get("/:id/character", async (req, res, next) => {
+  User.findByPk(req.params.id, {
+    include: [ Profile, Character ]
+  })
+  .then((user) => {
+    user.Character.getCharacter()
+    .then(() => {
+      res.status(200).json({ user })
+    });
+  })
+  .catch((e) => next(e));
+});
+
 //Gel user by id (params)
 router.get("/:id", auth, (req, res, next) => {
   User.findByPk(req.params.id, {
