@@ -1,4 +1,4 @@
-const { User, Team, Profile } = require("../models/index");
+const { User, Team, Profile, Character } = require("../models/index");
 const { transport, mailTemplate } = require("../helpers/nodemailer");
 const jwt = require("jsonwebtoken");
 const fs = require('fs');
@@ -9,10 +9,12 @@ const auth = require("../middlewares/auth");
 //Get all users
 router.get("/", auth, (req, res, next) => {
   User.findAll({
-    include: {
+    include: [{
       model: Profile,
       attributes: { exclude: ["UserId", "bio", "avatar", "mic"] }
-    }
+    }, {
+      model: Character
+    }]
   })
   .then((users) => res.status(200).json({ users }))
   .catch((e) => next(e));
