@@ -22,7 +22,9 @@ router.get("/", auth, (req, res, next) => {
 
 //Gel user by id (params)
 router.get("/:id", auth, (req, res, next) => {
-  User.findByPk(req.params.id)
+  User.findByPk(req.params.id, {
+    include: [ Profile, Character ]
+  })
   .then((user) => {
     if (user) {
       res.status(200).json({ user });
@@ -40,9 +42,15 @@ router.post("/signup", (req, res, next) => {
     team.createUser({
       email: req.body.email,
       password: req.body.password,
-      character: req.body.character_cl,
-      characterId: req.body.characterId,
-      discord: req.body.discord
+      profile: {
+        discord: req.body.discord
+      },
+      character: {
+        name: req.body.character_cl,
+        lodestoneId: req.body.characterId
+      }
+    }, {
+      include: [ Profile, Character ]
     })
     .then((user) => {
       const message = `
@@ -66,24 +74,29 @@ router.post("/signup", (req, res, next) => {
 });
 
 //Login
-router.post("/login", (req, res, next) => {
-  User.findOne({ where: { email: req.body.email }})
-  .then(user => {
-    if (user.passwordIsValid(req.body.password)) {
-      res.status(200).json({
-        user: user,
-        token: jwt.sign(
-          { userId: user.id },
-          process.env.SECRET,
-          { expiresIn: "24h" }
-        )
-      });
-    }
-    else {
-      return res.status(401).json({ error: "Mot de passe incorrect." });
-    }
-  })
-  .catch(() => res.status(401).json({ error: "Connexion impossible." }));
+router.post("/login", async (req, res, next) => {
+  const user = await User.findOne({
+    where: { email: req.body.email },
+    include: [ Profile, Character ]
+  }).catch(() => res.status(401).json({ error: "Connexion impossible." }));
+
+  if (await user.Character.hasExpired()) {
+    await user.Character.getCharacter();
+  }
+
+  if (await user.passwordIsValid(req.body.password)) {
+    res.status(200).json({
+      user: user,
+      token: jwt.sign(
+        { userId: user.id },
+        process.env.SECRET,
+        { expiresIn: "24h" }
+      )
+    });
+  }
+  else {
+    return res.status(401).json({ error: "Mot de passe incorrect." });
+  }
 });
 
 //Edit user
