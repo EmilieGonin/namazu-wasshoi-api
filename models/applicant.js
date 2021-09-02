@@ -12,19 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Applicant.belongsTo(models.Team, { targetKey: "name", foreignKey: "team" })
       Applicant.hasOne(models.Profile)
+      Applicant.hasOne(models.Character)
     }
   };
   Applicant.init({
-    character: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    characterId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      unique: true
-    },
     msq: {
       type: DataTypes.BOOLEAN,
       allowNull: false

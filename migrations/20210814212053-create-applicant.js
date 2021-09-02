@@ -8,16 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      character: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      characterId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        unique: true
-      },
       msq: {
         type: Sequelize.BOOLEAN,
         allowNull: false

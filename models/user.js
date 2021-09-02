@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Screenshot, { onDelete: "CASCADE" })
       User.hasMany(models.Vote)
       User.hasOne(models.Profile)
+      User.hasOne(models.Character)
     }
     passwordIsValid(password) {
       return bcrypt.compareSync(password, this.password);
@@ -30,16 +31,6 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    character: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    characterId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      unique: true
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,

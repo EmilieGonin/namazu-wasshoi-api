@@ -17,16 +17,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      character: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      characterId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        unique: true
-      },
       isAdmin: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
