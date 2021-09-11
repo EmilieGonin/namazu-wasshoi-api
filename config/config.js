@@ -7,7 +7,7 @@ module.exports = {
     logging: false
   },
   production: {
-    url: process.env.CLEARDB_DATABASE_URL,
+    url: process.env.JAWSDB_MARIA_URL,
     dialect: "mysql",
     logging: false
   }
