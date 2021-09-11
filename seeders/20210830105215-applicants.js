@@ -24,7 +24,7 @@ module.exports = {
     }])
 
     const applicant = await Applicant.findOne({
-      where: { createdAt: now }
+      where: { about: "Test" }
     });
 
     await queryInterface.bulkInsert("Profiles", [{
@@ -74,7 +74,7 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete("Applicants", [{
-      createdAt: now
+      about: "Test"
     }]);
 
     await queryInterface.bulkDelete("Profiles", [{
