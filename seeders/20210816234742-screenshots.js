@@ -19,7 +19,6 @@ module.exports = {
     }, {
       description: "Test - 3",
       url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
-      UserId: 1,
       festival: 14,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -28,7 +27,6 @@ module.exports = {
       description: "Test - 4",
       url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
       isWinner: true,
-      UserId: 1,
       festival: 14,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -37,7 +35,6 @@ module.exports = {
       description: "Test - 5",
       url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629291960/sample_2_hjyqow.png",
       isWinner: true,
-      UserId: 1,
       festival: 14,
       createdAt: new Date(),
       updatedAt: new Date(),
