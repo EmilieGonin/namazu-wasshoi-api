@@ -16,10 +16,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Applicant.init({
-    msq: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false
-    },
     availability: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -32,6 +28,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       get() {
         return { label: "À propos", value: this.getDataValue("about") }
+      }
+    },
+    msq: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      get() {
+        return { label: "Epopée", value: this.getDataValue("msq") }
       }
     },
     mainClass: {

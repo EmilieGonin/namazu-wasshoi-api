@@ -8,15 +8,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      msq: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
-      },
       availability: {
         type: Sequelize.TEXT,
         allowNull: false
       },
       about: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
+      msq: {
         type: Sequelize.TEXT,
         allowNull: false
       },

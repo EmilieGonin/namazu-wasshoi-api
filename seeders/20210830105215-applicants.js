@@ -8,9 +8,9 @@ module.exports = {
 
     await queryInterface.bulkInsert("Applicants", [{
       team: "Mog",
-      msq: true,
       availability: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lacinia, nibh nec mattis iaculis, lacus ex dictum tellus, eu euismod ligula enim quis urna. Donec porta vehicula orci vel scelerisque. Nam hendrerit venenatis ligula at placerat. Donec maximus magna pulvinar tincidunt dignissim. Proin ac suscipit urna, ut dignissim nisi. Aenean dictum finibus ante sed dapibus. Nulla suscipit sapien ultricies lectus luctus, ut sodales nisi commodo.",
       about: "Test",
+      msq: "Test",
       mainClass: "Test",
       playtime: "Test",
       gameActivities: "Test",
