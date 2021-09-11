@@ -7,17 +7,23 @@ const router = express.Router();
 const auth = require("../middlewares/auth");
 
 //Get all users
-router.get("/", auth, (req, res, next) => {
-  User.findAll({
+router.get("/", auth, async (req, res, next) => {
+  const users = await User.findAll({
     include: [{
       model: Profile,
       attributes: { exclude: ["UserId", "bio", "avatar", "mic"] }
     }, {
       model: Character
     }]
-  })
-  .then((users) => res.status(200).json({ users }))
-  .catch((e) => next(e));
+  }).catch((e) => next(e));
+
+  for (const user of users) {
+    if (await user.Character.hasExpired()) {
+      await user.Character.getCharacter();
+    }
+  }
+
+  res.status(200).json({ users })
 });
 
 //Update user character
