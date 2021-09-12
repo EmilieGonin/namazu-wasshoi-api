@@ -59,22 +59,12 @@ router.get("/:id", auth, (req, res, next) => {
 router.post("/signup", (req, res, next) => {
   Team.findOne({ where: { name: req.body.team }})
   .then((team) => {
-    team.createUser({
-      email: req.body.email,
-      password: req.body.password,
-      profile: {
-        discord: req.body.discord
-      },
-      character: {
-        name: req.body.character_cl,
-        lodestoneId: req.body.characterId
-      }
-    }, {
+    team.createUser(req.body, {
       include: [ Profile, Character ]
     })
     .then((user) => {
       const message = `
-        Bienvenue parmi nous, ${req.body.character_cl} !<br/><br/>Tu peux désormais te connecter à ton compte en utilisant l'adresse email et le mot de passe que tu as renseigné lors de ton inscription.<br/><br/>En cas de problème, n'hésites pas à contacter la GM sur Discord ! (Yuuna#5839)
+        Bienvenue parmi nous, ${req.body.Character.name} !<br/><br/>Tu peux désormais te connecter à ton compte en utilisant l'adresse email et le mot de passe que tu as renseigné lors de ton inscription.<br/><br/>En cas de problème, n'hésites pas à contacter la GM sur Discord ! (Yuuna#5839)
       `;
       const mail = mailTemplate(req.body.email, "Bienvenue sur Namazu Wasshoi !", message);
       transport.sendMail(mail);
