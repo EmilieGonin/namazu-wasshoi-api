@@ -1,5 +1,12 @@
 const nodemailer = require("nodemailer");
-let transport = nodemailer.createTransport(process.env.MAILERTOGO_URL);
+const env = process.env.NODE_ENV || 'dev';
+let transport;
+
+if (env == "dev") {
+  transport = nodemailer.createTransport(process.env.MAILTRAP_URL);
+} else {
+  transport = nodemailer.createTransport(process.env.MAILERTOGO_URL);
+}
 
 transport.verify((e) => {
   if (e) {
