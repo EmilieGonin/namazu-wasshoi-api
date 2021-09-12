@@ -41,7 +41,7 @@ router.post("/new", async (req, res, next) => {
    }
 
   const message = `
-    ${applicant.character} (${applicant.discord}) a posté sa candidature sur le site !
+    ${req.body.Character.name} (${req.body.Profile.discord}) a posté sa candidature sur le site !
   `
   for (const staffMail of staffMails) {
     const mail = mailTemplate(staffMail, "Une nouvelle candidature est disponible sur Namazu Wasshoi !", message);
