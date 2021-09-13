@@ -40,7 +40,7 @@ router.get("/:id/character", async (req, res, next) => {
   .catch((e) => next(e));
 });
 
-//Gel user by id (params)
+//Get user by id (params)
 router.get("/:id", auth, (req, res, next) => {
   User.findByPk(req.params.id, {
     include: [ Profile, Character ]
