@@ -94,7 +94,11 @@ router.post("/signup", (req, res, next) => {
         )
       })
     })
-    .catch(() => res.status(400).json({ error: "Vérifiez que vos données soient exactes ou que vous ne possédez pas déjà un compte associé à ce personnage." }));
+    .catch((e) => {
+      User.destroy({ where: { email: req.body.email }}).then(() =>
+        res.status(400).json({ error: "Vérifiez que vos données soient exactes ou que vous ne possédez pas déjà un compte associé à ce personnage." })
+      )
+    });
   })
   .catch((e) => next(e));
 });
