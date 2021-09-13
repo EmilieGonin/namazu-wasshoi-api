@@ -28,7 +28,8 @@ router.get("/now", (req, res, next) => {
   })
   .then((festival) => {
     const current = festival;
-    const voting = now > current.vote_date;
+    const voting = now > current.vote;
+    // const voting = false;
     const previousEdition = festival.edition - 1;
 
     //Find previous festival with current festival edition
