@@ -56,7 +56,7 @@ router.delete("/:id", auth, (req, res, next) => {
   Applicant.findByPk(req.params.id)
   .then((applicant) => {
     applicant.destroy()
-    .then(() => res.status(200).json({ message: "Candidature supprimée !" }))
+    .then(() => res.status(200).json({ message: "La candidature a bien été supprimée." }))
     .catch((error) => res.status(500).json({ error: "Impossible de supprimer la candidature." }));
   })
   .catch((e) => next(e));
