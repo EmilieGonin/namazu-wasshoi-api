@@ -26,6 +26,38 @@ router.get("/", auth, async (req, res, next) => {
   res.status(200).json({ users })
 });
 
+//Get all users by roles
+router.get("/roles", auth, async (req, res, next) => {
+  const golden = await User.findAll({
+    where: {
+      isGolden: true
+    },
+    include: [ Character ]
+  }).catch((e) => next(e));
+
+  const lunar = await User.findOne({
+    where: {
+      isLunar: true
+    },
+    include: [ Character ]
+  }).catch((e) => next(e));
+
+  const fail = await User.findOne({
+    where: {
+      isFail: true
+    },
+    include: [ Character ]
+  }).catch((e) => next(e));
+
+  const roles = {
+    golden: golden.length ? golden.Character.name : null,
+    lunar: lunar ? lunar.Character.name : null,
+    fail: fail ? fail.Character.name : null
+  }
+
+  res.status(200).json({ roles });
+});
+
 //Update user character
 router.get("/:id/character", async (req, res, next) => {
   User.findByPk(req.params.id, {
