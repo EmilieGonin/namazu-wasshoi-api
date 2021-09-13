@@ -163,7 +163,7 @@ router.post("/login", async (req, res, next) => {
 });
 
 //Edit user
-router.put("/:id", auth, (req, res, next) => {
+router.put("/:id", auth, async (req, res, next) => {
   //Get data from request
   const data = req.file ?
   {
@@ -171,30 +171,38 @@ router.put("/:id", auth, (req, res, next) => {
     avatar: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
   } : req.body;
 
-  User.findByPk(req.params.id)
-  .then((user) => {
-    //Delete previous user avatar if necessary
-    if ((req.file || data.deletefile) && user.avatar) {
-      try {
-        const filename = user.avatar.split("/uploads")[1];
-        fs.unlinkSync(`uploads/${filename}`);
-      } catch (e) {
-        res.status(500).json({ error: "Impossible de supprimer l'ancien avatar." })
-      }
-    }
+  const user = await User.findByPk(req.params.id, {
+    include: [ Profile, Character ]
+  }).catch((e) => next(e));
 
-    //Update user
-    user.update(data)
-    .then((user) => {
-      if (user) {
-        res.status(200).json({ message: "Utilisateur mis à jour !", user: user });
-      }
-      else {
-        res.status(500).json({ error: "Impossible de mettre à jour l'utilisateur'." });
-      }
-    })
-  })
-  .catch((e) => next(e));
+  const [profile, created] = await Profile.findOrCreate({
+    where: { UserId: user.id }
+  }).catch((e) => next(e));
+
+  if (data.Profile) {
+    await profile.update(data.Profile).catch((e) => next(e));
+  }
+
+  //Delete previous user avatar if necessary
+  // if ((req.file || data.deletefile) && user.avatar) {
+  //   try {
+  //     const filename = user.avatar.split("/uploads")[1];
+  //     fs.unlinkSync(`uploads/${filename}`);
+  //   } catch (e) {
+  //     res.status(500).json({ error: "Impossible de supprimer l'ancien avatar." })
+  //   }
+  // }
+
+  //Update user
+  user.update(data)
+  .then((user) => {
+    if (user) {
+      res.status(200).json({ message: "Utilisateur mis à jour !", user: user });
+    }
+    else {
+      res.status(500).json({ error: "Impossible de mettre à jour l'utilisateur'." });
+    }
+  }).catch((e) => next(e));
 });
 
 //Delete user
