@@ -92,6 +92,10 @@ router.post("/vote", auth, (req, res, next) => {
 
 //Create new festival
 router.post("/", auth, (req, res, next) => {
+  req.body.start = req.body.start + " 20:00:01";
+  req.body.vote = req.body.vote + " 20:00:00";
+  req.body.end = req.body.end + " 20:00:00";
+
   Festival.create(req.body)
   .then(() => res.status(200).json({ message: "Le festival a bien été créé !" }))
   .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
