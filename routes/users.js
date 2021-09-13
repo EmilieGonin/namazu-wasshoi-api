@@ -55,6 +55,21 @@ router.get("/:id", auth, (req, res, next) => {
   .catch((e) => next(e));
 });
 
+//Get User id by Character name (req.body)
+router.post("/character", auth, async (req, res, next) => {
+  Character.findOne({ where: {
+    name: req.body.name
+  }})
+  .then((character) => {
+    if (character && character.UserId) {
+      res.status(200).json({ id: character.UserId });
+    } else {
+      res.status(404).json({ error: "Ce personnage ne possède pas encore de profil." });
+    }
+  })
+  .catch((e) => next(e));
+});
+
 //Signup
 router.post("/signup", (req, res, next) => {
   Team.findOne({ where: { name: req.body.team }})
