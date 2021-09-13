@@ -16,5 +16,12 @@ router.get("/:name", (req, res, next) => {
   })
   .catch((e) => next(e));
 });
+router.put("/:id", (req, res, next) => {
+  Parameter.findByPk(req.params.id)
+  .then((parameter) => {
+    parameter.update({ data: !parameter.data }).then(() => res.status(200).json({ message: "Le paramètre a bien été modifié !" }))
+  })
+  .catch((e) => next(e));
+});
 
 module.exports = router;
