@@ -18,15 +18,15 @@ module.exports = {
         allowNull: false,
         unique: true
       },
-      start_date: {
+      start: {
         type: Sequelize.DATE,
         unique: true
       },
-      vote_date: {
+      vote: {
         type: Sequelize.DATE,
         unique: true
       },
-      end_date: {
+      end: {
         type: Sequelize.DATE,
         unique: true
       }

@@ -18,10 +18,10 @@ router.get("/now", (req, res, next) => {
   //Find current festival with date
   Festival.findOne({
     where: {
-      start_date: {
+      start: {
         [Op.lte]: now
       },
-      end_date: {
+      end: {
         [Op.gte]: now
       }
     }, include: Screenshot

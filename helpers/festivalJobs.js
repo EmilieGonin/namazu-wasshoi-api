@@ -20,16 +20,16 @@ function setWinners(id) {
 }
 
 Festival.afterCreate("addJob", (festival) => {
-  if (festival.end_date && festival.end_date > now) {
-    schedule.scheduleJob(festival.theme, festival.end_date, function() {
+  if (festival.end && festival.end > now) {
+    schedule.scheduleJob(festival.theme, festival.end, function() {
       setWinners(festival.id);
     });
   }
 })
 Festival.afterUpdate("updateJob", (festival) => {
-  if (festival.changed("end_date") && festival.end_date > now) {
+  if (festival.changed("end_date") && festival.end > now) {
     const job = schedule.scheduledJobs[festival.theme];
-    job.reschedule(festival.end_date, function() {
+    job.reschedule(festival.end, function() {
       setWinners(festival.id);
     });
   }
@@ -43,7 +43,7 @@ Festival.afterDestroy("cancelJob", (festival) => {
 
 Festival.findAll({
   where: {
-    end_date: {
+    end: {
       [Op.gte]: now
     }
   }
@@ -52,7 +52,7 @@ Festival.findAll({
   for (let festival of festivals) {
     const isScheduled = schedule.scheduledJobs[festival.theme];
     if (!isScheduled) {
-      schedule.scheduleJob(festival.theme, festival.end_date, function() {
+      schedule.scheduleJob(festival.theme, festival.end, function() {
         setWinners(festival.id);
       });
     }
