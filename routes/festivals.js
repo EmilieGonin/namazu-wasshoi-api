@@ -49,6 +49,16 @@ router.get("/:id", (req, res, next) => {
   .catch(() => res.status(500).json({ error: "Une erreur s'est produite." }));
 });
 
+//Edit one festival by id
+router.put("/:id", (req, res, next) => {
+  Festival.findByPk(req.params.id)
+  .then((festival) => {
+    festival.update(req.body)
+    .then(() => res.status(200).json({ message: "Le festival a bien été mis à jour." }))
+  })
+  .catch((e) => next(e));
+});
+
 //Add vote (FestivalId, UserId, ScreenshotId)
 router.post("/vote", auth, (req, res, next) => {
   Festival.findByPk(req.body.FestivalId, { include: Vote })
