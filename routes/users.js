@@ -27,7 +27,7 @@ router.get("/", auth, async (req, res, next) => {
 });
 
 //Get all users by roles
-router.get("/roles", auth, async (req, res, next) => {
+router.get("/roles", async (req, res, next) => {
   const golden = await User.findAll({
     where: {
       isGolden: true
