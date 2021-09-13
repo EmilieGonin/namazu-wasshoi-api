@@ -50,13 +50,13 @@ module.exports = {
     }, {
       edition: 15,
       theme: "Si je n'étais pas guerrier de la lumière, je serais...",
-      start: "2021-08-29 20:01",
+      start: "2021-08-29 20:00:01",
       vote: "2021-09-24 20:00",
       end: "2021-09-26 20:00"
     }, {
       edition: 16,
       theme: "TBA",
-      start: "2021-09-26 20:01",
+      start: "2021-09-26 20:00:01",
       vote: "2021-10-29 20:00",
       end: "2021-10-31 20:00"
     }])
