@@ -70,6 +70,7 @@ router.post("/signup", (req, res, next) => {
       transport.sendMail(mail);
 
       res.status(201).json({
+        message: "Inscription validée !",
         user: user,
         token: jwt.sign(
           { userId: user.id },
@@ -96,6 +97,7 @@ router.post("/login", async (req, res, next) => {
 
   if (await user.passwordIsValid(req.body.password)) {
     res.status(200).json({
+      message: "Connexion réussie !",
       user: user,
       token: jwt.sign(
         { userId: user.id },
