@@ -37,7 +37,7 @@ router.post("/", auth, multer, async (req, res, next) => {
   }
 
   //Upload screenshot
-  cloudinary.uploader.upload(file, { public_id: filename.split(".")[0], folder: festival ? "festivals/" + festival.edition : null, quality: "auto:best", format: "jpg" }, (e, upload) => {
+  cloudinary.uploader.upload(file, { public_id: filename.split(".")[0], folder: festival ? "festivals/" + festival.edition : null, quality: "auto:best", format: "jpg", aspect_ratio: festival ? "16:9" : null, crop: festival ? "crop" : null }, (e, upload) => {
     if (e) {
       return next(e);
     } else {
