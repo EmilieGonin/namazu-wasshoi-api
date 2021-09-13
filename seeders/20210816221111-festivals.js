@@ -49,10 +49,16 @@ module.exports = {
       end_date: "2021-08-29 20:00"
     }, {
       edition: 15,
-      theme: "TBA",
+      theme: "Si je n'étais pas guerrier de la lumière, je serais...",
       start_date: "2021-08-29 20:01",
       vote_date: "2021-09-24 20:00",
       end_date: "2021-09-26 20:00"
+    }, {
+      edition: 16,
+      theme: "TBA",
+      start_date: "2021-09-26 20:01",
+      vote_date: "2021-10-29 20:00",
+      end_date: "2021-10-31 20:00"
     }])
   },
 

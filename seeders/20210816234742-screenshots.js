@@ -3,48 +3,30 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert("Screenshots", [{
-      description: "Test - 1",
-      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
+      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1631542495/festivals/14/Nexara_compressed_zlvf2k.png",
       isWinner: true,
-      festival: 13,
+      festival: 14,
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      description: "Test - 2",
-      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629291960/sample_2_hjyqow.png",
+      description: "Sur une scène de sable fin, une danseuse solitaire répète, au rythme des vagues.",
+      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1631543007/festivals/14/Jalee_compressed_z0zwxl.png",
       isWinner: true,
-      festival: 13,
+      festival: 14,
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      description: "Test - 3",
+      description: "Test",
       url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
       festival: 14,
       createdAt: new Date(),
-      updatedAt: new Date(),
-      votes: 10
-    }, {
-      description: "Test - 4",
-      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png",
-      isWinner: true,
-      festival: 14,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      votes: 1
-    }, {
-      description: "Test - 5",
-      url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629291960/sample_2_hjyqow.png",
-      isWinner: true,
-      festival: 14,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      votes: 7
+      updatedAt: new Date()
     }])
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete("Screenshots", [{
-      url: ["https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png", "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629291960/sample_2_hjyqow.png"]
+      url: ["https://res.cloudinary.com/hh2lzr1uk/image/upload/v1629158322/sample_q9p7g1.png", "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1631542495/festivals/14/Nexara_compressed_zlvf2k.png", "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1631543007/festivals/14/Jalee_compressed_z0zwxl.png"]
     }]);
   }
 };
