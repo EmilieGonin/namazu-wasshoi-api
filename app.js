@@ -5,17 +5,17 @@ const port = process.env.PORT || "3000";
 const emptyTemp = require("./middlewares/emptyTemp");
 require('./helpers/festivalJobs');
 
-//Hello World Test
-app.get("/", (req, res) => {
-	res.send("Hello World");
-})
-
 app.use(cors({
 	origin: "*",
 	credentials: true,
 	allowHeaders: "Authorization"
 }));
 app.options("*", cors());
+
+//Hello World Test
+app.get("/", (req, res) => {
+	res.send("Hello World");
+})
 
 app.use(express.json());
 app.use("/applicants", require("./routes/applicants"));
