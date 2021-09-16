@@ -12,8 +12,10 @@ app.get("/", (req, res) => {
 
 app.use(cors({
 	origin: "*",
-	credentials: true
+	credentials: true,
+	allowHeaders: "Authorization"
 }));
+app.options("*", cors());
 
 app.use(express.json());
 app.use("/applicants", require("./routes/applicants"));
