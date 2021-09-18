@@ -122,7 +122,7 @@ router.post("/signup", (req, res, next) => {
         token: jwt.sign(
           { userId: user.id },
           process.env.SECRET,
-          { expiresIn: "24h" }
+          { expiresIn: "7d" }
         )
       })
     })
@@ -153,7 +153,7 @@ router.post("/login", async (req, res, next) => {
       token: jwt.sign(
         { userId: user.id },
         process.env.SECRET,
-        { expiresIn: "24h" }
+        { expiresIn: "7d" }
       )
     });
   }
