@@ -3,7 +3,7 @@ const router = express.Router();
 const { xivapi, fcId } = require("../helpers/xivapi");
 
 router.get("/", (req, res, next) => {
-  const staffRoles = ["Maître", "Bras droit", "Officier"];
+  const staffRoles = ["Maître", "Bras droit", "Jeune officier", "Officier"];
   const staffMembers = [];
 
   xivapi.freecompany.get(fcId, {data: "FCM"})
