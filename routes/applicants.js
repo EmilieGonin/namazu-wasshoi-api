@@ -20,15 +20,22 @@ router.get("/", auth, async (req, res, next) => {
 
 //Post new applicant
 router.post("/new", async (req, res, next) => {
-  const applicant = await Applicant.create(req.body, {
-    include: [ Profile, Character ]
-  }).catch(() => {
+  //Check if character doesn't already exist
+  const character = await Character.findOne({
+    where: { name: req.body.Character.name }
+  });
+
+  if (character) {
     const error = {
       status: 400,
-      message: "Une erreur s'est produite. Si vous aviez déjà postulé, vous ne pourrez pas le faire une seconde fois."
+      message: "Vous ne pouvez pas postuler à plusieurs reprises. S'il s'agit d'une erreur, veuillez nous contacter sur Discord."
     }
     next(error);
-  })
+  }
+
+  const applicant = await Applicant.create(req.body, {
+    include: [ Profile, Character ]
+  }).catch((e) => next(e));
 
   const staffMails = [];
   const staff = await User.findAll({
