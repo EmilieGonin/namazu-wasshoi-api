@@ -1,5 +1,4 @@
 const { Applicant, Profile, Character, User } = require("../models/index");
-const { transport, mailTemplate } = require("../helpers/nodemailer");
 const { client } = require("../bot/gyoshoi");
 const express = require('express');
 const router = express.Router();
@@ -37,24 +36,6 @@ router.post("/new", async (req, res, next) => {
   const applicant = await Applicant.create(req.body, {
     include: [ Profile, Character ]
   }).catch((e) => next(e));
-
-  const staffMails = [];
-  const staff = await User.findAll({
-    where: { isAdmin: true },
-    attributes: ["email"]
-  }).catch((e) => next(e));
-
-   for (const user of staff) {
-     staffMails.push(user.email);
-   }
-
-  const message = `
-    ${req.body.Character.name} (${req.body.Profile.discord}) a posté sa candidature sur le site !
-  `
-  for (const staffMail of staffMails) {
-    const mail = mailTemplate(staffMail, "Une nouvelle candidature est disponible sur Namazu Wasshoi !", message);
-    transport.sendMail(mail);
-  }
 
   //Send Discord notification
   const channel = client.channels.cache.get('674550105113755660');

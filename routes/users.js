@@ -1,5 +1,4 @@
 const { User, Team, Profile, Character } = require("../models/index");
-const { transport, mailTemplate } = require("../helpers/nodemailer");
 const jwt = require("jsonwebtoken");
 const fs = require('fs');
 const express = require('express');
@@ -127,12 +126,6 @@ router.post("/signup", (req, res, next) => {
       include: [ Profile, Character ]
     })
     .then((user) => {
-      const message = `
-        Bienvenue parmi nous, ${req.body.Character.name} !<br/><br/>Tu peux désormais te connecter à ton compte en utilisant l'adresse email et le mot de passe que tu as renseigné lors de ton inscription.<br/><br/>En cas de problème, n'hésites pas à contacter la GM sur Discord ! (Yuuna#5839)
-      `;
-      const mail = mailTemplate(req.body.email, "Bienvenue sur Namazu Wasshoi !", message);
-      transport.sendMail(mail);
-
       res.status(201).json({
         message: "Inscription validée !",
         user: user,
