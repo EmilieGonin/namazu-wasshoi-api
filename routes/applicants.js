@@ -59,7 +59,7 @@ router.post("/new", async (req, res, next) => {
   //Send Discord notification
   const channel = client.channels.cache.get('674550105113755660');
   if (channel) {
-    channel.send('@everyone Une nouvelle candidature est disponible sur le site, wasshoi !');
+    channel.send('@everyone Une nouvelle candidature est disponible sur le site, wasshoi ! https://namazuwasshoi.com/');
   }
 
   res.status(201).json({ message: "Merci ! Ta candidature a bien été envoyée." });
