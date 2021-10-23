@@ -1,6 +1,6 @@
 const { Applicant, Profile, Character, User } = require("../models/index");
 const { transport, mailTemplate } = require("../helpers/nodemailer");
-const { client } = require("../helpers/wasshobot");
+const { client } = require("../bot/gyoshoi");
 const express = require('express');
 const router = express.Router();
 const auth = require("../middlewares/auth");
