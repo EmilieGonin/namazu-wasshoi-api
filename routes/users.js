@@ -28,31 +28,48 @@ router.get("/", auth, async (req, res, next) => {
 
 //Get all users by roles
 router.get("/roles", async (req, res, next) => {
-  const golden = await User.findAll({
+  let golden = await User.findAll({
     where: {
       isGolden: true
     },
     include: [ Character ]
   }).catch((e) => next(e));
 
-  const lunar = await User.findOne({
+  if (golden.length) {
+    const users = [];
+    for (const user of golden) {
+      users.push(user.Character.name)
+    }
+
+    golden = users;
+  }
+
+  let lunar = await User.findOne({
     where: {
       isLunar: true
     },
     include: [ Character ]
   }).catch((e) => next(e));
 
-  const fail = await User.findOne({
+  if (lunar) {
+    lunar = lunar.Character.name;
+  }
+
+  let fail = await User.findOne({
     where: {
       isFail: true
     },
     include: [ Character ]
   }).catch((e) => next(e));
 
+  if (fail) {
+    fail = fail.Character.name;
+  }
+
   const roles = {
-    golden: golden.length ? golden.Character.name : null,
-    lunar: lunar ? lunar.Character.name : null,
-    fail: fail ? fail.Character.name : null
+    golden: golden.length ? golden : null,
+    lunar: lunar ? lunar : null,
+    fail: fail ? fail : null
   }
 
   res.status(200).json({ roles });
