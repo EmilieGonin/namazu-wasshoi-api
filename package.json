@@ -13,6 +13,10 @@
     "type": "git",
     "url": "https://github.com/EmilieGonin/namazu-wasshoi-api"
   },
+  "engines": {
+    "node": "16.6.0",
+    "npm": "8.1.1"
+  },
   "dependencies": {
     "@xivapi/js": "^0.3.2",
     "bcrypt": "^5.0.1",
