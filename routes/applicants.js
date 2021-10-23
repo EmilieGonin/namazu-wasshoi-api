@@ -1,5 +1,6 @@
 const { Applicant, Profile, Character, User } = require("../models/index");
 const { transport, mailTemplate } = require("../helpers/nodemailer");
+const { client } = require("../helpers/wasshobot");
 const express = require('express');
 const router = express.Router();
 const auth = require("../middlewares/auth");
@@ -53,6 +54,12 @@ router.post("/new", async (req, res, next) => {
   for (const staffMail of staffMails) {
     const mail = mailTemplate(staffMail, "Une nouvelle candidature est disponible sur Namazu Wasshoi !", message);
     transport.sendMail(mail);
+  }
+
+  //Send Discord notification
+  const channel = client.channels.cache.get('674550105113755660');
+  if (channel) {
+    channel.send('@everyone Une nouvelle candidature est disponible sur le site, wasshoi !');
   }
 
   res.status(201).json({ message: "Merci ! Ta candidature a bien été envoyée." });
