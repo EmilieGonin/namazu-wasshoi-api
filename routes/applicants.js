@@ -20,30 +20,38 @@ router.get("/", auth, async (req, res, next) => {
 
 //Post new applicant
 router.post("/new", async (req, res, next) => {
-  //Check if character doesn't already exist
+  //Check if character or profile doesn't already exist
   const character = await Character.findOne({
     where: { name: req.body.Character.name }
   });
 
-  if (character) {
+  const profile = await Profile.findOne({
+    where: { discord: req.body.Profile.discord }
+  });
+
+  if (character || profile) {
     const error = {
       status: 400,
       message: "Vous ne pouvez pas postuler à plusieurs reprises. S'il s'agit d'une erreur, veuillez nous contacter sur Discord."
     }
     next(error);
+  } else {
+    const applicant = await Applicant.create(req.body, {
+      include: [ Profile, Character ]
+    });
+
+    if (applicant) {
+      //Send Discord notification
+      const channel = client.channels.cache.get('674550105113755660');
+      if (channel) {
+        channel.send('@everyone Une nouvelle candidature est disponible sur le site, wasshoi ! https://namazuwasshoi.com/');
+      }
+
+      res.status(201).json({ message: "Merci ! Ta candidature a bien été envoyée." });
+    } else {
+      next(error);
+    }
   }
-
-  const applicant = await Applicant.create(req.body, {
-    include: [ Profile, Character ]
-  }).catch((e) => next(e));
-
-  //Send Discord notification
-  const channel = client.channels.cache.get('674550105113755660');
-  if (channel) {
-    channel.send('@everyone Une nouvelle candidature est disponible sur le site, wasshoi ! https://namazuwasshoi.com/');
-  }
-
-  res.status(201).json({ message: "Merci ! Ta candidature a bien été envoyée." });
 });
 
 //Delete applicant
