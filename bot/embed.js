@@ -3,7 +3,20 @@ const embed = {
   title: "Test"
 }
 
-const planning = {
+const event = {
+  fields: [
+    { name: '** **', value: '** **' },
+    { name: ':calendar: Date', value: '`date`', inline: true },
+    { name: ':clock1: Heure de départ', value: '`hour`', inline: true },
+    { name: '** **', value: '** **', inline: true },
+    { name: '** **', value: '<:Tank:674261754225754152> **Tanks**', inline: true },
+    { name: '** **', value: '<:Healer:674261739239637003> **Healers**', inline: true },
+    { name: '** **', value: '<:DPS:674261714870468610> **DPS**', inline: true },
+    { name: '** **', value: '** **' },
+  ]
+}
+
+const activities = {
   cartes: {
     color: "#ffd700",
     title: "🔹Cartes aux trésors",
@@ -13,8 +26,7 @@ const planning = {
     // },
     image: {
       url: "attachment://cartes.png"
-    },
-    fields: []
+    }
   },
   atelier: {
     color: "#ffd700",
@@ -29,4 +41,4 @@ const planning = {
   },
 }
 
-module.exports = { planning, embed };
+module.exports = { embed, event, activities };

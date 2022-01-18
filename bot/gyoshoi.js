@@ -1,5 +1,5 @@
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
-const { planning, embed } = require('./embed');
+const { embed, event, activities } = require('./embed');
 const token = process.env.WASSHOBOT_KEY;
 
 const client = new Client({
@@ -41,9 +41,10 @@ client.on('messageCreate', msg => {
       .then(() => {
         msg.delete();
       })
-    } else if (!planning[type]) {
+    } else if (!activities[type]) {
       const types = [];
-      for (let type in planning) {
+
+      for (let type in activities) {
         types.push(' ' + type)
       }
 
@@ -52,25 +53,16 @@ client.on('messageCreate', msg => {
         msg.delete();
       })
     } else {
-      planning[type].fields.unshift(
-        { name: ':calendar: Date', value: '`' + date + '`', inline: true },
-        { name: ':clock1: Heure de départ', value: '`' + hour + '`', inline: true },
-        { name: '** **', value: '** **', inline: true }
-      );
+      for (let i in activities[type]) {
+        event[i] = activities[type][i];
+      }
 
-      // const emojiTank = client.emojis.get()
-
-      planning[type].fields.push(
-        { name: '** **', value: '<:Tank:674261754225754152> **Tanks**', inline: true },
-        { name: '** **', value: '<:Healer:674261739239637003> **Healers**', inline: true },
-        { name: '** **', value: '<:DPS:674261714870468610> **DPS**', inline: true }
-      );
+      event.fields[1].value = '`' + date + '`';
+      event.fields[2].value = '`' + hour + '`';
 
       msg.delete();
-      msg.channel.send({ embeds: [planning[type]], files: [file] })
+      msg.channel.send({ embeds: [event], files: [file] })
       .then(msg => {
-        planning[type].fields = [];
-
         const filter = (reaction, user) => {
           return ['901253049077612584'].includes(reaction.emoji.id) && !user.bot;
         };
