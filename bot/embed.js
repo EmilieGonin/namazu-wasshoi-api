@@ -13,7 +13,10 @@ const event = {
     { name: '** **', value: '<:Healer:674261739239637003> **Healers**', inline: true },
     { name: '** **', value: '<:DPS:674261714870468610> **DPS**', inline: true },
     { name: '** **', value: '** **' },
-  ]
+  ],
+  footer: {
+    text: 'Consultez les messages épinglés pour obtenir de l\'aide.'
+  }
 }
 
 const activities = {
