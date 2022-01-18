@@ -54,14 +54,16 @@ client.on('messageCreate', msg => {
     } else {
       planning[type].fields.unshift(
         { name: ':calendar: Date', value: '`' + date + '`', inline: true },
-        { name: ':clock1: Heure de départ', value: '`' + hour + '`', inline: true }
+        { name: ':clock1: Heure de départ', value: '`' + hour + '`', inline: true },
+        { name: '** **', value: '** **', inline: true }
       );
 
       // const emojiTank = client.emojis.get()
 
       planning[type].fields.push(
         { name: '** **', value: '<:Tank:674261754225754152> **Tanks**', inline: true },
-        { name: ':Healer: **Healers**', value: '** **', inline: true }
+        { name: '** **', value: '<:Healer:674261739239637003> **Healers**', inline: true },
+        { name: '** **', value: '<:DPS:674261714870468610> **DPS**', inline: true }
       );
 
       msg.delete();
