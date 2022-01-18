@@ -74,9 +74,14 @@ client.on('messageCreate', msg => {
           console.log(user.username);
         });
 
-        msg.react('<:Tank:674261754225754152>')
-        .then(() => msg.react('<:Healer:674261739239637003>'))
-        .then(() => msg.react('<:DPS:674261714870468610>'))
+        msg.react('<:Tank:933062548046106665>')
+        .then(() => msg.react('<:Healer:933062562076057671>'))
+        .then(() => msg.react('<:Melee_DPS:933062571836182548>'))
+        .then(() => msg.react('<:Physical_Ranged_DPS:933062582326136872>'))
+        .then(() => msg.react('<:Magic_Ranged_DPS:933062594158276659> '))
+        .then(() => msg.react('<:Dispo_si_besoin:933068148360487023>'))
+        .then(() => msg.react('<:Maybe:933068124037709854>'))
+        .then(() => msg.react('<:Pas_dispo:933068138550018108>'))
         .catch(error => console.error(error));
       })
     }
