@@ -69,6 +69,7 @@ client.on('messageCreate', msg => {
       msg.delete();
       msg.channel.send({ embeds: [planning[type]], files: [file] })
       .then(msg => {
+        planning[type].fields = [];
         msg.react('901253049077612584');
 
         const filter = (reaction, user) => {
