@@ -70,7 +70,6 @@ client.on('messageCreate', msg => {
       msg.channel.send({ embeds: [planning[type]], files: [file] })
       .then(msg => {
         planning[type].fields = [];
-        msg.react('901253049077612584');
 
         const filter = (reaction, user) => {
           return ['901253049077612584'].includes(reaction.emoji.id) && !user.bot;
@@ -82,6 +81,11 @@ client.on('messageCreate', msg => {
           console.log(reaction.emoji.name);
           console.log(user.username);
         });
+
+        msg.react('<:Tank:674261754225754152>')
+        .then(() => msg.react('<:Healer:674261739239637003>'))
+        .then(() => msg.react('<:DPS:674261714870468610>'))
+        .catch(error => console.error(error));
       })
     }
   }
