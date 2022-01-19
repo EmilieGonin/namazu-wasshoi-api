@@ -77,30 +77,51 @@ client.on('messageCreate', msg => {
         };
 
         const reactions = {
-          tank: 0,
-          healer: 0,
-          melee_dps: 0,
-          physical_ranged_dps: 0,
-          magic_ranged_dps: 0,
-          dispo_si_besoin: 0,
-          maybe: 0,
-          pas_dispo: 0,
+          roles: {
+            tank: 0,
+            healer: 0,
+            melee_dps: 0,
+            physical_ranged_dps: 0,
+            magic_ranged_dps: 0
+          },
+          state: {
+            dispo_si_besoin: 0,
+            maybe: 0,
+            pas_dispo: 0
+          },
           users: []
         }
 
         const collector = msg.createReactionCollector({ filter, time: 100000, dispose: true});
 
         collector.on('collect', (reaction, user) => {
+          const emoji = reaction.emoji.name.toLowerCase();
           const i = reactions.users.findIndex(item => item.id == user.id);
+          const userFound = i != -1;
 
-          if (i != -1) {
-            reactions[reactions.users[i].role]--;
-            reactions.users.splice(i, 1);
+          if (reactions.roles.hasOwnProperty(emoji)) {
+            if (userFound) {
+              reactions.roles[reactions.users[i].role]--;
+              reactions.users[i].role = emoji;
+
+              if (reactions.users[i].state) {
+                reactions.state[reactions.users[i].state]--;
+                reactions.users[i].state = '';
+              }
+            } else {
+              reactions.users.push({ id: user.id, role: emoji});
+            }
+            reactions.roles[emoji] ++;
+          } else if (!userFound) {
+            console.log("Sélectionnez d'abord un rôle.");
+          } else {
+            if (reactions.users[i].state) {
+              reactions.state[reactions.users[i].state]--;
+            }
+            reactions.state[emoji] ++;
+            reactions.users[i].state = emoji;
           }
 
-          const emoji = reaction.emoji.name.toLowerCase();
-          reactions[emoji] ++;
-          reactions.users.push({ id: user.id, role: emoji});
           reaction.users.remove(user);
           console.log(reactions);
           console.log(reaction.emoji.name);
