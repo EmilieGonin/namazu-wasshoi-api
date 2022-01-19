@@ -1,5 +1,5 @@
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
-const { embed, event, activities } = require('./embed');
+const { embed, activities } = require('./embed');
 const token = process.env.WASSHOBOT_KEY;
 
 const client = new Client({
@@ -27,7 +27,14 @@ client.on('messageCreate', msg => {
   const isAdmin = msg.member.roles.cache.has(roles.test);
   // const isAdmin = true;
   const string = msg.content.toLowerCase();
+
   if (!msg.author.bot && isAdmin && string.includes('!planning')) {
+    let event = {
+      footer: {
+        text: 'Consultez les messages épinglés pour obtenir de l\'aide.'
+      }
+    };
+    
     const type = string.split(' ')[1];
     const date = string.split(' ')[2];
     const hour = string.split(' ')[3];
@@ -57,8 +64,14 @@ client.on('messageCreate', msg => {
         event[i] = activities[type][i];
       }
 
-      event.fields[1].value = '`' + date + '`';
-      event.fields[2].value = '`' + hour + '`';
+      basicFields = [
+        { name: '** **', value: '** **' },
+        { name: ':calendar: Date', value: '`' + date + '`', inline: true },
+        { name: ':clock1: Heure de départ', value: '`' + hour + '`', inline: true },
+        { name: '** **', value: '** **', inline: true },
+      ]
+
+      event.fields = basicFields;
 
       msg.delete();
       msg.channel.send({ embeds: [event], files: [file] })
