@@ -34,7 +34,7 @@ client.on('messageCreate', msg => {
         text: 'Consultez les messages épinglés pour obtenir de l\'aide.'
       }
     };
-    
+
     const type = string.split(' ')[1];
     const date = string.split(' ')[2];
     const hour = string.split(' ')[3];
@@ -139,6 +139,40 @@ client.on('messageCreate', msg => {
           console.log(reactions);
           console.log(reaction.emoji.name);
           console.log(user.username);
+
+          let newFields = [];
+          let newField = { name: '** **', inline: true };
+
+          if (reactions.roles.tank) {
+            newField.value = '<:Tank:933062548046106665> **Tanks** (' + reactions.roles.tank + ')'
+            newFields.push(newField);
+          }
+
+          if (reactions.roles.healer) {
+            newField.value = '<:Healer:933062562076057671> **Healers** (' + reactions.roles.healer + ')'
+            newFields.push(newField);
+          }
+
+          if (reactions.roles.melee_dps) {
+            newField.value = '<:Melee_DPS:933062571836182548> **DPS de mêlée** (' + reactions.roles.melee_dps + ')'
+            newFields.push(newField);
+          }
+
+          if (reactions.roles.physical_ranged_dps) {
+            newField.value = '<:Physical_Ranged_DPS:933062582326136872> **DPS à distance physiques** (' + reactions.roles.physical_ranged_dps + ')'
+            newFields.push(newField);
+          }
+
+          if (reactions.roles.magic_ranged_dps) {
+            newField.value = '<:Magic_Ranged_DPS:933062594158276659> **DPS à distance magiques** (' + reactions.roles.magic_ranged_dps + ')'
+            newFields.push(newField);
+          }
+
+          // newFields.push({ name: '** **', value: '** **' });
+
+          event.fields = [...basicFields, ...newFields];
+
+          msg.edit({ embeds: [event] });
         });
 
         msg.react('<:Tank:933062548046106665>')
