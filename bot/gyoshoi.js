@@ -109,7 +109,7 @@ client.on('messageCreate', msg => {
                 reactions.users[i].state = '';
               }
             } else {
-              reactions.users.push({ id: user.id, role: emoji});
+              reactions.users.push({ id: user.id, username: user.username, role: emoji});
             }
             reactions.roles[emoji] ++;
           } else if (!userFound) {
