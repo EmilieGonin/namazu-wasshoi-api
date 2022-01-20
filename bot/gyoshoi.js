@@ -77,7 +77,7 @@ client.on('messageCreate', msg => {
         { name: '** **', value: '** **' },
         { name: ':calendar: Date', value: '`' + date + '`', inline: true },
         { name: ':clock1: Heure de départ', value: '`' + hour + ':00`', inline: true },
-        { name: '**Inscrits**', value: '0', inline: true },
+        { name: '<:Inscrits:933695822028226601> **Inscrits**', value: '`0`', inline: true },
       ]
 
       event.fields = basicFields;
@@ -178,7 +178,7 @@ client.on('messageCreate', msg => {
           }
 
           // newFields.push({ name: '** **', value: '** **' });
-
+          basicFields[3] = { name: '<:Inscrits:933695822028226601> **Inscrits**', value: '`' + reactions.users.length + '`', inline: true };
           event.fields = [...basicFields, ...newFields];
 
           msg.edit({ embeds: [event] });
