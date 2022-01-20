@@ -2,6 +2,10 @@ const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js
 const { embed, activities } = require('./embed');
 const token = process.env.WASSHOBOT_KEY;
 
+//date
+const { parse, format, isValid } = require('date-fns');
+const fr = require('date-fns/locale/fr');
+
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]
 });
@@ -36,15 +40,18 @@ client.on('messageCreate', msg => {
     };
 
     const type = string.split(' ')[1];
-    const date = string.split(' ')[2];
     const hour = string.split(' ')[3];
-    // console.log(type);
-    // console.log(date);
-    // console.log(hour);
+    const parsedDate = parse(string.split(' ')[2] + ':' + hour, 'dd/MM/yyyy:HH', new Date())
+
     const file = new MessageAttachment('./assets/' + type + '.png');
 
-    if (!type || !date || !hour) {
+    if (!type || !parsedDate || !hour) {
       msg.reply(':warning: Veuillez préciser un type de sortie, une date et une heure de départ.\n\n🔹**Exemple :** `!planning cartes 01/01/2022 21`')
+      .then(() => {
+        msg.delete();
+      })
+    } else if (parsedDate && !isValid(parsedDate)) {
+      msg.reply(':warning: Le format de la date et/ou de l\'heure est incorrect.\n\n🔹**Exemple :** `!planning cartes 01/01/2022 21`')
       .then(() => {
         msg.delete();
       })
@@ -60,6 +67,8 @@ client.on('messageCreate', msg => {
         msg.delete();
       })
     } else {
+      const date = format(parsedDate, 'E d MMMM', { locale: fr });
+
       for (let i in activities[type]) {
         event[i] = activities[type][i];
       }
@@ -67,8 +76,8 @@ client.on('messageCreate', msg => {
       basicFields = [
         { name: '** **', value: '** **' },
         { name: ':calendar: Date', value: '`' + date + '`', inline: true },
-        { name: ':clock1: Heure de départ', value: '`' + hour + '`', inline: true },
-        { name: '** **', value: '** **', inline: true },
+        { name: ':clock1: Heure de départ', value: '`' + hour + ':00`', inline: true },
+        { name: '**Inscrits**', value: '0', inline: true },
       ]
 
       event.fields = basicFields;
