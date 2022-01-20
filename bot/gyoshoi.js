@@ -35,7 +35,8 @@ client.on('messageCreate', msg => {
   if (!msg.author.bot && isAdmin && string.includes('!planning')) {
     let event = {
       footer: {
-        text: 'Consultez les messages épinglés pour obtenir de l\'aide.'
+        text: 'Consultez les messages épinglés pour obtenir de l\'aide.',
+        icon_url: 'https://i.goopics.net/fc2ntk.png'
       }
     };
 
