@@ -33,7 +33,7 @@ client.on('messageCreate', msg => {
   const string = msg.content.toLowerCase();
 
   if (!msg.author.bot && isAdmin && string.includes('!planning')) {
-    let event = {
+    const event = {
       footer: {
         text: 'Consultez les messages épinglés pour obtenir de l\'aide.',
         icon_url: 'https://i.goopics.net/fc2ntk.png'
@@ -43,8 +43,6 @@ client.on('messageCreate', msg => {
     const type = string.split(' ')[1];
     const hour = string.split(' ')[3];
     const parsedDate = parse(string.split(' ')[2] + ':' + hour, 'dd/MM/yyyy:HH', new Date())
-
-    const file = new MessageAttachment('./assets/' + type + '.png');
 
     if (!type || !parsedDate || !hour) {
       msg.reply(':warning: Veuillez préciser un type de sortie, une date et une heure de départ.\n\n🔹**Exemple :** `!planning cartes 01/01/2022 21`')
@@ -82,6 +80,7 @@ client.on('messageCreate', msg => {
       ]
 
       event.fields = basicFields;
+      const file = new MessageAttachment('./assets/' + type + '.png');
 
       msg.delete();
       msg.channel.send({ embeds: [event], files: [file] })
