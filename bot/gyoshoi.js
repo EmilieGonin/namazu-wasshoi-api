@@ -1,10 +1,11 @@
+const { DiscordEvent, DiscordUser, DiscordUserEvents } = require("../models/index");
+
+const { parse, format, isValid, getTime } = require('date-fns');
+const fr = require('date-fns/locale/fr');
+
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
 const { embed, activities } = require('./embed');
-const token = process.env.WASSHOBOT_KEY;
-
-//date
-const { parse, format, isValid } = require('date-fns');
-const fr = require('date-fns/locale/fr');
+const discordToken = process.env.WASSHOBOT_KEY;
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]
@@ -26,7 +27,7 @@ client.on('messageCreate', msg => {
   }
 })
 
-//Planning
+// !planning type date hour
 client.on('messageCreate', msg => {
   const isAdmin = msg.member.roles.cache.has(roles.test);
   // const isAdmin = true;
@@ -199,6 +200,6 @@ client.on('messageCreate', msg => {
   }
 })
 
-client.login(token);
+client.login(discordToken);
 
 module.exports = { client };
