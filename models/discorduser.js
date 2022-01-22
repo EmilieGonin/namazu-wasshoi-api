@@ -10,12 +10,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      DiscordUser.belongsToMany(models.DiscordEvent, { through: models.DiscordUserEvents });
+      DiscordUser.hasMany(models.DiscordEventReaction);
     }
   };
   DiscordUser.init({
     discordId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
       unique: true
     },

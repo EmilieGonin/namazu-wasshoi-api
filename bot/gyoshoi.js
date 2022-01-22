@@ -1,4 +1,4 @@
-const { DiscordEvent, DiscordUser, DiscordUserEvents } = require("../models/index");
+const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
 
 const { parse, format, isValid, getTime } = require('date-fns');
 const fr = require('date-fns/locale/fr');
@@ -86,116 +86,181 @@ client.on('messageCreate', msg => {
       msg.delete();
       msg.channel.send({ embeds: [event], files: [file] })
       .then(msg => {
-        const filter = (reaction, user) => {
-          return [
-            '933062548046106665', /*Tank*/
-            '933062562076057671', /*Healer*/
-            '933062571836182548', /*Melee_DPS*/
-            '933062582326136872', /*Physical_Ranged_DPS*/
-            '933062594158276659', /*Magic_Ranged_DPS*/
-            '933068148360487023', /*Dispo_si_besoin*/
-            '933068124037709854', /*Maybe*/
-            '933068138550018108' /*Pas_dispo*/
-          ].includes(reaction.emoji.id) && !user.bot;
-        };
+        DiscordEvent.create({
+          discordId: msg.id,
+          date: parsedDate
+        }).then(discordEvent => {
+          const datas = discordEvent.dataValues;
 
-        const reactions = {
-          roles: {
-            tank: 0,
-            healer: 0,
-            melee_dps: 0,
-            physical_ranged_dps: 0,
-            magic_ranged_dps: 0
-          },
-          state: {
-            dispo_si_besoin: 0,
-            maybe: 0,
-            pas_dispo: 0
-          },
-          users: []
-        }
+          msg.react('<:Tank:933062548046106665>')
+          .then(() => msg.react('<:Healer:933062562076057671>'))
+          .then(() => msg.react('<:Melee_DPS:933062571836182548>'))
+          .then(() => msg.react('<:Physical_Ranged_DPS:933062582326136872>'))
+          .then(() => msg.react('<:Magic_Ranged_DPS:933062594158276659>'))
+          .then(() => msg.react('<:Dispo_si_besoin:933068148360487023>'))
+          .then(() => msg.react('<:Maybe:933068124037709854>'))
+          .then(() => msg.react('<:Pas_dispo:933068138550018108>'))
+          .catch(error => console.error(error));
 
-        const collector = msg.createReactionCollector({ filter, time: 100000, dispose: true});
+          const filter = (reaction, user) => {
+            return [
+              '933062548046106665', /*Tank*/
+              '933062562076057671', /*Healer*/
+              '933062571836182548', /*Melee_DPS*/
+              '933062582326136872', /*Physical_Ranged_DPS*/
+              '933062594158276659', /*Magic_Ranged_DPS*/
+              '933068148360487023', /*Dispo_si_besoin*/
+              '933068124037709854', /*Maybe*/
+              '933068138550018108' /*Pas_dispo*/
+            ].includes(reaction.emoji.id) && !user.bot;
+          };
 
-        collector.on('collect', (reaction, user) => {
-          const emoji = reaction.emoji.name.toLowerCase();
-          const i = reactions.users.findIndex(item => item.id == user.id);
-          const userFound = i != -1;
-
-          if (reactions.roles.hasOwnProperty(emoji)) {
-            if (userFound) {
-              reactions.roles[reactions.users[i].role]--;
-              reactions.users[i].role = emoji;
-
-              if (reactions.users[i].state) {
-                reactions.state[reactions.users[i].state]--;
-                reactions.users[i].state = '';
+          async function getDiscordUser(id) {
+            return await DiscordUser.findOne({
+              where: {
+                discordId: id
+              },
+              include: {
+                model: DiscordEventReaction,
+                include: [{
+                  model: DiscordEvent,
+                  where: {
+                    id: discordEvent.id
+                  },
+                  required: false
+                }]
               }
-            } else {
-              reactions.users.push({ id: user.id, username: user.username, role: emoji});
-            }
-            reactions.roles[emoji] ++;
-          } else if (!userFound) {
-            console.log("Sélectionnez d'abord un rôle.");
-          } else {
-            if (reactions.users[i].state) {
-              reactions.state[reactions.users[i].state]--;
-            }
-            reactions.state[emoji] ++;
-            reactions.users[i].state = emoji;
+          });
           }
 
-          reaction.users.remove(user);
-          console.log(reactions);
-          console.log(reaction.emoji.name);
-          console.log(user.username);
-
-          let newFields = [];
-          let newField = { name: '** **', inline: true };
-
-          if (reactions.roles.tank) {
-            newField.value = '<:Tank:933062548046106665> **Tanks** (' + reactions.roles.tank + ')'
-            newFields.push(newField);
+          async function userFound(user) {
+            const query = await user.getDiscordEventReactions({
+              where: { DiscordEventId: discordEvent.id }
+            });
+            return query.length;
           }
 
-          if (reactions.roles.healer) {
-            newField.value = '<:Healer:933062562076057671> **Healers** (' + reactions.roles.healer + ')'
-            newFields.push(newField);
+          function getJob(userId) {
+            //
           }
 
-          if (reactions.roles.melee_dps) {
-            newField.value = '<:Melee_DPS:933062571836182548> **DPS de mêlée** (' + reactions.roles.melee_dps + ')'
-            newFields.push(newField);
+          async function collector() {
+            const collector = msg.createReactionCollector({ filter, time: 100000, dispose: true});
+
+            collector.on('collect', (reaction, user) => {
+              const emoji = reaction.emoji.name.toLowerCase();
+              const roleEmoji = 'roles_' + emoji;
+              const stateEmoji = 'state_' + emoji;
+
+              if (datas.hasOwnProperty(roleEmoji)) {
+                discordEvent[roleEmoji]++;
+
+                getDiscordUser(user.id).then(discordUser => {
+                  if (discordUser) {
+                    userFound(discordUser).then(userFound => {
+                      if (userFound && user[emoji + 'Job']) {
+                        //Get user job
+                        discordEvent[roleEmoji]--;
+                        reactions.users[i].role = emoji;
+
+                        //Check if user has a state
+                        // if (reactions.users[i].state) {
+                        //   reactions.state[reactions.users[i].state]--;
+                        //   reactions.users[i].state = '';
+                        // }
+                      } else if (userFound) {
+                        //Ask job
+                      } else if (user[emoji + 'Job']) {
+                        //
+                      } else {
+                        //Ask job
+                      }
+                    })
+                  } else {
+                    //Ask job
+                    discordEvent.createDiscordEventReaction({
+                      role: emoji,
+                      DiscordUser: {
+                        discordId: user.id
+                      }
+                    }, {
+                      include: [ DiscordUser ]
+                    });
+                  }
+                })
+              } else if (!userFound) {
+                console.log("Sélectionnez d'abord un rôle."); //Ajouter mp
+              } else {
+                if (reactions.users[i].state) {
+                  reactions.state[reactions.users[i].state]--;
+                }
+                reactions.state[emoji] ++;
+                reactions.users[i].state = emoji;
+              }
+
+              reaction.users.remove(user);
+              // console.log(reactions);
+              // console.log(reaction.emoji.name);
+              // console.log(user.username);
+
+              let newFields = [];
+              let newField = { name: '** **', inline: true };
+
+              // if (reactions.roles.tank) {
+              //   const tankUsers = reactions.users.map(item => {
+              //     if (item.role == "tank" && !item.state) {
+              //       return item.username;
+              //     }
+              //   }).join('\n');
+              //   newField.value = '<:Tank:933062548046106665> **Tanks** (' + reactions.roles.tank + ')\n' + tankUsers;
+              //   newFields.push(newField);
+              // }
+              //
+              // if (reactions.roles.healer) {
+              //   newField.value = '<:Healer:933062562076057671> **Healers** (' + reactions.roles.healer + ')'
+              //   newFields.push(newField);
+              // }
+              //
+              // if (reactions.roles.melee_dps) {
+              //   newField.value = '<:Melee_DPS:933062571836182548> **DPS de mêlée** (' + reactions.roles.melee_dps + ')'
+              //   newFields.push(newField);
+              // }
+              //
+              // if (reactions.roles.physical_ranged_dps) {
+              //   newField.value = '<:Physical_Ranged_DPS:933062582326136872> **DPS à distance physiques** (' + reactions.roles.physical_ranged_dps + ')'
+              //   newFields.push(newField);
+              // }
+              //
+              // if (reactions.roles.magic_ranged_dps) {
+              //   newField.value = '<:Magic_Ranged_DPS:933062594158276659> **DPS à distance magiques** (' + reactions.roles.magic_ranged_dps + ')'
+              //   newFields.push(newField);
+              // }
+
+              // newFields.push({ name: '** **', value: '** **' });
+              // basicFields[3] = { name: '<:Inscrits:933695822028226601> **Inscrits**', value: '`' + reactions.users.length + '`', inline: true };
+              event.fields = [...basicFields, ...newFields];
+
+              // const eventIndex = event.fields.findIndex(item => item.value.includes(reaction.emoji.name));
+              // console.log(eventIndex);
+              //
+              // const map = reactions.users.map(item => item.username).join('\n');
+              //
+              // event.fields[eventIndex].value = event.fields[eventIndex].value + '\n' + map;
+              //
+              msg.edit({ embeds: [event] });
+            });
           }
-
-          if (reactions.roles.physical_ranged_dps) {
-            newField.value = '<:Physical_Ranged_DPS:933062582326136872> **DPS à distance physiques** (' + reactions.roles.physical_ranged_dps + ')'
-            newFields.push(newField);
-          }
-
-          if (reactions.roles.magic_ranged_dps) {
-            newField.value = '<:Magic_Ranged_DPS:933062594158276659> **DPS à distance magiques** (' + reactions.roles.magic_ranged_dps + ')'
-            newFields.push(newField);
-          }
-
-          // newFields.push({ name: '** **', value: '** **' });
-          basicFields[3] = { name: '<:Inscrits:933695822028226601> **Inscrits**', value: '`' + reactions.users.length + '`', inline: true };
-          event.fields = [...basicFields, ...newFields];
-
-          msg.edit({ embeds: [event] });
-        });
-
-        msg.react('<:Tank:933062548046106665>')
-        .then(() => msg.react('<:Healer:933062562076057671>'))
-        .then(() => msg.react('<:Melee_DPS:933062571836182548>'))
-        .then(() => msg.react('<:Physical_Ranged_DPS:933062582326136872>'))
-        .then(() => msg.react('<:Magic_Ranged_DPS:933062594158276659>'))
-        .then(() => msg.react('<:Dispo_si_besoin:933068148360487023>'))
-        .then(() => msg.react('<:Maybe:933068124037709854>'))
-        .then(() => msg.react('<:Pas_dispo:933068138550018108>'))
-        .catch(error => console.error(error));
+          collector();
+        })
+        .catch((e) => {
+          console.error(e);
+          msg.delete();
+        })
       })
-      .catch(error => console.error(error));
+      .catch((e) => {
+        console.error(e);
+        msg.delete();
+      })
     }
   }
 })

@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('DiscordUserEvents', {
+    await queryInterface.createTable('DiscordEventReactions', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: "DiscordUsers",
-          key: 'id'
+          key: 'id',
         }
       },
       DiscordEventId: {
@@ -39,6 +39,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('DiscordUserEvents');
+    await queryInterface.dropTable('DiscordEventReactions');
   }
 };

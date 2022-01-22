@@ -11,7 +11,7 @@ module.exports = {
       discordId: {
         allowNull: false,
         unique: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
       },
       tankJob: {
         type: Sequelize.STRING
