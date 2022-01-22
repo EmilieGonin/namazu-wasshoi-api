@@ -5,16 +5,12 @@ const fr = require('date-fns/locale/fr');
 
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
 const { embed, activities } = require('./embed');
+const { roles, emojis } = require('./ressources');
 const discordToken = process.env.WASSHOBOT_KEY;
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]
 });
-
-const roles = {
-  officier: '674204890054131712',
-  test: '932934305552941066'
-}
 
 client.once('ready', () => {
   console.log('Je suis prêt, wasshoi !');
