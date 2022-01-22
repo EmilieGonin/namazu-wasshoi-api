@@ -6,7 +6,7 @@ const fr = require('date-fns/locale/fr');
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
 const { embed, activities } = require('./embed');
 const { roles, emojis } = require('./ressources');
-const { getDiscordUser, userFound, getJob } = require('./functions');
+const { getDiscordUser, userFound, react, getJob } = require('./functions');
 const discordToken = process.env.WASSHOBOT_KEY;
 
 const client = new Client({
@@ -88,34 +88,19 @@ client.on('messageCreate', msg => {
           date: parsedDate
         }).then(discordEvent => {
           const datas = discordEvent.dataValues;
-
-          msg.react('<:Tank:933062548046106665>')
-          .then(() => msg.react('<:Healer:933062562076057671>'))
-          .then(() => msg.react('<:Melee_DPS:933062571836182548>'))
-          .then(() => msg.react('<:Physical_Ranged_DPS:933062582326136872>'))
-          .then(() => msg.react('<:Magic_Ranged_DPS:933062594158276659>'))
-          .then(() => msg.react('<:Dispo_si_besoin:933068148360487023>'))
-          .then(() => msg.react('<:Maybe:933068124037709854>'))
-          .then(() => msg.react('<:Pas_dispo:933068138550018108>'))
-          .catch(error => console.error(error));
-
-          const filter = (reaction, user) => {
-            return [
-              '933062548046106665', /*Tank*/
-              '933062562076057671', /*Healer*/
-              '933062571836182548', /*Melee_DPS*/
-              '933062582326136872', /*Physical_Ranged_DPS*/
-              '933062594158276659', /*Magic_Ranged_DPS*/
-              '933068148360487023', /*Dispo_si_besoin*/
-              '933068124037709854', /*Maybe*/
-              '933068138550018108' /*Pas_dispo*/
-            ].includes(reaction.emoji.id) && !user.bot;
-          };
+          react(msg, emojis.event);
 
           async function collector() {
-            const collector = msg.createReactionCollector({ filter, time: 100000, dispose: true});
+            const filter = (reaction, user) => {
+              return emojis.event.includes(
+                `<:${reaction.emoji.name}:${reaction.emoji.id}>`
+              ) && !user.bot;
+            };
+
+            const collector = msg.createReactionCollector({ filter, time: 100000 });
 
             collector.on('collect', (reaction, user) => {
+              reaction.users.remove(user);
               const emoji = reaction.emoji.name.toLowerCase();
               const roleEmoji = 'roles_' + emoji;
               const stateEmoji = 'state_' + emoji;
@@ -166,7 +151,6 @@ client.on('messageCreate', msg => {
                 reactions.users[i].state = emoji;
               }
 
-              reaction.users.remove(user);
               // console.log(reactions);
               // console.log(reaction.emoji.name);
               // console.log(user.username);
