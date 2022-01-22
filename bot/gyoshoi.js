@@ -6,6 +6,7 @@ const fr = require('date-fns/locale/fr');
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
 const { embed, activities } = require('./embed');
 const { roles, emojis } = require('./ressources');
+const { getDiscordUser, userFound, getJob } = require('./functions');
 const discordToken = process.env.WASSHOBOT_KEY;
 
 const client = new Client({
@@ -111,35 +112,6 @@ client.on('messageCreate', msg => {
             ].includes(reaction.emoji.id) && !user.bot;
           };
 
-          async function getDiscordUser(id) {
-            return await DiscordUser.findOne({
-              where: {
-                discordId: id
-              },
-              include: {
-                model: DiscordEventReaction,
-                include: [{
-                  model: DiscordEvent,
-                  where: {
-                    id: discordEvent.id
-                  },
-                  required: false
-                }]
-              }
-          });
-          }
-
-          async function userFound(user) {
-            const query = await user.getDiscordEventReactions({
-              where: { DiscordEventId: discordEvent.id }
-            });
-            return query.length;
-          }
-
-          function getJob(userId) {
-            //
-          }
-
           async function collector() {
             const collector = msg.createReactionCollector({ filter, time: 100000, dispose: true});
 
@@ -151,9 +123,9 @@ client.on('messageCreate', msg => {
               if (datas.hasOwnProperty(roleEmoji)) {
                 discordEvent[roleEmoji]++;
 
-                getDiscordUser(user.id).then(discordUser => {
+                getDiscordUser(user.id, discordEvent.id).then(discordUser => {
                   if (discordUser) {
-                    userFound(discordUser).then(userFound => {
+                    userFound(discordUser, discordEvent.id).then(userFound => {
                       if (userFound && user[emoji + 'Job']) {
                         //Get user job
                         discordEvent[roleEmoji]--;
