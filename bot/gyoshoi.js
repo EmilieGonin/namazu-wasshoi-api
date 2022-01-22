@@ -10,7 +10,7 @@ const { getDiscordUser, userFound, react, getJob } = require('./functions');
 const discordToken = process.env.WASSHOBOT_KEY;
 
 const client = new Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]
 });
 
 client.once('ready', () => {
@@ -26,11 +26,12 @@ client.on('messageCreate', msg => {
 
 // !planning type date hour
 client.on('messageCreate', msg => {
+  if (msg.author.bot || msg.channel.type == 'DM') { return };
+  const string = msg.content.toLowerCase();
   const isAdmin = msg.member.roles.cache.has(roles.test);
   // const isAdmin = true;
-  const string = msg.content.toLowerCase();
 
-  if (!msg.author.bot && isAdmin && string.includes('!planning')) {
+  if (string.includes('!planning') && isAdmin) {
     const event = {
       footer: {
         text: 'Consultez les messages épinglés pour obtenir de l\'aide.',
