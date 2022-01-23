@@ -103,6 +103,7 @@ client.on('messageCreate', msg => {
             collector.on('collect', (reaction, user) => {
               reaction.users.remove(user);
               const emoji = reaction.emoji.name.toLowerCase();
+              const emojiCode = `<:${reaction.emoji.name}:${reaction.emoji.id}>`
               const roleEmoji = 'roles_' + emoji;
               const stateEmoji = 'state_' + emoji;
 
@@ -131,15 +132,7 @@ client.on('messageCreate', msg => {
                       }
                     })
                   } else {
-                    //Ask job
-                    discordEvent.createDiscordEventReaction({
-                      role: emoji,
-                      DiscordUser: {
-                        discordId: user.id
-                      }
-                    }, {
-                      include: [ DiscordUser ]
-                    });
+                    getJob(user, emoji, emojiCode, discordEvent);
                   }
                 })
               } else if (!userFound) {
@@ -200,6 +193,7 @@ client.on('messageCreate', msg => {
               //
               // event.fields[eventIndex].value = event.fields[eventIndex].value + '\n' + map;
               //
+              discordEvent.save();
               msg.edit({ embeds: [event] });
             });
           }
