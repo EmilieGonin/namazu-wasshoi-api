@@ -4,6 +4,41 @@ const roles = {
 }
 
 const emojis = {
+  shoi: {
+    teams: {
+      mog: '<:ShoiMog:893475670724857866>',
+      chocobo: '<:ShoiChocobo:893475702710599711>',
+      pampa: '<:ShoiPampa:893475738953588777>',
+      carbuncle: '<:ShoiCarbuncle:893475770222133258>'
+    },
+    angel: '<:ShoiAngel:893475807811489894>',
+    blbl: '<:ShoiBlbl:893476090725683249>',
+    coffee: '<:ShoiCoffee:893475472267165736>',
+    cry: '<:ShoiCry:813510411827675237>',
+    evil: '<:ShoiEvil:893475846109659136>',
+    eyes: '<:ShoiEyes:893475509973954630>',
+    fear: '<:ShoiFear:893476198250840074>',
+    flex: '<:ShoiFlex:813510412162433064>',
+    glasses: '<:ShoiGlasses:813510412418416660>',
+    gold: '<:ShoiGold:813510412346720327>',
+    grr: '<:ShoiGrr:813510412124684318>',
+    gun: '<:ShoiGun:893475600348631051>',
+    huhu: '<:ShoiHuhu:893476054449156106>',
+    joy: '<:ShoiJoy:893475411495886848>',
+    kawaii: '<:ShoiKawaii:893475357951393823>',
+    love: '<:ShoiLove:813510412016025601>',
+    mdr: '<:ShoiMDR:813510412175278110>',
+    pls: '<:ShoiPLS:813510412103843882>',
+    party: '<:ShoiParty:813510412187992084>',
+    peek: '<:ShoiPeek:893476129535561748>',
+    punk: '<:ShoiPunk:893476000510394388>',
+    scream: '<:ShoiScream:893476161043169290>',
+    sing: '<:ShoiSing:893475635534655529>',
+    surprise: '<:ShoiSurprise:893475550549659698>',
+    think: '<:ShoiThink:813510412254838865>',
+    wave: '<:ShoiWave:813510412007243807>',
+    wasshoi: '<:Wasshoi:813510412150505472>'
+  },
   event: [
     '<:Tank:933062548046106665>',
     '<:Healer:933062562076057671>',
