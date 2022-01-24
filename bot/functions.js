@@ -58,6 +58,7 @@ async function handleReaction(reaction, user, discordEvent) {
 
   if (stateEmoji) {
     discordEventReaction.state = emoji;
+    discordEvent['roles_' + discordEventReaction.role]--;
     discordEvent['state_' + emoji]++;
   } else if (roleEmoji) {
     if (discordEventReaction.role) {
