@@ -6,7 +6,7 @@ const fr = require('date-fns/locale/fr');
 
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
 const { embed, activities } = require('./embed');
-const { discordRoles, roles, emojis } = require('./ressources');
+const { discordRoles, roles, states, emojis } = require('./ressources');
 const { handleReaction, react } = require('./functions');
 const discordToken = process.env.WASSHOBOT_KEY;
 
@@ -111,7 +111,6 @@ client.on('messageCreate', msg => {
                   basicFields[3].value = `\`${total}\``;
 
                   let newFields = [];
-                  let newField = { name: '** **', inline: true };
 
                   for (let item in discordEvent.dataValues) {
                     if (item.startsWith('roles_')) {
@@ -121,6 +120,17 @@ client.on('messageCreate', msg => {
                         inline: true,
                         value: `${roles[role].emoji} **${roles[role].name}** (${discordEvent[item]})`
                       };
+
+                      if (discordEvent[item]) {
+                        newFields.push(newField);
+                      }
+                    } else if (item.startsWith('state_')) {
+                      const state = item.replace('state_', '');
+                      let newField = {
+                        name: '** **',
+                        value: `${states[state].emoji} **${states[state].name}** (${discordEvent[item]}) :`
+                      };
+
                       if (discordEvent[item]) {
                         newFields.push(newField);
                       }

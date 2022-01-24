@@ -23,6 +23,21 @@ const roles = {
   }
 }
 
+const states = {
+  dispo_si_besoin: {
+    name: 'Dispo si besoin',
+    emoji: '<:Dispo_si_besoin:933068148360487023>'
+  },
+  maybe: {
+    name: 'Peut-être',
+    emoji: '<:Maybe:933068124037709854>'
+  },
+  pas_dispo: {
+    name: 'Pas dispo',
+    emoji: '<:Pas_dispo:933068138550018108>'
+  }
+}
+
 const emojis = {
   shoi: {
     teams: {
@@ -97,4 +112,4 @@ const emojis = {
   ]
 }
 
-module.exports = { discordRoles, roles, emojis };
+module.exports = { discordRoles, roles, states, emojis };
