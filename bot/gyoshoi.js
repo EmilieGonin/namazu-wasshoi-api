@@ -18,8 +18,9 @@ client.once('ready', () => {
 })
 
 client.on('messageCreate', msg => {
+  if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
-  if (!msg.author.bot && (string.includes('wasshoi') && string.includes('gyoshoi'))) {
+  if (string == '!wasshoi' || (string.includes('wasshoi') && string.includes('gyoshoi'))) {
     msg.reply('Yes yes, wasshoi !');
   }
 })
