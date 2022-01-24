@@ -13,6 +13,10 @@ module.exports = {
         unique: true,
         type: Sequelize.BIGINT,
       },
+      discordName: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       tankJob: {
         type: Sequelize.STRING
       },

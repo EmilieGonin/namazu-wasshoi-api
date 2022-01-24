@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
+    discordName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     tankJob: DataTypes.STRING,
     healerJob: DataTypes.STRING,
     melee_dpsJob: DataTypes.STRING,
