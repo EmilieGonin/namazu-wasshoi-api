@@ -16,16 +16,9 @@ function getJob(user, emoji) {
         if (emojis[emoji][m.content - 1]) {
           collector.stop();
           resolve(emojis[emoji][m.content - 1]);
-
-          // datas.DiscordUser[emoji + 'Job'] = emojis[emoji][m.content - 1];
-          //
-          // discordEvent.createDiscordEventReaction(datas, {
-          //   include: [ DiscordUser ]
-          // });
         } else {
           user.send("Je n'ai pas compris votre réponse ! " + emojis.shoi.surprise);
           collector.resetTimer();
-          // getJob(user, emoji);
         }
       })
 
