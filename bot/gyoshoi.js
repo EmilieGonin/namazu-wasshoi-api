@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
 
 const { parse, format, isValid, getTime } = require('date-fns');
@@ -5,7 +6,7 @@ const fr = require('date-fns/locale/fr');
 
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
 const { embed, activities } = require('./embed');
-const { roles, emojis } = require('./ressources');
+const { discordRoles, roles, emojis } = require('./ressources');
 const { handleReaction, react } = require('./functions');
 const discordToken = process.env.WASSHOBOT_KEY;
 
@@ -28,7 +29,7 @@ client.on('messageCreate', msg => {
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
-  const isAdmin = msg.member.roles.cache.has(roles.test);
+  const isAdmin = msg.member.roles.cache.has(discordRoles.test);
   // const isAdmin = true;
 
   if (string.includes('!planning') && isAdmin) {
@@ -104,54 +105,34 @@ client.on('messageCreate', msg => {
               handleReaction(reaction, user, discordEvent)
               .then(() => {
                 console.log("function ended");
+                discordEvent.countDiscordEventReactions({
+                  where: { state: { [Op.is]: null } }
+                }).then(total => {
+                  basicFields[3].value = `\`${total}\``;
+
+                  let newFields = [];
+                  let newField = { name: '** **', inline: true };
+
+                  for (let item in discordEvent.dataValues) {
+                    if (item.startsWith('roles_')) {
+                      const role = item.replace('roles_', '');
+                      let newField = {
+                        name: '** **',
+                        inline: true,
+                        value: `${roles[role].emoji} **${roles[role].name}** (${discordEvent[item]})`
+                      };
+                      if (discordEvent[item]) {
+                        newFields.push(newField);
+                      }
+                    }
+                  }
+
+                  event.fields = [...basicFields, ...newFields];
+                  msg.edit({ embeds: [event] });
+                })
               })
 
-              let newFields = [];
-              let newField = { name: '** **', inline: true };
-
-              if (discordEvent.roles_tank) {
-                // const tankUsers = reactions.users.map(item => {
-                //   if (item.role == "tank" && !item.state) {
-                //     return item.username;
-                //   }
-                // }).join('\n');
-                const tankUsers = '';
-                newField.value = '<:Tank:933062548046106665> **Tanks** (' + discordEvent.roles_tank + ')\n' + tankUsers;
-                newFields.push(newField);
-              }
-
-              if (discordEvent.roles_healer) {
-                newField.value = '<:Healer:933062562076057671> **Healers** (' + discordEvent.roles_healer + ')'
-                newFields.push(newField);
-              }
-
-              if (discordEvent.roles_melee_dps) {
-                newField.value = '<:Melee_DPS:933062571836182548> **DPS de mêlée** (' + discordEvent.roles_melee_dps + ')'
-                newFields.push(newField);
-              }
-
-              if (discordEvent.roles_physical_ranged_dps) {
-                newField.value = '<:Physical_Ranged_DPS:933062582326136872> **DPS à distance physiques** (' + discordEvent.roles_physical_ranged_dps + ')'
-                newFields.push(newField);
-              }
-
-              if (discordEvent.roles_magic_ranged_dps) {
-                newField.value = '<:Magic_Ranged_DPS:933062594158276659> **DPS à distance magiques** (' + discordEvent.roles_magic_ranged_dps + ')'
-                newFields.push(newField);
-              }
-
               // newFields.push({ name: '** **', value: '** **' });
-              // basicFields[3] = { name: '<:Inscrits:933695822028226601> **Inscrits**', value: '`' + reactions.users.length + '`', inline: true };
-              event.fields = [...basicFields, ...newFields];
-
-              // const eventIndex = event.fields.findIndex(item => item.value.includes(reaction.emoji.name));
-              // console.log(eventIndex);
-              //
-              // const map = reactions.users.map(item => item.username).join('\n');
-              //
-              // event.fields[eventIndex].value = event.fields[eventIndex].value + '\n' + map;
-              //
-              msg.edit({ embeds: [event] });
             });
           }
           collector();

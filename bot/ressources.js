@@ -1,6 +1,26 @@
-const roles = {
+const discordRoles = {
   officier: '674204890054131712',
   test: '932934305552941066'
+}
+
+const roles = {
+  tank: {
+    name: 'Tanks', emoji: '<:Tank:933062548046106665>'
+  },
+  healer: {
+    name: 'Healers', emoji: '<:Healer:933062562076057671>'
+  },
+  melee_dps: {
+    name: 'DPS de mêlée', emoji: '<:Melee_DPS:933062571836182548>'
+  },
+  physical_ranged_dps: {
+    name: 'DPS à distance physiques',
+    emoji: '<:Physical_Ranged_DPS:933062582326136872>'
+  },
+  magic_ranged_dps: {
+    name: 'DPS à distance magiques',
+    emoji: '<:Magic_Ranged_DPS:933062594158276659>'
+  }
 }
 
 const emojis = {
@@ -40,11 +60,8 @@ const emojis = {
     wasshoi: '<:Wasshoi:813510412150505472>'
   },
   event: [
-    '<:Tank:933062548046106665>',
-    '<:Healer:933062562076057671>',
-    '<:Melee_DPS:933062571836182548>',
-    '<:Physical_Ranged_DPS:933062582326136872>',
-    '<:Magic_Ranged_DPS:933062594158276659>',
+    roles.tank.emoji, roles.healer.emoji, roles.melee_dps.emoji,
+    roles.physical_ranged_dps.emoji, roles.magic_ranged_dps.emoji,
     '<:Dispo_si_besoin:933068148360487023>',
     '<:Maybe:933068124037709854>',
     '<:Pas_dispo:933068138550018108>'
@@ -80,4 +97,4 @@ const emojis = {
   ]
 }
 
-module.exports = { roles, emojis };
+module.exports = { discordRoles, roles, emojis };
