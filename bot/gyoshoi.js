@@ -1,4 +1,3 @@
-const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
 
 const { parse, format, isValid, getTime } = require('date-fns');
@@ -6,7 +5,7 @@ const fr = require('date-fns/locale/fr');
 
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
 const { embed, activities } = require('./embed');
-const { discordRoles, roles, states, emojis } = require('./ressources');
+const { discordRoles, emojis } = require('./ressources');
 const { handleReaction, react } = require('./functions');
 const discordToken = process.env.WASSHOBOT_KEY;
 
@@ -103,46 +102,16 @@ client.on('messageCreate', msg => {
             collector.on('collect', (reaction, user) => {
               reaction.users.remove(user);
               handleReaction(reaction, user, discordEvent)
-              .then(() => {
+              .then(newFields => {
                 console.log("function ended");
                 discordEvent.countDiscordEventReactions({
                   where: { state: { [Op.is]: null } }
                 }).then(total => {
                   basicFields[3].value = `\`${total}\``;
-
-                  let newFields = [];
-
-                  for (let item in discordEvent.dataValues) {
-                    if (item.startsWith('roles_')) {
-                      const role = item.replace('roles_', '');
-                      let newField = {
-                        name: '** **',
-                        inline: true,
-                        value: `${roles[role].emoji} **${roles[role].name}** (${discordEvent[item]})`
-                      };
-
-                      if (discordEvent[item]) {
-                        newFields.push(newField);
-                      }
-                    } else if (item.startsWith('state_')) {
-                      const state = item.replace('state_', '');
-                      let newField = {
-                        name: '** **',
-                        value: `${states[state].emoji} **${states[state].name}** (${discordEvent[item]}) :`
-                      };
-
-                      if (discordEvent[item]) {
-                        newFields.push(newField);
-                      }
-                    }
-                  }
-
                   event.fields = [...basicFields, ...newFields];
                   msg.edit({ embeds: [event] });
                 })
               })
-
-              // newFields.push({ name: '** **', value: '** **' });
             });
           }
           collector();

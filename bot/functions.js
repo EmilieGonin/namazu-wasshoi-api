@@ -1,5 +1,6 @@
+const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
-const { emojis } = require('./ressources');
+const { emojis, roles, states } = require('./ressources');
 
 async function react(msg, reactions) {
   for (let reaction of reactions) {
@@ -37,7 +38,7 @@ async function handleReaction(reaction, user, discordEvent) {
   const stateEmoji = discordEvent.dataValues.hasOwnProperty('state_' + emoji);
 
   const [discordUser] = await DiscordUser.findOrCreate({
-    where: { discordId: user.id }
+    where: { discordId: user.id, discordName: user.username }
   });
 
   const [discordEventReaction] = await DiscordEventReaction.findOrCreate({
@@ -94,6 +95,51 @@ async function handleReaction(reaction, user, discordEvent) {
   await discordEvent.reload();
   await discordUser.save();
   await discordEventReaction.save();
+
+  //Edit embed
+  const total = discordEvent.countDiscordEventReactions({
+    where: { state: { [Op.is]: null } }
+  });
+
+  let newFields = [];
+
+  for (let item in discordEvent.dataValues) {
+    if (item.startsWith('roles_')) {
+      const role = item.replace('roles_', '');
+      const users = (await DiscordUser.findAll({
+        include: {
+          model: DiscordEventReaction,
+          where: {
+            DiscordEventId: discordEvent.id,
+            role: role,
+            state: { [Op.is]: null }
+          }
+        }
+      })).map(item => item[role + 'Job'] + ' ' + item.discordName).join('\n');
+
+      let newField = {
+        name: '** **',
+        inline: true,
+        value: `${roles[role].emoji} **${roles[role].name}** (${discordEvent[item]})\n${users}`
+      };
+
+      if (discordEvent[item]) {
+        newFields.push(newField);
+      }
+    } else if (item.startsWith('state_')) {
+      const state = item.replace('state_', '');
+      let newField = {
+        name: '** **',
+        value: `${states[state].emoji} **${states[state].name}** (${discordEvent[item]}) :`
+      };
+
+      if (discordEvent[item]) {
+        newFields.push(newField);
+      }
+    }
+  }
+
+  return newFields;
 }
 
 module.exports = { react, getJob, handleReaction }
