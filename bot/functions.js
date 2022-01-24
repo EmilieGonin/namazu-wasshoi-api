@@ -10,7 +10,7 @@ function getJob(user, emoji) {
   return new Promise((resolve, reject) => {
     user.send("Test").then(msg => {
       const filter = m => !m.author.bot;
-      const collector = user.dmChannel.createMessageCollector({ filter, time: 15000 });
+      const collector = user.dmChannel.createMessageCollector({ filter, time: 600000 });
 
       collector.on('collect', m => {
         if (emojis[emoji][m.content - 1]) {
@@ -51,21 +51,35 @@ async function handleReaction(reaction, user, discordEvent) {
     console.log('no role');
     user.send("Vous devez d'abord choisir un rôle.")
     return;
-  } else if (discordEventReaction.state) {
-    discordEvent['state_' + discordEventReaction.state]--;
-    discordEventReaction.state = '';
   }
 
   if (stateEmoji) {
+    console.log("-state-");
+    if (discordEventReaction.state) {
+      console.log('already state, removing old one');
+      await discordEvent.decrement('state_' + discordEventReaction.state);
+    } else {
+      console.log('no state, removing role');
+      await discordEvent.decrement('roles_' + discordEventReaction.role);
+    }
     discordEventReaction.state = emoji;
-    discordEvent['roles_' + discordEventReaction.role]--;
-    discordEvent['state_' + emoji]++;
+    await discordEvent.reload();
+    await discordEvent.increment('state_' + emoji);
   } else if (roleEmoji) {
-    if (discordEventReaction.role) {
-      discordEvent['roles_' + discordEventReaction.role]--;
+    console.log('-role-');
+    if (discordEventReaction.state) {
+      console.log('state, removing it');
+      await discordEvent.decrement('state_' + discordEventReaction.state);
+      discordEventReaction.state = null;
+    } else if (!discordEventReaction.state && discordEventReaction.role && (discordEventReaction.role != emoji)) {
+      console.log('no state but already role, removing old one');
+      console.log(discordEventReaction.role);
+      await discordEvent.decrement('roles_' + discordEventReaction.role);
     }
     discordEventReaction.role = emoji;
-    discordEvent['roles_' + emoji]++;
+    await discordEvent.reload();
+    await discordEvent.increment('roles_' + emoji);
+
     if (!discordUser[emoji + 'Job']) {
       console.log('checking job');
       const job = await getJob(user, emoji);
@@ -77,8 +91,8 @@ async function handleReaction(reaction, user, discordEvent) {
     }
   }
 
+  await discordEvent.reload();
   await discordUser.save();
-  await discordEvent.save();
   await discordEventReaction.save();
 }
 
