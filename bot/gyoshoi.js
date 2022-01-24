@@ -91,7 +91,7 @@ client.on('messageCreate', msg => {
         }).then(discordEvent => {
           react(msg, emojis.event);
 
-          async function collector() {
+          async function setCollector() {
             const filter = (reaction, user) => {
               return emojis.event.includes(
                 `<:${reaction.emoji.name}:${reaction.emoji.id}>`
@@ -115,7 +115,7 @@ client.on('messageCreate', msg => {
               })
             });
           }
-          collector();
+          setCollector();
         })
         .catch((e) => {
           console.error(e);
