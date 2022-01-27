@@ -55,6 +55,17 @@ async function handleReaction(reaction, user, discordEvent) {
     return;
   }
 
+  if (emoji == 'rappel_par_mp') {
+    console.log('rappel');
+    discordUser.notifications = !discordUser.notifications;
+    
+    if (discordUser.notifications) {
+      user.send("Les notifications de rappel pour les sorties sont désormais **__activées__**, wasshoi !");
+    } else {
+      user.send("Les notifications de rappel pour les sorties sont désormais **__désactivées__**, wasshoi !");
+    }
+  }
+
   if (stateEmoji) {
     console.log("-state-");
     if (discordEventReaction.state) {

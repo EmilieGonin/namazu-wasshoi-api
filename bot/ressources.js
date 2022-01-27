@@ -79,7 +79,8 @@ const emojis = {
     roles.physical_ranged_dps.emoji, roles.magic_ranged_dps.emoji,
     '<:Dispo_si_besoin:933068148360487023>',
     '<:Maybe:933068124037709854>',
-    '<:Pas_dispo:933068138550018108>'
+    '<:Pas_dispo:933068138550018108>',
+    '<:Rappel_par_MP:936367117597552721>'
   ],
   tank: [
     '<:pld:934408826394918932>',
