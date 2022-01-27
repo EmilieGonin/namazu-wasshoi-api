@@ -16,16 +16,16 @@ function getDiscordTime(date) {
     return 43200000;
   }
 }
-function getJob(user, emoji) {
+function getJob(user, role) {
   return new Promise((resolve, reject) => {
     user.send("Test").then(msg => {
       const filter = m => !m.author.bot;
       const collector = user.dmChannel.createMessageCollector({ filter, time: 600000 });
 
       collector.on('collect', m => {
-        if (emojis[emoji][m.content - 1]) {
+        if (emojis[role][m.content - 1]) {
           collector.stop();
-          resolve(emojis[emoji][m.content - 1]);
+          resolve(emojis[role][m.content - 1]);
         } else {
           user.send("Je n'ai pas compris votre réponse ! " + emojis.shoi.surprise);
           collector.resetTimer();
@@ -57,10 +57,18 @@ async function handleReaction(reaction, user, discordEvent) {
     }
   });
 
-  if (stateEmoji && emoji != 'pas_dispo' && !discordEventReaction.role) {
+  if (((stateEmoji && emoji != 'pas_dispo') || emoji == 'changer_job') && !discordEventReaction.role) {
     console.log('no role');
     user.send("Vous devez d'abord choisir un rôle.")
     return;
+  } else if (emoji == 'changer_job' && discordEventReaction.role) {
+    console.log('change job');
+    const job = await getJob(user, discordEventReaction.role);
+    console.log('job checked');
+
+    user.send(`Compris, wasshoi ! Désormais, votre rôle de ${roles[discordEventReaction.role].emoji} sera automatiquement lié au job ${job}.`)
+
+    discordUser[discordEventReaction.role + 'Job'] = job;
   }
 
   if (emoji == 'rappel_par_mp') {
