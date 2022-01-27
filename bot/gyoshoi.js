@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
 
 const { parse, format, isValid, isFuture } = require('date-fns');

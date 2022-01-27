@@ -98,10 +98,6 @@ async function handleReaction(reaction, user, discordEvent) {
   await discordEventReaction.save();
 
   //Edit embed
-  const total = discordEvent.countDiscordEventReactions({
-    where: { state: { [Op.is]: null } }
-  });
-
   let newFields = [];
 
   for (let item in discordEvent.dataValues) {
