@@ -49,7 +49,7 @@ async function handleReaction(reaction, user, discordEvent) {
     }
   });
 
-  if (stateEmoji && !discordEventReaction.role) {
+  if (stateEmoji && emoji != 'pas_dispo' && !discordEventReaction.role) {
     console.log('no role');
     user.send("Vous devez d'abord choisir un rôle.")
     return;
@@ -60,7 +60,7 @@ async function handleReaction(reaction, user, discordEvent) {
     if (discordEventReaction.state) {
       console.log('already state, removing old one');
       await discordEvent.decrement('state_' + discordEventReaction.state);
-    } else {
+    } else if (discordEventReaction.role) {
       console.log('no state, removing role');
       await discordEvent.decrement('roles_' + discordEventReaction.role);
     }
@@ -133,7 +133,13 @@ async function handleReaction(reaction, user, discordEvent) {
             state: state
           }
         }
-      })).map(item => item[item.DiscordEventReactions[0].role + 'Job'] + ' ' + item.discordName).join(', ');
+      })).map(item => {
+        if (item.DiscordEventReactions[0].role) {
+          return item[item.DiscordEventReactions[0].role + 'Job'] + ' ' + item.discordName
+        } else {
+          return item.discordName
+        }
+      }).join(', ');
 
       let newField = {
         name: '** **',

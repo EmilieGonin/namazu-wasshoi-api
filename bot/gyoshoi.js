@@ -106,13 +106,15 @@ client.on('messageCreate', msg => {
               handleReaction(reaction, user, discordEvent)
               .then(newFields => {
                 console.log("function ended");
-                discordEvent.countDiscordEventReactions({
-                  where: { state: { [Op.is]: null } }
-                }).then(total => {
-                  basicFields[3].value = `\`${total}\``;
-                  event.fields = [...basicFields, ...newFields];
-                  msg.edit({ embeds: [event] });
-                })
+                if (newFields) {
+                  discordEvent.countDiscordEventReactions({
+                    where: { state: { [Op.is]: null } }
+                  }).then(total => {
+                    basicFields[3].value = `\`${total}\``;
+                    event.fields = [...basicFields, ...newFields];
+                    msg.edit({ embeds: [event] });
+                  })
+                }
               })
             });
 
