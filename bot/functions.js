@@ -8,6 +8,14 @@ async function react(msg, reactions) {
     await msg.react(reaction);
   }
 }
+function getDiscordTime(date) {
+  const time = differenceInMilliseconds(date, new Date());
+  if (time < 43200000) {
+    return time;
+  } else {
+    return 43200000;
+  }
+}
 function getJob(user, emoji) {
   return new Promise((resolve, reject) => {
     user.send("Test").then(msg => {
@@ -58,7 +66,7 @@ async function handleReaction(reaction, user, discordEvent) {
   if (emoji == 'rappel_par_mp') {
     console.log('rappel');
     discordUser.notifications = !discordUser.notifications;
-    
+
     if (discordUser.notifications) {
       user.send("Les notifications de rappel pour les sorties sont désormais **__activées__**, wasshoi !");
     } else {
@@ -165,13 +173,41 @@ async function handleReaction(reaction, user, discordEvent) {
 
   return newFields;
 }
-function getDiscordTime(date) {
-  const time = differenceInMilliseconds(date, new Date());
-  if (time < 43200000) {
-    return time;
-  } else {
-    return 43200000;
+async function handleEnd(discordEvent) {
+  //Logs
+
+  //Mentions
+  const users = (await DiscordUser.findAll({
+    include: {
+      model: DiscordEventReaction,
+      where: {
+        DiscordEventId: discordEvent.id,
+        state: { [Op.is]: null }
+      }
+    }
+  })).map(item => `<@${item.discordId}>`).join(' ');
+
+  const usersDispo = (await DiscordUser.findAll({
+    include: {
+      model: DiscordEventReaction,
+      where: {
+        DiscordEventId: discordEvent.id,
+        state: 'dispo_si_besoin'
+      }
+    }
+  })).map(item => `<@${item.discordId}>`).join(' ');
+
+  let msg = '';
+
+  if (users) {
+    msg = `🔹**C'est l'heure de la sortie !**\n${users}`;
   }
+
+  if (usersDispo) {
+    msg = msg + `\n\n${states.dispo_si_besoin.emoji} **${states.dispo_si_besoin.name}** : ${usersDispo}`;
+   }
+
+  return msg;
 }
 
-module.exports = { react, getJob, handleReaction, getDiscordTime }
+module.exports = { react, getDiscordTime, getJob, handleReaction, handleEnd }

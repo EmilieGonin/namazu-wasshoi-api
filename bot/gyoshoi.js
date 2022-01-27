@@ -7,7 +7,7 @@ const fr = require('date-fns/locale/fr');
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
 const { embed, activities } = require('./embed');
 const { discordRoles, emojis } = require('./ressources');
-const { handleReaction, react, getDiscordTime } = require('./functions');
+const { react, getDiscordTime, handleReaction, handleEnd } = require('./functions');
 const discordToken = process.env.WASSHOBOT_KEY;
 
 const client = new Client({
@@ -123,6 +123,13 @@ client.on('messageCreate', msg => {
               if (isFuture(parsedDate)) {
                 console.log('reset');
                 setCollector();
+              } else {
+                handleEnd(discordEvent).then(msgContent => {
+                  if (msgContent) {
+                    msg.channel.send(msgContent);
+                  }
+                  msg.delete();
+                })
               }
             })
           }
