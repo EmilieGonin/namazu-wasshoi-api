@@ -1,5 +1,7 @@
 const discordRoles = {
   officier: '674204890054131712',
+  membres: '674206058410934272',
+  jeunes_membres: '675344539724152843',
   test: '932934305552941066'
 }
 

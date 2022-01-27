@@ -84,7 +84,7 @@ client.on('messageCreate', msg => {
       const file = new MessageAttachment('./assets/' + type + '.png');
 
       msg.delete();
-      msg.channel.send({ embeds: [event], files: [file] })
+      msg.channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [event], files: [file] })
       .then(msg => {
         DiscordEvent.create({
           discordId: msg.id,
