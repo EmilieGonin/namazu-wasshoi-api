@@ -108,7 +108,9 @@ client.on('messageCreate', msg => {
                 console.log("function ended");
                 if (newFields) {
                   discordEvent.countDiscordEventReactions({
-                    where: { state: { [Op.is]: null } }
+                    where: {
+                      role: { [Op.not]: null },
+                      state: { [Op.is]: null } }
                   }).then(total => {
                     basicFields[3].value = `\`${total}\``;
                     event.fields = [...basicFields, ...newFields];
