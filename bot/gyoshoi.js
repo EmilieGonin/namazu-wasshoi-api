@@ -1,12 +1,12 @@
 const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
 
-const { parse, format, isValid, getTime } = require('date-fns');
+const { parse, format, isValid, isFuture } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
 const { embed, activities } = require('./embed');
 const { discordRoles, emojis } = require('./ressources');
-const { handleReaction, react } = require('./functions');
+const { handleReaction, react, getDiscordTime } = require('./functions');
 const discordToken = process.env.WASSHOBOT_KEY;
 
 const client = new Client({
@@ -98,7 +98,7 @@ client.on('messageCreate', msg => {
               ) && !user.bot;
             };
 
-            const collector = msg.createReactionCollector({ filter, time: 100000 });
+            const collector = msg.createReactionCollector({ filter, time: getDiscordTime(parsedDate) });
 
             collector.on('collect', (reaction, user) => {
               reaction.users.remove(user);
@@ -114,6 +114,14 @@ client.on('messageCreate', msg => {
                 })
               })
             });
+
+            collector.on('end', () => {
+              console.log('ended');
+              if (isFuture(parsedDate)) {
+                console.log('reset');
+                setCollector();
+              }
+            })
           }
           setCollector();
         })

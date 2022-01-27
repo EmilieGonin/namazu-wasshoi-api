@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
 const { emojis, roles, states } = require('./ressources');
+const { differenceInMilliseconds } = require('date-fns');
 
 async function react(msg, reactions) {
   for (let reaction of reactions) {
@@ -141,5 +142,13 @@ async function handleReaction(reaction, user, discordEvent) {
 
   return newFields;
 }
+function getDiscordTime(date) {
+  const time = differenceInMilliseconds(date, new Date());
+  if (time < 43200000) {
+    return time;
+  } else {
+    return 43200000;
+  }
+}
 
-module.exports = { react, getJob, handleReaction }
+module.exports = { react, getJob, handleReaction, getDiscordTime }
