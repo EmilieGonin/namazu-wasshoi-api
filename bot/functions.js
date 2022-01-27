@@ -125,9 +125,19 @@ async function handleReaction(reaction, user, discordEvent) {
       }
     } else if (item.startsWith('state_')) {
       const state = item.replace('state_', '');
+      const users = (await DiscordUser.findAll({
+        include: {
+          model: DiscordEventReaction,
+          where: {
+            DiscordEventId: discordEvent.id,
+            state: state
+          }
+        }
+      })).map(item => item[item.DiscordEventReactions[0].role + 'Job'] + ' ' + item.discordName).join(', ');
+
       let newField = {
         name: '** **',
-        value: `${states[state].emoji} **${states[state].name}** (${discordEvent[item]}) :`
+        value: `${states[state].emoji} **${states[state].name}** (${discordEvent[item]}) : ${users}`
       };
 
       if (discordEvent[item]) {
