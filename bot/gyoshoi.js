@@ -110,7 +110,8 @@ client.on('messageCreate', msg => {
                   discordEvent.countDiscordEventReactions({
                     where: {
                       role: { [Op.not]: null },
-                      state: { [Op.is]: null } }
+                      state: { [Op.is]: null }
+                    }
                   }).then(total => {
                     basicFields[3].value = `\`${total}\``;
                     event.fields = [...basicFields, ...newFields];
