@@ -190,6 +190,7 @@ async function handleEnd(discordEvent) {
       model: DiscordEventReaction,
       where: {
         DiscordEventId: discordEvent.id,
+        role: { [Op.not]: null },
         state: { [Op.is]: null }
       }
     }
