@@ -5,7 +5,7 @@ const { parse, format, isValid, isFuture } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 
 const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
-const { embed, activities } = require('./embed');
+const { activities } = require('./embed');
 const { discordRoles, emojis } = require('./ressources');
 const { react, getDiscordTime, handleReaction, handleEnd } = require('./functions');
 const discordToken = process.env.WASSHOBOT_KEY;

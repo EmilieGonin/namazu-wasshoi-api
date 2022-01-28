@@ -217,5 +217,14 @@ async function handleEnd(discordEvent) {
 
   return msg;
 }
+function createEmbed(description, title) {
+  const embed = {
+    color: "#e62e39",
+    title: title ? title : '',
+    description: description
+  }
 
-module.exports = { react, getDiscordTime, getJob, handleReaction, handleEnd }
+  return embed;
+}
+
+module.exports = { react, getDiscordTime, getJob, handleReaction, handleEnd, createEmbed }

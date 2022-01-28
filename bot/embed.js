@@ -1,8 +1,3 @@
-const embed = {
-  color: "#e62e39",
-  title: "Test"
-}
-
 const activities = {
   cartes: {
     color: "#ffd700",
@@ -28,4 +23,4 @@ const activities = {
   },
 }
 
-module.exports = { embed, activities };
+module.exports = { activities };
