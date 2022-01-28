@@ -113,7 +113,9 @@ const emojis = {
     '<:blm:934408826294263819>',
     '<:smn:934408826315231284>',
     '<:rdm:934408826478817341>'
-  ]
+  ],
+  error: '<:error:936622863031623700>',
+  update: '<:update:936631342857338950>'
 }
 
 module.exports = { discordRoles, roles, states, emojis };
