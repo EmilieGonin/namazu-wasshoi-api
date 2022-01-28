@@ -115,7 +115,9 @@ const emojis = {
     '<:rdm:934408826478817341>'
   ],
   error: '<:error:936622863031623700>',
-  update: '<:update:936631342857338950>'
+  update: '<:update:936631342857338950>',
+  edit: '<:edit:936640835766845521>',
+  rappel: '<:Rappel_par_MP:936367117597552721>'
 }
 
 module.exports = { discordRoles, roles, states, emojis };
