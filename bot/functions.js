@@ -18,7 +18,9 @@ function getDiscordTime(date) {
 }
 function getJob(user, role) {
   return new Promise((resolve, reject) => {
-    user.send("Test").then(msg => {
+    const jobs = emojis[role].map((item, index) => `\`${index + 1}\` ${item}`).join('\n');
+    const embed = createEmbed("Répondez avec le numéro du job de votre choix.\n\n" + jobs, emojis.edit + " Sélection du job");
+    user.send({ embeds: [embed] }).then(msg => {
       const filter = m => !m.author.bot;
       const collector = user.dmChannel.createMessageCollector({ filter, time: 600000 });
 
@@ -27,7 +29,9 @@ function getJob(user, role) {
           collector.stop();
           resolve(emojis[role][m.content - 1]);
         } else {
-          user.send("Je n'ai pas compris votre réponse ! " + emojis.shoi.surprise);
+          const embed = createEmbed("Je n'ai pas compris votre réponse ! " + emojis.shoi.surprise + '\n\n' + jobs, emojis.error + " Une erreur s'est produite");
+
+          user.send({ embeds: [embed] });
           collector.resetTimer();
         }
       })
@@ -59,27 +63,31 @@ async function handleReaction(reaction, user, discordEvent) {
 
   if (((stateEmoji && emoji != 'pas_dispo') || emoji == 'changer_job') && !discordEventReaction.role) {
     console.log('no role');
-    user.send("Vous devez d'abord choisir un rôle.")
+    const embed = createEmbed("Vous devez d'abord choisir un rôle.", emojis.error + " Une erreur s'est produite");
+    user.send({ embeds: [embed] });
     return;
   } else if (emoji == 'changer_job' && discordEventReaction.role) {
     console.log('change job');
     const job = await getJob(user, discordEventReaction.role);
     console.log('job checked');
+    const embed = createEmbed(`Désormais, votre rôle de ${roles[discordEventReaction.role].emoji} sera automatiquement lié au job ${job}.`, emojis.update + " Mise à jour du job");
 
-    user.send(`Compris, wasshoi ! Désormais, votre rôle de ${roles[discordEventReaction.role].emoji} sera automatiquement lié au job ${job}.`)
-
+    user.send({ embeds: [embed] });
     discordUser[discordEventReaction.role + 'Job'] = job;
   }
 
   if (emoji == 'rappel_par_mp') {
     console.log('rappel');
     discordUser.notifications = !discordUser.notifications;
+    let embed = ''
 
     if (discordUser.notifications) {
-      user.send("Les notifications de rappel pour les sorties sont désormais **__activées__**, wasshoi !");
+      embed = createEmbed("Les notifications de rappel pour les sorties sont désormais **__activées__**, wasshoi !", emojis.rappel + " Notifications");
     } else {
-      user.send("Les notifications de rappel pour les sorties sont désormais **__désactivées__**, wasshoi !");
+      embed = createEmbed("Les notifications de rappel pour les sorties sont désormais **__désactivées__**, wasshoi !", emojis.rappel + " Notifications");
     }
+
+    user.send({ embeds: [embed] })
   }
 
   if (stateEmoji) {
@@ -113,9 +121,9 @@ async function handleReaction(reaction, user, discordEvent) {
       console.log('checking job');
       const job = await getJob(user, emoji);
       console.log('job checked');
+      const embed = createEmbed(`Désormais, votre rôle de ${emojiCode} sera automatiquement lié au job ${job}.`, emojis.update + " Mise à jour du job");
 
-      user.send(`Compris, wasshoi ! Désormais, votre rôle de ${emojiCode} sera automatiquement lié au job ${job}.`)
-
+      user.send({ embeds: [embed] });
       discordUser[emoji + 'Job'] = job;
     }
   }
