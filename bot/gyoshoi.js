@@ -4,15 +4,12 @@ const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/i
 const { parse, format, isValid, isFuture } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 
-const { Client, Intents, MessageEmbed, MessageAttachment } = require('discord.js');
 const { activities } = require('./embed');
 const { discordRoles, emojis } = require('./ressources');
 const { react, getDiscordTime, handleReaction, handleEnd } = require('./functions');
-const discordToken = process.env.WASSHOBOT_KEY;
 
-const client = new Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]
-});
+const { MessageEmbed, MessageAttachment } = require('discord.js');
+const { client } = require('./config');
 
 client.once('ready', () => {
   console.log('Je suis prêt, wasshoi !');
