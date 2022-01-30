@@ -5,6 +5,13 @@ const discordRoles = {
   test: '932934305552941066'
 }
 
+const channels = {
+  inscriptions: '841025816556863509',
+  rassemblement: '677984271159263282',
+  logs: '707735383177166858',
+  dev : '933031685702946866'
+}
+
 const roles = {
   tank: {
     name: 'Tanks', emoji: '<:Tank:933062548046106665>'
@@ -122,4 +129,4 @@ const emojis = {
   false: '<:false:937343578424873002>'
 }
 
-module.exports = { discordRoles, roles, states, emojis };
+module.exports = { discordRoles, channels, roles, states, emojis };
