@@ -1,15 +1,18 @@
+require('dotenv').config();
+const env = process.env.NODE_ENV;
+const devRole = '932934305552941066';
+const devChannel = '933031685702946866';
+
 const discordRoles = {
-  officier: '674204890054131712',
-  membres: '674206058410934272',
-  jeunes_membres: '675344539724152843',
-  test: '932934305552941066'
+  officier: env ? '674204890054131712' : devRole,
+  membres: env ? '674206058410934272' : devRole,
+  jeunes_membres: env ? '675344539724152843' : devRole,
 }
 
 const channels = {
-  inscriptions: '841025816556863509',
-  rassemblement: '677984271159263282',
-  logs: '707735383177166858',
-  dev : '933031685702946866'
+  inscriptions: env ? '841025816556863509' : devChannel,
+  rassemblement: env ? '677984271159263282' : devChannel,
+  logs: env ? '707735383177166858' : devChannel
 }
 
 const roles = {

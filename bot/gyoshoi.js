@@ -27,7 +27,7 @@ client.on('messageCreate', msg => {
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
-  const isAdmin = msg.member.roles.cache.has(discordRoles.test);
+  const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
   // const isAdmin = true;
 
   if (string.includes('!planning') && isAdmin) {
