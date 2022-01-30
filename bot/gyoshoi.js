@@ -85,6 +85,7 @@ client.on('messageCreate', msg => {
       .then(msg => {
         DiscordEvent.create({
           discordId: msg.id,
+          title: event.title,
           date: parsedDate
         }).then(discordEvent => {
           react(msg, emojis.event);
