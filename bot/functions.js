@@ -2,18 +2,60 @@ const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
 const { emojis, roles, states } = require('./ressources');
 const { differenceInMilliseconds } = require('date-fns');
+const { client } = require('./config');
 
 async function react(msg, reactions) {
   for (let reaction of reactions) {
     await msg.react(reaction);
   }
 }
-function getDiscordTime(date) {
+function getDiscordTime(date, discordEvent) {
   const time = differenceInMilliseconds(date, new Date());
-  if (time < 43200000) {
+  const twentyfourHours = 86400000;
+  const threeHours = 10800000;
+  const oneHour = 3600000;
+
+  if (time > twentyfourHours) {
+    //return the time - 24h
+    //to make sure logs and notifications are activated on time
+    if ((time - twentyfourHours) > twentyfourHours) {
+      return twentyfourHours;
+    } else {
+      return time - twentyfourHours;
+    }
+  } else if (time <= twentyfourHours && time > threeHours) {
+    //activate logs
+    if (!discordEvent.logs) {
+      discordEvent.update({ logs: true });
+    }
+
+    if (!discordEvent.notifications_24h) {
+      console.log('sending notifications_24h');
+      discordEvent.update({ notifications_24h: true });
+      sendNotification('24h', discordEvent);
+    }
+
+    //return the time - 3h
+    // to make sure notifications are activated on time
+    return time - threeHours;
+  } else if (time <= threeHours && time > oneHour) {
+    if (!discordEvent.notifications_3h) {
+      console.log('sending notifications_3h');
+      discordEvent.update({ notifications_3h: true });
+      sendNotification('3h', discordEvent);
+    }
+
+    //return the time - 1h
+    // to make sure notifications are activated on time
+    return time - oneHour;
+  } else if (time <= oneHour) {
+    if (!discordEvent.notifications_1h) {
+      console.log('sending notifications_1h');
+      discordEvent.update({ notifications_1h: true });
+      sendNotification('1h', discordEvent);
+    }
+
     return time;
-  } else {
-    return 43200000;
   }
 }
 function getJob(user, role) {
@@ -267,6 +309,30 @@ function createEmbed(description, title) {
   }
 
   return embed;
+}
+async function sendNotification(hour, discordEvent) {
+  const users = (await DiscordUser.findAll({
+    where: {
+      ['notifications_' + hour]: true
+    },
+    include: {
+      model: DiscordEventReaction,
+      where: {
+        DiscordEventId: discordEvent.id,
+        role: { [Op.not]: null },
+        state: { [Op.or]: [
+          { [Op.is]: null },
+          { [Op.ne]: 'pas_dispo' }
+        ]}
+      }
+    }
+  })).map(item => item.discordId);
+
+  for (let userId of users) {
+    const user = await client.users.fetch(userId);
+    const embed = createEmbed(`${emojis.rappel} Rappel : La sortie ${discordEvent.title} démarre dans ${hour} !`)
+    user.send({ embeds: [embed] });
+  }
 }
 
 module.exports = { react, getDiscordTime, getJob, handleReaction, handleEnd, createEmbed }

@@ -40,7 +40,7 @@ client.on('messageCreate', msg => {
 
     const type = string.split(' ')[1];
     const hour = string.split(' ')[3];
-    const parsedDate = parse(string.split(' ')[2] + ':' + hour, 'dd/MM/yyyy:HH', new Date())
+    const parsedDate = parse(string.split(' ')[2] + ':' + hour, 'dd/MM/yyyy:HH', new Date());
 
     if (!type || !parsedDate || !hour) {
       msg.reply(':warning: Veuillez préciser un type de sortie, une date et une heure de départ.\n\n🔹**Exemple :** `!planning cartes 01/01/2022 21`')
@@ -97,7 +97,7 @@ client.on('messageCreate', msg => {
               ) && !user.bot;
             };
 
-            const collector = msg.createReactionCollector({ filter, time: getDiscordTime(parsedDate) });
+            const collector = msg.createReactionCollector({ filter, time: getDiscordTime(parsedDate, discordEvent) });
 
             collector.on('collect', (reaction, user) => {
               reaction.users.remove(user);
