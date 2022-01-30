@@ -1,7 +1,8 @@
 const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
-const { emojis, roles, states } = require('./ressources');
-const { differenceInMilliseconds } = require('date-fns');
+const { emojis, roles, states, channels } = require('./ressources');
+const { differenceInMilliseconds, formatDistanceToNowStrict, subHours, isBefore } = require('date-fns');
+const fr = require('date-fns/locale/fr');
 const { client } = require('./config');
 
 async function react(msg, reactions) {
@@ -125,6 +126,14 @@ async function handleReaction(reaction, user, discordEvent) {
 
   if (stateEmoji) {
     console.log("-state-");
+
+    if (emoji == 'pas_dispo' && discordEventReaction.role && discordEvent.logs && isBefore(discordEventReaction.createdAt, subHours(discordEvent.date, 24))) {
+      const interval = formatDistanceToNowStrict(discordEventReaction.createdAt, { locale: fr });
+      const channel = client.channels.cache.get(channels.logs);
+      const embed = createEmbed(`${discordUser.discordName} vient de se désinscrire de la sortie ${discordEvent.title} (${interval} après son inscription).`)
+      channel.send({ embeds: [embed] });
+    }
+
     if (discordEventReaction.state) {
       console.log('already state, removing old one');
       await discordEvent.decrement('state_' + discordEventReaction.state);
