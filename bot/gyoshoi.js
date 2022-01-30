@@ -148,7 +148,3 @@ client.on('messageCreate', msg => {
     }
   }
 })
-
-client.login(discordToken);
-
-module.exports = { client };
