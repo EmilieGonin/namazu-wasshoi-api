@@ -78,16 +78,7 @@ async function handleReaction(reaction, user, discordEvent) {
 
   if (emoji == 'rappel_par_mp') {
     console.log('rappel');
-    discordUser.notifications = !discordUser.notifications;
-    let embed = ''
-
-    if (discordUser.notifications) {
-      embed = createEmbed("Les notifications de rappel pour les sorties sont désormais **__activées__**, wasshoi !", emojis.rappel + " Notifications");
-    } else {
-      embed = createEmbed("Les notifications de rappel pour les sorties sont désormais **__désactivées__**, wasshoi !", emojis.rappel + " Notifications");
-    }
-
-    user.send({ embeds: [embed] })
+    await handleNotifications(user, discordUser);
   }
 
   if (stateEmoji) {
@@ -225,6 +216,48 @@ async function handleEnd(discordEvent) {
    }
 
   return msg;
+}
+function handleNotifications(user, discordUser) {
+  return new Promise((resolve, reject) => {
+    const embed = createEmbed(`Voici vos paramètres actuels :\n\n\`1\` Rappel 24h : ${discordUser.notifications_24h ? emojis.true : emojis.false}\n\`2\` Rappel 3h : ${discordUser.notifications_3h ? emojis.true : emojis.false}\n\`3\` Rappel 1h : ${discordUser.notifications_1h ? emojis.true : emojis.false}\n\nS'ils ne vous conviennent pas, répondez avec le numéro du paramètre que vous voulez modifier. Vous pouvez spécifier plusieurs numéros dans le même message, séparés par une virgule.\n\nExemple : \`1,2,3\``, emojis.edit + " Configuration des notifications");
+    user.send({ embeds: [embed] }).then(msg => {
+      const filter = m => !m.author.bot;
+      const collector = user.dmChannel.createMessageCollector({ filter, time: 600000 });
+
+      collector.on('collect', m => {
+        const options = m.content.split(',');
+
+        if (options.find(item => item == '1' || item == '2' || item == '3')) {
+          if (options.includes('1')) {
+            discordUser.notifications_24h = !discordUser.notifications_24h;
+          }
+          if (options.includes('2')) {
+            discordUser.notifications_3h = !discordUser.notifications_3h;
+          }
+          if (options.includes('3')) {
+            discordUser.notifications_1h = !discordUser.notifications_1h;
+          }
+
+          discordUser.save().then(() => {
+            const embed = createEmbed(`Vos paramètres ont bien été mis à jour !\n\n${emojis.rappel} Rappel 24h : ${discordUser.notifications_24h ? emojis.true : emojis.false}\n${emojis.rappel} Rappel 3h : ${discordUser.notifications_3h ? emojis.true : emojis.false}\n${emojis.rappel} Rappel 1h : ${discordUser.notifications_1h ? emojis.true : emojis.false}`, emojis.update + " Notifications mises à jour");
+
+            user.send({ embeds: [embed] });
+            collector.stop();
+            resolve();
+          });
+        } else {
+          const embed = createEmbed("Je n'ai pas compris votre réponse ! " + emojis.shoi.surprise, emojis.error + " Une erreur s'est produite");
+
+          user.send({ embeds: [embed] });
+          collector.resetTimer();
+        }
+      })
+
+      collector.on('end', () => {
+        console.log('collector ended');
+      })
+    })
+  });
 }
 function createEmbed(description, title) {
   const embed = {
