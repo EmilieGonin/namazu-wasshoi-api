@@ -54,6 +54,22 @@ module.exports = (sequelize, DataTypes) => {
     state_pas_dispo: {
       type: DataTypes.INTEGER,
       defaultValue: 0
+    },
+    logs: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    notifications_24h: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    notifications_3h: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    notifications_1h: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }, {
     sequelize,

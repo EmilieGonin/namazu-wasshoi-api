@@ -49,6 +49,22 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
+      logs: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      notifications_24h: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      notifications_3h: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      notifications_1h: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

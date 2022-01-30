@@ -32,8 +32,17 @@ module.exports = {
       magical_ranged_dpsJob: {
         type: Sequelize.STRING
       },
-      notifications: {
-        type: Sequelize.BOOLEAN
+      notifications_24h: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      notifications_3h: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      notifications_1h: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,
