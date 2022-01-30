@@ -1,12 +1,12 @@
 const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
 
-const { parse, format, isValid, isFuture } = require('date-fns');
+const { parse, format, isValid, isFuture, isBefore } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 
 const { activities } = require('./embed');
 const { discordRoles, emojis } = require('./ressources');
-const { react, getDiscordTime, handleReaction, handleEnd } = require('./functions');
+const { react, getDiscordTime, handleReaction, handleEnd, createEmbed } = require('./functions');
 
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const { client } = require('./config');
@@ -43,12 +43,20 @@ client.on('messageCreate', msg => {
     const parsedDate = parse(string.split(' ')[2] + ':' + hour, 'dd/MM/yyyy:HH', new Date());
 
     if (!type || !parsedDate || !hour) {
-      msg.reply(':warning: Veuillez préciser un type de sortie, une date et une heure de départ.\n\n🔹**Exemple :** `!planning cartes 01/01/2022 21`')
+      const embed = createEmbed('Veuillez préciser un type de sortie, une date et une heure de départ.\n\n🔹**Exemple :** `!planning cartes 01/01/2022 21`', emojis.error + " Une erreur s'est produite");
+      msg.reply({ embeds: [embed] })
       .then(() => {
         msg.delete();
       })
     } else if (parsedDate && !isValid(parsedDate)) {
-      msg.reply(':warning: Le format de la date et/ou de l\'heure est incorrect.\n\n🔹**Exemple :** `!planning cartes 01/01/2022 21`')
+      const embed = createEmbed('Le format de la date et/ou de l\'heure est incorrect.\n\n🔹**Exemple :** `!planning cartes 01/01/2022 21`', emojis.error + " Une erreur s'est produite");
+      msg.reply({ embeds: [embed] })
+      .then(() => {
+        msg.delete();
+      })
+    } else if (parsedDate && isBefore(parsedDate, new Date())) {
+      const embed = createEmbed('La date ne peut pas être antérieure à aujourd\'hui !', emojis.error + " Une erreur s'est produite")
+      msg.reply({ embeds: [embed] })
       .then(() => {
         msg.delete();
       })
@@ -59,7 +67,9 @@ client.on('messageCreate', msg => {
         types.push(' ' + type)
       }
 
-      msg.reply(':warning: Le type de sortie "' + type +'" est incorrect.\n\n🔹**Liste des types acceptés :**' + types.toString())
+      const embed = createEmbed('Le type de sortie "' + type +'" est incorrect.\n\n🔹**Liste des types acceptés :**' + types.toString(), emojis.error + " Une erreur s'est produite");
+
+      msg.reply({ embeds: [embed] })
       .then(reply => {
         msg.delete();
       })
