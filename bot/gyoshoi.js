@@ -145,6 +145,7 @@ client.on('messageCreate', msg => {
                     channel.send(msgContent);
                   }
                   msg.delete();
+                  discordEvent.destroy();
                 })
               }
             })
