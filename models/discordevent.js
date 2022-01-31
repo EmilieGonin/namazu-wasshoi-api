@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   DiscordEvent.init({
     discordId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING,
       unique: true,
       allowNull: false
     },

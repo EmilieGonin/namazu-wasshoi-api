@@ -11,7 +11,7 @@ module.exports = {
       discordId: {
         unique: true,
         allowNull: false,
-        type: Sequelize.BIGINT
+        type: Sequelize.STRING
       },
       title: {
         allowNull: false,
