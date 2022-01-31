@@ -5,7 +5,7 @@ const { parse, format, isValid, isFuture, isBefore } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 
 const { activities } = require('./embed');
-const { discordRoles, emojis } = require('./ressources');
+const { discordRoles, emojis, channels } = require('./ressources');
 const { react, getDiscordTime, handleReaction, handleEnd, createEmbed } = require('./functions');
 
 const { MessageEmbed, MessageAttachment } = require('discord.js');
@@ -89,9 +89,10 @@ client.on('messageCreate', msg => {
 
       event.fields = basicFields;
       const file = new MessageAttachment('./assets/' + type + '.png');
+      const channel = client.channels.cache.get(channels.inscriptions);
 
       msg.delete();
-      msg.channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [event], files: [file] })
+      channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [event], files: [file] })
       .then(msg => {
         DiscordEvent.create({
           discordId: msg.id,
@@ -137,7 +138,8 @@ client.on('messageCreate', msg => {
               } else {
                 handleEnd(discordEvent).then(msgContent => {
                   if (msgContent) {
-                    msg.channel.send(msgContent);
+                    const channel = client.channels.cache.get(channels.rassemblement);
+                    channel.send(msgContent);
                   }
                   msg.delete();
                 })
