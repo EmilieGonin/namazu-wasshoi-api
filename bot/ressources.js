@@ -10,6 +10,7 @@ const discordRoles = {
 }
 
 const channels = {
+  planning: env ? '894607375271604224' : devChannel,
   inscriptions: env ? '841025816556863509' : devChannel,
   rassemblement: env ? '677984271159263282' : devChannel,
   logs: env ? '707735383177166858' : devChannel

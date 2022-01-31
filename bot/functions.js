@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
-const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
+const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage } = require("../models/index");
 const { emojis, roles, states, channels } = require('./ressources');
-const { differenceInMilliseconds, formatDistanceToNowStrict, subHours, isBefore } = require('date-fns');
+const { differenceInMilliseconds, formatDistanceToNowStrict, subHours, isBefore, isEqual, format } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 const { client } = require('./config');
 
@@ -374,5 +374,38 @@ async function sendNotification(hour, discordEvent) {
     user.send({ embeds: [embed] });
   }
 }
+async function handlePlanning() {
+  const [planning, created] = await DiscordMessage.findOrCreate({
+    where: { type: 'planning' }
+  });
 
-module.exports = { react, getDiscordTime, getJob, handleReaction, handleEnd, createEmbed }
+  const dates = (await DiscordEvent.findAll({
+    group: ['formattedDate'],
+    order: ['date']
+  })).map(item => item.formattedDate);
+
+  let eventsList = [];
+
+  for (let date of dates) {
+    const events = (await DiscordEvent.findAll({
+      where: { formattedDate: date },
+      order: ['hour']
+    })).map(item => `\`${item.hour}\` ${item.title}`).join('\n');
+    const string = `\n:calendar: **${date}**\n${events}`
+    eventsList.push(string);
+  }
+
+  eventsList = eventsList.join('\n');
+  const embed = createEmbed(eventsList, "Planning");
+  const channel = client.channels.cache.get(channels.planning);
+
+  if (created) {
+    const msg = await channel.send({ embeds: [embed] });
+    planning.update({ discordId: msg.id });
+  } else {
+    const msg = await channel.messages.fetch(planning.discordId);
+    msg.edit({ embeds: [embed] });
+  }
+}
+
+module.exports = { react, getDiscordTime, getJob, handleReaction, handleEnd, createEmbed, handlePlanning }

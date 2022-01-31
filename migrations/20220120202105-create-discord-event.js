@@ -21,6 +21,14 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
+      formattedDate: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      hour: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       roles_tank: {
         type: Sequelize.INTEGER,
         defaultValue: 0

@@ -6,7 +6,7 @@ const fr = require('date-fns/locale/fr');
 
 const { activities } = require('./embed');
 const { discordRoles, emojis, channels } = require('./ressources');
-const { react, getDiscordTime, handleReaction, handleEnd, createEmbed } = require('./functions');
+const { react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed } = require('./functions');
 
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const { client } = require('./config');
@@ -97,9 +97,12 @@ client.on('messageCreate', msg => {
         DiscordEvent.create({
           discordId: msg.id,
           title: event.title,
-          date: parsedDate
+          date: parsedDate,
+          formattedDate: date,
+          hour: hour + ':00'
         }).then(discordEvent => {
           react(msg, emojis.event);
+          handlePlanning();
 
           async function setCollector() {
             const filter = (reaction, user) => {

@@ -27,6 +27,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false
     },
+    formattedDate: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    hour: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     roles_tank: {
       type: DataTypes.INTEGER,
       defaultValue: 0
