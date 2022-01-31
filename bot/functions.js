@@ -124,16 +124,21 @@ async function handleReaction(reaction, user, discordEvent) {
     await handleNotifications(user, discordUser);
   }
 
-  if (stateEmoji) {
-    console.log("-state-");
+  if (emoji == 'pas_dispo' && discordEventReaction.role && discordEvent.logs && isBefore(discordEventReaction.createdAt, subHours(discordEvent.date, 24))) {
+    const hasOptOut = await optOut(user);
 
-    if (emoji == 'pas_dispo' && discordEventReaction.role && discordEvent.logs && isBefore(discordEventReaction.createdAt, subHours(discordEvent.date, 24))) {
+    if (hasOptOut) {
       const interval = formatDistanceToNowStrict(discordEventReaction.createdAt, { locale: fr });
       const channel = client.channels.cache.get(channels.logs);
-      const embed = createEmbed(`${discordUser.discordName} vient de se désinscrire de la sortie ${discordEvent.title} (${interval} après son inscription).`)
+      embed = createEmbed(`${discordUser.discordName} vient de se désinscrire de la sortie ${discordEvent.title} (${interval} après son inscription).`)
       channel.send({ embeds: [embed] });
+    } else {
+      return;
     }
+  }
 
+  if (stateEmoji) {
+    console.log("-state-");
     if (discordEventReaction.state) {
       console.log('already state, removing old one');
       await discordEvent.decrement('state_' + discordEventReaction.state);
@@ -141,6 +146,7 @@ async function handleReaction(reaction, user, discordEvent) {
       console.log('no state, removing role');
       await discordEvent.decrement('roles_' + discordEventReaction.role);
     }
+
     discordEventReaction.state = emoji;
     await discordEvent.reload();
     await discordEvent.increment('state_' + emoji);
@@ -303,9 +309,34 @@ function handleNotifications(user, discordUser) {
           collector.resetTimer();
         }
       })
+    })
+  });
+}
+function optOut(user) {
+  return new Promise(function(resolve, reject) {
+    let embed = createEmbed(`**Es-tu sûr(e) de vouloir te désinscrire ?** ${emojis.shoi.surprise} S'il n'y a pas assez de monde pour la sortie, il se peut qu'elle soit annulée !\n\nRéponds \`oui\` pour valider ta désincription, ou \`non\` pour l'annuler.`, emojis.error + " Tu dois valider ta désinscription");
+    user.send({ embeds: [embed] }).then(msg => {
+      const filter = m => !m.author.bot;
+      const collector = user.dmChannel.createMessageCollector({ filter, time: 600000 });
 
-      collector.on('end', () => {
-        console.log('collector ended');
+      collector.on('collect', m => {
+        const answer = m.content.toLowerCase();
+        if (answer == 'oui') {
+          const embed = createEmbed(`J'espère que tout va bien, wasshoi ! Ta désinscription ayant lieu moins de 24h avant la sortie, elle va être notifiée aux officiers. Pas de panique ! Nous receuillons ces informations uniquement à titre informatif. N'hésites surtout pas à contacter un officier si tu as besoin d'aide.`, emojis.update + " Tu as bien été désinscrit(e)");
+          user.send({ embeds: [embed] });
+          collector.stop();
+          resolve(true);
+        } else if (answer == 'non') {
+          const embed = createEmbed(`C'est noté, tu es toujours inscrit(e), wasshoi !`, emojis.update + " Désinscription annulée");
+          user.send({ embeds: [embed] });
+          collector.stop();
+          resolve(false);
+        } else {
+          const embed = createEmbed("Je n'ai pas compris votre réponse ! " + emojis.shoi.surprise, emojis.error + " Une erreur s'est produite");
+
+          user.send({ embeds: [embed] });
+          collector.resetTimer();
+        }
       })
     })
   });
