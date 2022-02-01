@@ -137,4 +137,13 @@ const emojis = {
   inscrits: '<:Inscrits:933695822028226601>'
 }
 
-module.exports = { guild, link, discordRoles, channels, roles, states, emojis };
+const activities = {
+  cartes: {
+    color: "#ffd700",
+    title: "<:cartes_aux_tresors:937406414954057768> Cartes aux trésors",
+    description: "Essayez de récupérer votre carte journalière, ou au moins d'en apporter une.",
+    image: { url: "attachment://cartes.png" }
+  }
+}
+
+module.exports = { guild, link, discordRoles, channels, roles, states, emojis, activities };

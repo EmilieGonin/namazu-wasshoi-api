@@ -4,9 +4,8 @@ const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/i
 const { parse, format, isValid, isFuture, isBefore } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 
-const { activities } = require('./embed');
-const { discordRoles, emojis, channels } = require('./ressources');
-const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed } = require('./functions');
+const { discordRoles, emojis, channels, activities } = require('./ressources');
+const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed } = require('./functions');
 
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const { client } = require('./config');
@@ -28,16 +27,8 @@ client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
   const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
-  // const isAdmin = true;
 
   if (string.includes('!planning') && isAdmin) {
-    const event = {
-      footer: {
-        text: 'Consultez les messages épinglés pour obtenir de l\'aide.',
-        icon_url: 'https://i.goopics.net/fc2ntk.png'
-      }
-    };
-
     const type = string.split(' ')[1];
     const hour = string.split(' ')[3];
     const parsedDate = parse(string.split(' ')[2] + ':' + hour, 'dd/MM/yyyy:HH', new Date());
@@ -76,43 +67,36 @@ client.on('messageCreate', msg => {
     } else {
       const date = format(parsedDate, 'E d MMMM', { locale: fr });
 
-      for (let i in activities[type]) {
-        event[i] = activities[type][i];
-      }
-
-      basicFields = [
-        { name: '** **', value: '** **' },
-        { name: ':calendar: Date', value: '`' + date + '`', inline: true },
-        { name: ':clock1: Heure de départ', value: '`' + hour + ':00`', inline: true },
-        { name: emojis.inscrits + ' **Inscrits**', value: '`0`', inline: true },
-      ]
-
-      event.fields = basicFields;
       const file = new MessageAttachment('./assets/' + type + '.png');
       const channel = client.channels.cache.get(channels.inscriptions);
+      const event = { type, date, hour: hour + ':00' };
 
-      msg.delete();
-      channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [event], files: [file] })
-      .then(msg => {
-        DiscordEvent.create({
-          discordId: msg.id,
-          title: event.title,
-          date: parsedDate,
-          formattedDate: date,
-          hour: hour + ':00'
-        }).then(discordEvent => {
-          react(msg, emojis.event);
-          handlePlanning();
-          setCollector(discordEvent, event, msg, basicFields);
+      createEventEmbed(event).then(embed => {
+        msg.delete();
+
+        channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [embed], files: [file] })
+        .then(msg => {
+          DiscordEvent.create({
+            discordId: msg.id,
+            title: embed.title,
+            date: parsedDate,
+            formattedDate: date,
+            hour: hour + ':00',
+            type: type
+          }).then(discordEvent => {
+            react(msg, emojis.event);
+            handlePlanning();
+            setCollector(discordEvent, msg);
+          })
+          .catch((e) => {
+            console.error(e);
+            msg.delete();
+          })
         })
         .catch((e) => {
           console.error(e);
           msg.delete();
         })
-      })
-      .catch((e) => {
-        console.error(e);
-        msg.delete();
       })
     }
   }

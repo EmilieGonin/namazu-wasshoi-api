@@ -82,6 +82,10 @@ module.exports = (sequelize, DataTypes) => {
     notifications_1h: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    type: {
+      allowNull: false,
+      type: DataTypes.STRING
     }
   }, {
     sequelize,

@@ -1,11 +1,11 @@
 const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage } = require("../models/index");
-const { emojis, roles, states, channels, link } = require('./ressources');
+const { emojis, roles, states, channels, link, activities } = require('./ressources');
 const { differenceInMilliseconds, formatDistanceToNowStrict, subHours, isBefore, isEqual, format } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 const { client } = require('./config');
 
-async function setCollector(discordEvent, event, msg, basicFields) {
+async function setCollector(discordEvent, msg) {
   const filter = (reaction, user) => {
     return emojis.event.includes(
       `<:${reaction.emoji.name}:${reaction.emoji.id}>`
@@ -21,15 +21,8 @@ async function setCollector(discordEvent, event, msg, basicFields) {
       console.log("function ended");
       if (newFields) {
         handlePlanning();
-        discordEvent.countDiscordEventReactions({
-          where: {
-            role: { [Op.not]: null },
-            state: { [Op.is]: null }
-          }
-        }).then(total => {
-          basicFields[3].value = `\`${total}\``;
-          event.fields = [...basicFields, ...newFields];
-          msg.edit({ embeds: [event] });
+        createEventEmbed(discordEvent, newFields).then(embed => {
+          msg.edit({ embeds: [embed] });
         })
       }
     })
@@ -39,7 +32,7 @@ async function setCollector(discordEvent, event, msg, basicFields) {
     console.log('ended');
     if (isFuture(discordEvent.date)) {
       console.log('reset');
-      setCollector(discordEvent, event, msg, basicFields);
+      setCollector(discordEvent, msg);
     } else {
       handleEnd(discordEvent).then(msgContent => {
         if (msgContent) {
@@ -404,6 +397,37 @@ function createEmbed(description, title) {
 
   return embed;
 }
+async function createEventEmbed(event, newFields) {
+  const embed = {
+    footer: {
+      text: 'Consultez les messages épinglés pour obtenir de l\'aide.',
+      icon_url: 'https://i.goopics.net/fc2ntk.png'
+    }
+  };
+
+  for (let i in activities[event.type]) {
+    embed[i] = activities[event.type][i];
+  }
+
+  const basicFields = [
+    { name: '** **', value: '** **' },
+    { name: ':calendar: Date', value: '`' + event.date + '`', inline: true },
+    { name: ':clock1: Heure de départ', value: '`' + event.hour + '`', inline: true },
+    { name: emojis.inscrits + ' **Inscrits**', value: '`0`', inline: true },
+  ]
+
+  if (newFields) {
+    const total = await event.countDiscordEventReactions({
+      where: { role: { [Op.not]: null }, state: { [Op.is]: null } }
+    });
+    basicFields[3].value = `\`${total}\``;
+    embed.fields = [...basicFields, ...newFields];
+  } else {
+    embed.fields = basicFields;
+  }
+
+  return embed;
+}
 async function sendNotification(hour, discordEvent) {
   const users = (await DiscordUser.findAll({
     where: {
@@ -471,4 +495,4 @@ async function handlePlanning() {
   }
 }
 
-module.exports = { setCollector, react, getDiscordTime, getJob, handleReaction, handleEnd, createEmbed, handlePlanning }
+module.exports = { setCollector, react, getDiscordTime, getJob, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning }
