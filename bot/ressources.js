@@ -138,11 +138,67 @@ const emojis = {
 }
 
 const activities = {
+  categories: [
+    { name: 'Ateliers', emoji: '<:ateliers:938077848441348117>' },
+    { name: 'Clear et farm', emoji: '<:farm:938081526346842153>' },
+    { name: 'Autres', emoji: '<:autres:938078545178148884>' }
+  ],
+  atelier_glam: {
+    category: 'Ateliers',
+    color: '#faaab4',
+    title: "<:glamour:938077848336498749> Atelier Glamour avec Yuuna",
+    description: 'uc',
+    image: { url: "attachment://atelier_glam.png" }
+  },
+  atelier_gold: {
+    category: 'Ateliers',
+    color: '#eec671',
+    title: "<:gold_saucer:938077848659451909> Atelier Gold Saucer avec Rabyte",
+    description: "Viens te plonger dans l'univers magique (et dépensier) du Gold Saucer !\n\nDans cet atelier ouvert à tous, tu pourras apprendre les ficelles du farm de PGS et réaliser ton carnet d'objectifs, que ce soit grâce aux JACTAS ou à la Triple Triade, en passant par la course de Chocobo ! Viens t'amuser et devenir riche *(en PGS)* avec nous ! " + emojis.shoi.gold,
+    image: { url: "attachment://atelier_gold.png" }
+  },
+  atelier_logs: {
+    category: 'Ateliers',
+    color: '#001487',
+    title: "<:ateliers:938077848441348117> Atelier Logs avec Ladisla",
+    description: "Bienvenue à cette session conçue pour vous aider à approfondir vos connaissances et votre niveau d'expertise sur FFXIV ! Cet atelier abordera de nombreux sujets, que ce soit pour maîtriser votre job ou apprendre à utiliser les outils de logs.",
+    image: { url: "attachment://atelier_logs.png" },
+    fields: [
+      { name: ':small_blue_diamond: Programme du jour', value: "Cette session sera consacrée à la gestion des outils de groupe, et savoir comment s'accorder avec votre groupe pour mieux briller !" }
+    ]
+  },
+  atelier_screen: {
+    category: 'Ateliers',
+    title: "<:screenshots:938075407821983744> Atelier Screenshots avec Nexara",
+    description: 'uc',
+    image: { url: "attachment://atelier_screen.png" }
+  },
   cartes: {
-    color: "#ffd700",
+    category: 'Autres',
+    color: '#ffd700',
     title: "<:cartes_aux_tresors:937406414954057768> Cartes aux trésors",
-    description: "Essayez de récupérer votre carte journalière, ou au moins d'en apporter une.",
+    description: "Venez vous faire un max de gils ! Essayez de récupérer votre carte journalière, ou au moins d'en apporter une.",
     image: { url: "attachment://cartes.png" }
+  },
+  farm_mount: {
+    category: 'Clear et farm',
+    color: '#7b3890',
+    title: '<:farm:938081526346842153> Farm de monture',
+    description: 'Essayez de regarder les vidéos avant de venir (celles de Mikoto ou Plava par exemple).',
+    image: { url: "attachment://farm_mount.png" },
+    fields: [
+      { name: ':small_blue_diamond: Contenu de la sortie', value: 'uc' }
+    ]
+  },
+  jeux: {
+    category: 'Autres',
+    subtypes: true,
+    phasmophobia: {
+      color: '#ffd700',
+      title: 'Soirée jeux sur Phasmophobia',
+      description: "Venez passer une soirée détente (enfin, plus ou moins) sur Phasmophobia ! Nous pourrons créer des équipes de 4, et ceux qui souhaitent juste regarder tout le monde flipper pourront le faire grâce aux partages d'écran Discord <:ShoiEyes:893475509973954630> N'oubliez pas que vous pouvez récupérer le rôle du jeu dans <#704781275461845132> pour accéder à son salon privé !",
+      image: { url: "attachment://jeux.png" }
+    }
   }
 }
 
