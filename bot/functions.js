@@ -411,7 +411,7 @@ async function createEventEmbed(event, newFields) {
 
   const basicFields = [
     { name: '** **', value: '** **' },
-    { name: ':calendar: Date', value: '`' + event.date + '`', inline: true },
+    { name: ':calendar: Date', value: `\`${event.formattedDate ? event.formattedDate : event.date}\``, inline: true },
     { name: ':clock1: Heure de départ', value: '`' + event.hour + '`', inline: true },
     { name: emojis.inscrits + ' **Inscrits**', value: '`0`', inline: true },
   ]
