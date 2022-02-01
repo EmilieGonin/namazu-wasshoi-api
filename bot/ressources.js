@@ -3,6 +3,9 @@ const env = process.env.NODE_ENV;
 const devRole = '932934305552941066';
 const devChannel = '933031685702946866';
 
+const guild = env ? '674203369275129857' : '901224403122151474';
+const link = 'https://discord.com/channels/' + guild + '/';
+
 const discordRoles = {
   officier: env ? '674204890054131712' : devRole,
   membres: env ? '674206058410934272' : devRole,
@@ -133,4 +136,4 @@ const emojis = {
   false: '<:false:937343578424873002>'
 }
 
-module.exports = { discordRoles, channels, roles, states, emojis };
+module.exports = { guild, link, discordRoles, channels, roles, states, emojis };

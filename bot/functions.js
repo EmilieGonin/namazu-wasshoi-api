@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage } = require("../models/index");
-const { emojis, roles, states, channels } = require('./ressources');
+const { emojis, roles, states, channels, link } = require('./ressources');
 const { differenceInMilliseconds, formatDistanceToNowStrict, subHours, isBefore, isEqual, format } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 const { client } = require('./config');
@@ -390,7 +390,7 @@ async function handlePlanning() {
     const events = (await DiscordEvent.findAll({
       where: { formattedDate: date },
       order: ['hour']
-    })).map(item => `\`${item.hour}\` ${item.title}`).join('\n');
+    })).map(item => `\`${item.hour}\` [${item.title}](${link}${channels.inscriptions}/${item.discordId})`).join('\n');
     const string = `\n:calendar: **${date}**\n${events}`
     eventsList.push(string);
   }
