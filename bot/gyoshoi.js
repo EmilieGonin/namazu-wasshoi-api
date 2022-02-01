@@ -58,6 +58,16 @@ client.on('messageCreate', msg => {
   }
 })
 
+// !gyoshoi clear
+client.on('messageCreate', msg => {
+  if (msg.author.bot || msg.channel.type == 'DM') { return };
+  const string = msg.content.toLowerCase();
+  const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
+  if (isAdmin && (string == '!gyoshoi clear')) {
+    msg.channel.bulkDelete(100);
+  }
+})
+
 // !planning type date hour
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
