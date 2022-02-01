@@ -95,13 +95,21 @@ client.on('messageCreate', msg => {
         msg.delete();
       })
     } else if (!activities[type]) {
-      const types = [];
+      let typeList = [];
 
-      for (let type in activities) {
-        types.push(' ' + type)
+      for (let category of activities.categories) {
+        let types = [];
+        for (let type in activities) {
+          if (activities[type].category == category.name) {
+            types.push(type);
+          }
+        }
+        types = `${category.emoji} **${category.name}**\n${types.join('\n')}`;
+        typeList.push(types);
       }
 
-      const embed = createEmbed('Le type de sortie "' + type +'" est incorrect.\n\n🔹**Liste des types acceptés :**' + types.toString(), emojis.error + " Une erreur s'est produite");
+      typeList = typeList.join('\n\n');
+      const embed = createEmbed('Le type de sortie "' + type +'" est incorrect.\n\n🔹**Liste des types acceptés :**\n\n' + typeList, emojis.error + " Une erreur s'est produite");
 
       msg.reply({ embeds: [embed] })
       .then(reply => {
