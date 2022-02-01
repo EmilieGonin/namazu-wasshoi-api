@@ -5,13 +5,67 @@ const { differenceInMilliseconds, formatDistanceToNowStrict, subHours, isBefore,
 const fr = require('date-fns/locale/fr');
 const { client } = require('./config');
 
+async function setCollector(discordEvent, event, msg, basicFields) {
+  const filter = (reaction, user) => {
+    return emojis.event.includes(
+      `<:${reaction.emoji.name}:${reaction.emoji.id}>`
+    ) && !user.bot;
+  };
+
+  const collector = msg.createReactionCollector({ filter, time: getDiscordTime(discordEvent) });
+
+  collector.on('collect', (reaction, user) => {
+    reaction.users.remove(user);
+    handleReaction(reaction, user, discordEvent)
+    .then(newFields => {
+      console.log("function ended");
+      if (newFields) {
+        handlePlanning();
+        discordEvent.countDiscordEventReactions({
+          where: {
+            role: { [Op.not]: null },
+            state: { [Op.is]: null }
+          }
+        }).then(total => {
+          basicFields[3].value = `\`${total}\``;
+          event.fields = [...basicFields, ...newFields];
+          msg.edit({ embeds: [event] });
+        })
+      }
+    })
+  });
+
+  collector.on('end', () => {
+    console.log('ended');
+    if (isFuture(discordEvent.date)) {
+      console.log('reset');
+      setCollector(discordEvent, event, msg, basicFields);
+    } else {
+      handleEnd(discordEvent).then(msgContent => {
+        if (msgContent) {
+          const channel = client.channels.cache.get(channels.rassemblement);
+          channel.send(msgContent);
+        }
+        msg.delete();
+        discordEvent.destroy();
+      })
+    }
+    // handleEnd(discordEvent).then(msgContent => {
+    //   if (msgContent) {
+    //     msg.channel.send(msgContent);
+    //   }
+    //   console.log('deleting message');
+    //   msg.delete();
+    // })
+  })
+}
 async function react(msg, reactions) {
   for (let reaction of reactions) {
     await msg.react(reaction);
   }
 }
-function getDiscordTime(date, discordEvent) {
-  const time = differenceInMilliseconds(date, new Date());
+function getDiscordTime(discordEvent) {
+  const time = differenceInMilliseconds(discordEvent.date, new Date());
   const twentyfourHours = 86400000;
   const threeHours = 10800000;
   const oneHour = 3600000;
@@ -417,4 +471,4 @@ async function handlePlanning() {
   }
 }
 
-module.exports = { react, getDiscordTime, getJob, handleReaction, handleEnd, createEmbed, handlePlanning }
+module.exports = { setCollector, react, getDiscordTime, getJob, handleReaction, handleEnd, createEmbed, handlePlanning }

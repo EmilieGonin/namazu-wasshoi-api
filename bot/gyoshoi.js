@@ -6,7 +6,7 @@ const fr = require('date-fns/locale/fr');
 
 const { activities } = require('./embed');
 const { discordRoles, emojis, channels } = require('./ressources');
-const { react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed } = require('./functions');
+const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed } = require('./functions');
 
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const { client } = require('./config');
@@ -103,55 +103,7 @@ client.on('messageCreate', msg => {
         }).then(discordEvent => {
           react(msg, emojis.event);
           handlePlanning();
-
-          async function setCollector() {
-            const filter = (reaction, user) => {
-              return emojis.event.includes(
-                `<:${reaction.emoji.name}:${reaction.emoji.id}>`
-              ) && !user.bot;
-            };
-
-            const collector = msg.createReactionCollector({ filter, time: getDiscordTime(parsedDate, discordEvent) });
-
-            collector.on('collect', (reaction, user) => {
-              reaction.users.remove(user);
-              handleReaction(reaction, user, discordEvent)
-              .then(newFields => {
-                console.log("function ended");
-                if (newFields) {
-                  handlePlanning();
-                  discordEvent.countDiscordEventReactions({
-                    where: {
-                      role: { [Op.not]: null },
-                      state: { [Op.is]: null }
-                    }
-                  }).then(total => {
-                    basicFields[3].value = `\`${total}\``;
-                    event.fields = [...basicFields, ...newFields];
-                    msg.edit({ embeds: [event] });
-                  })
-                }
-              })
-            });
-
-            collector.on('end', () => {
-              console.log('ended');
-              if (isFuture(parsedDate)) {
-                console.log('reset');
-                setCollector();
-              } else {
-                handleEnd(discordEvent).then(msgContent => {
-                  if (msgContent) {
-                    const channel = client.channels.cache.get(channels.rassemblement);
-                    channel.send(msgContent);
-                  }
-                  msg.delete();
-                  discordEvent.destroy();
-                })
-              }
-            })
-          }
-          setCollector();
+          setCollector(discordEvent, event, msg, basicFields);
         })
         .catch((e) => {
           console.error(e);
