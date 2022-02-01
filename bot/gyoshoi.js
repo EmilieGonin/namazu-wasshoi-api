@@ -49,7 +49,6 @@ client.once('ready', () => {
     }
   })
 })
-
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
@@ -57,7 +56,6 @@ client.on('messageCreate', msg => {
     msg.reply('Yes yes, wasshoi !');
   }
 })
-
 // !gyoshoi clear
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
@@ -67,7 +65,6 @@ client.on('messageCreate', msg => {
     msg.channel.bulkDelete(100);
   }
 })
-
 // !planning type date hour
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
