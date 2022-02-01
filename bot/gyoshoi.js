@@ -12,6 +12,42 @@ const { client } = require('./config');
 
 client.once('ready', () => {
   console.log('Je suis prêt, wasshoi !');
+
+  DiscordEvent.findAll().then(discordEvents => {
+    const channel = client.channels.cache.get(channels.inscriptions);
+
+    for (let event of discordEvents) {
+      channel.messages.fetch(event.discordId).then(msg => {
+        console.log('message found');
+        setCollector(event, msg);
+        if (msg.reactions.cache.size != 10) {
+          console.log('some reactions are missing');
+          msg.reactions.removeAll().then(() => {
+            react(msg, emojis.event);
+          })
+        }
+      }).catch(e => {
+        if (e.httpStatus == 404) {
+          console.log('message not found');
+
+          const file = new MessageAttachment('./assets/' + event.type + '.png');
+          createEventEmbed(event).then(embed => {
+            channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [embed], files: [file] })
+            .then(msg => {
+              event.update({ discordId: msg.id });
+              react(msg, emojis.event);
+              handlePlanning();
+              setCollector(event, msg);
+            })
+            .catch((e) => {
+              console.error(e);
+              msg.delete();
+            })
+          })
+        }
+      })
+    }
+  })
 })
 
 client.on('messageCreate', msg => {
