@@ -84,7 +84,7 @@ client.on('messageCreate', msg => {
         { name: '** **', value: '** **' },
         { name: ':calendar: Date', value: '`' + date + '`', inline: true },
         { name: ':clock1: Heure de départ', value: '`' + hour + ':00`', inline: true },
-        { name: '<:Inscrits:933695822028226601> **Inscrits**', value: '`0`', inline: true },
+        { name: emojis.inscrits + ' **Inscrits**', value: '`0`', inline: true },
       ]
 
       event.fields = basicFields;
@@ -119,6 +119,7 @@ client.on('messageCreate', msg => {
               .then(newFields => {
                 console.log("function ended");
                 if (newFields) {
+                  handlePlanning();
                   discordEvent.countDiscordEventReactions({
                     where: {
                       role: { [Op.not]: null },

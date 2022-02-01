@@ -390,7 +390,16 @@ async function handlePlanning() {
     const events = (await DiscordEvent.findAll({
       where: { formattedDate: date },
       order: ['hour']
-    })).map(item => `\`${item.hour}\` [${item.title}](${link}${channels.inscriptions}/${item.discordId})`).join('\n');
+    })).map(item => {
+      let users = 0;
+      for (let property in item.dataValues) {
+        if (property.startsWith('roles_')) {
+          users = users + item.dataValues[property];
+        }
+      }
+
+      return `\`${item.hour}\` ${emojis.inscrits}\`${users}\` [${item.title}](${link}${channels.inscriptions}/${item.discordId})`;
+    }).join('\n');
     const string = `\n:calendar: **${date}**\n${events}`
     eventsList.push(string);
   }

@@ -133,7 +133,8 @@ const emojis = {
   edit: '<:edit:936640835766845521>',
   rappel: '<:Rappel_par_MP:936367117597552721>',
   true: '<:true:937343578714275901>',
-  false: '<:false:937343578424873002>'
+  false: '<:false:937343578424873002>',
+  inscrits: '<:Inscrits:933695822028226601>'
 }
 
 module.exports = { guild, link, discordRoles, channels, roles, states, emojis };
