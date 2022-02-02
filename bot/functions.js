@@ -625,25 +625,30 @@ async function handlePlanning() {
 
   let eventsList = [];
 
-  for (let date of dates) {
-    const events = (await DiscordEvent.findAll({
-      where: { formattedDate: date },
-      order: ['hour']
-    })).map(item => {
-      let users = 0;
-      for (let property in item.dataValues) {
-        if (property.startsWith('roles_')) {
-          users = users + item.dataValues[property];
+  if (dates.length) {
+    for (let date of dates) {
+      const events = (await DiscordEvent.findAll({
+        where: { formattedDate: date },
+        order: ['hour']
+      })).map(item => {
+        let users = 0;
+        for (let property in item.dataValues) {
+          if (property.startsWith('roles_')) {
+            users = users + item.dataValues[property];
+          }
         }
-      }
 
-      return `\`${item.hour}\` ${emojis.inscrits}\`${users}\` [${item.title}](${link}${channels.inscriptions}/${item.discordId})`;
-    }).join('\n');
-    const string = `\n:calendar: **${date}**\n${events}`
-    eventsList.push(string);
+        return `\`${item.hour}\` ${emojis.inscrits}\`${users}\` [${item.title}](${link}${channels.inscriptions}/${item.discordId})`;
+      }).join('\n');
+      const string = `\n:calendar: **${date}**\n${events}`
+      eventsList.push(string);
+    }
+
+    eventsList = eventsList.join('\n');
+  } else {
+    eventsList = "Aucune sortie de prévue pour le moment.";
   }
 
-  eventsList = eventsList.join('\n');
   const embed = createEmbed(eventsList, "Planning");
   const channel = client.channels.cache.get(channels.planning);
 
