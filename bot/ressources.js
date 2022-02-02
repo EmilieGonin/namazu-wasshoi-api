@@ -1,7 +1,7 @@
 require('dotenv').config();
 const env = process.env.NODE_ENV;
 const devRole = '932934305552941066';
-const devChannel = '933031685702946866';
+const devChannel = '938454833353084938';
 
 const guild = env ? '674203369275129857' : '901224403122151474';
 const link = 'https://discord.com/channels/' + guild + '/';
