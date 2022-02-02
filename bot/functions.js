@@ -37,19 +37,26 @@ async function setCollector(discordEvent, msg) {
 
   collector.on('end', () => {
     console.log('ended');
-    if (isFuture(discordEvent.date)) {
-      console.log('reset');
-      setCollector(discordEvent, msg);
-    } else {
-      handleEnd(discordEvent).then(msgContent => {
-        if (msgContent) {
-          const channel = client.channels.cache.get(channels.rassemblement);
-          channel.send(msgContent);
-        }
-        msg.delete();
-        discordEvent.destroy();
-      })
-    }
+    DiscordEvent.findOne({
+      where: { discordId: msg.id }
+    }).then(discordEvent => {
+      if (discordEvent && isFuture(discordEvent.date)) {
+        console.log('reset');
+        setCollector(discordEvent, msg);
+      } else if (discordEvent) {
+        handleEnd(discordEvent).then(msgContent => {
+          if (msgContent) {
+            const channel = client.channels.cache.get(channels.rassemblement);
+            channel.send(msgContent);
+          }
+          msg.delete();
+          discordEvent.destroy();
+          handlePlanning();
+        })
+      } else {
+        handlePlanning();
+      }
+    })
     // handleEnd(discordEvent).then(msgContent => {
     //   if (msgContent) {
     //     msg.channel.send(msgContent);
@@ -60,21 +67,22 @@ async function setCollector(discordEvent, msg) {
   })
 }
 async function react(msg, type, reactions) {
-  // console.log(type);
-  // console.log(emojis.event);
-  // console.log(emojis.event[type]);
-  if (reactions) {
-    for (let reaction of reactions) {
-      await msg.react(reaction);
+  try {
+    if (reactions) {
+      for (let reaction of reactions) {
+        await msg.react(reaction);
+      }
+    } else if (activities[type].yesno) {
+      for (let reaction of emojis.event.yesno) {
+        await msg.react(reaction);
+      }
+    } else {
+      for (let reaction of emojis.event.default) {
+        await msg.react(reaction);
+      }
     }
-  } else if (activities[type].yesno) {
-    for (let reaction of emojis.event.yesno) {
-      await msg.react(reaction);
-    }
-  } else {
-    for (let reaction of emojis.event.default) {
-      await msg.react(reaction);
-    }
+  } catch (e) {
+    console.error(e);
   }
 }
 function getDiscordTime(discordEvent) {

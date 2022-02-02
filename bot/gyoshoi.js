@@ -151,21 +151,28 @@ client.on('messageCreate', msg => {
     }
   }
 })
-// !shoi delete messageId
+// !shoi cancel messageId
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
   const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
-  if (isAdmin && (string.startsWith('!shoi delete'))) {
+  if (isAdmin && (string.startsWith('!shoi cancel'))) {
     const messageId = string.split(' ')[2];
+    msg.delete();
 
     if (messageId) {
-      msg.channel.messages.fetch(messageId).then(message => {
-        message.delete();
-        msg.delete();
+      const channel = client.channels.cache.get(channels.inscriptions);
+      DiscordEvent.findOne({ where: { discordId: messageId } }).then(event => {
+        if (event) {
+          event.destroy();
+        }
+        channel.messages.fetch(messageId).then(message => {
+          message.delete()
+          .catch(e => {
+            console.error(e);
+          })
+        })
       })
-    } else {
-      //
     }
   }
 })

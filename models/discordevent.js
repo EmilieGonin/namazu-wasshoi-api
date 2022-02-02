@@ -10,7 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      DiscordEvent.hasMany(models.DiscordEventReaction);
+      DiscordEvent.hasMany(models.DiscordEventReaction, {
+        onDelete: 'CASCADE'
+      });
     }
   };
   DiscordEvent.init({

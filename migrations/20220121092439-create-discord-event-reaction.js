@@ -17,6 +17,7 @@ module.exports = {
       },
       DiscordEventId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         references: {
           model: "DiscordEvents",
           key: 'id'
