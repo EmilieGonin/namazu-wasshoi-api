@@ -56,15 +56,6 @@ client.on('messageCreate', msg => {
     msg.reply('Yes yes, wasshoi !');
   }
 })
-// !gyoshoi clear
-client.on('messageCreate', msg => {
-  if (msg.author.bot || msg.channel.type == 'DM') { return };
-  const string = msg.content.toLowerCase();
-  const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
-  if (isAdmin && (string == '!gyoshoi clear')) {
-    msg.channel.bulkDelete(100);
-  }
-})
 // !planning type date hour
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
@@ -158,5 +149,32 @@ client.on('messageCreate', msg => {
         })
       })
     }
+  }
+})
+// !shoi delete messageId
+client.on('messageCreate', msg => {
+  if (msg.author.bot || msg.channel.type == 'DM') { return };
+  const string = msg.content.toLowerCase();
+  const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
+  if (isAdmin && (string.startsWith('!shoi delete'))) {
+    const messageId = string.split(' ')[2];
+
+    if (messageId) {
+      msg.channel.messages.fetch(messageId).then(message => {
+        message.delete();
+        msg.delete();
+      })
+    } else {
+      //
+    }
+  }
+})
+// !shoi clear
+client.on('messageCreate', msg => {
+  if (msg.author.bot || msg.channel.type == 'DM') { return };
+  const string = msg.content.toLowerCase();
+  const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
+  if (isAdmin && (string == '!shoi clear')) {
+    msg.channel.bulkDelete(100);
   }
 })
