@@ -56,16 +56,16 @@ client.on('messageCreate', msg => {
     msg.reply('Yes yes, wasshoi !');
   }
 })
-// !planning type date hour
+// !shoi add type date hour
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
   const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
 
-  if (string.includes('!planning') && isAdmin) {
-    const type = string.split(' ')[1];
-    const hour = string.split(' ')[3];
-    const parsedDate = parse(string.split(' ')[2] + ':' + hour, 'dd/MM/yyyy:HH', new Date());
+  if (string.startsWith('!shoi add') && isAdmin) {
+    const type = string.split(' ')[2];
+    const hour = string.split(' ')[4];
+    const parsedDate = parse(string.split(' ')[3] + ':' + hour, 'dd/MM/yyyy:HH', new Date());
 
     if (!type || !parsedDate || !hour) {
       const embed = createEmbed('Veuillez préciser un type de sortie, une date et une heure de départ.\n\n🔹**Exemple :** `!planning cartes 01/01/2022 21`', emojis.error + " Une erreur s'est produite");
