@@ -643,8 +643,14 @@ async function handlePlanning() {
     const msg = await channel.send({ embeds: [embed] });
     planning.update({ discordId: msg.id });
   } else {
-    const msg = await channel.messages.fetch(planning.discordId);
-    msg.edit({ embeds: [embed] });
+    try {
+      const msg = await channel.messages.fetch(planning.discordId);
+      msg.edit({ embeds: [embed] });
+    } catch(e) {
+      if (e.httpStatus == '404') {
+        const msg = await channel.send({ embeds: [embed] });
+      }
+    }
   }
 }
 function confirm(msg, command) {
