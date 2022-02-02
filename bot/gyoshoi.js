@@ -20,10 +20,10 @@ client.once('ready', () => {
       channel.messages.fetch(event.discordId).then(msg => {
         console.log('message found');
         setCollector(event, msg);
-        if (msg.reactions.cache.size != 10) {
+        if ((activities[event.type].yesno && msg.reactions.cache.size != 4) || (!activities[event.type].yesno && msg.reactions.cache.size != 10)) {
           console.log('some reactions are missing');
           msg.reactions.removeAll().then(() => {
-            react(msg, emojis.event);
+            react(msg, event.type);
           })
         }
       }).catch(e => {
@@ -118,26 +118,34 @@ client.on('messageCreate', msg => {
     } else {
       const date = format(parsedDate, 'E d MMMM', { locale: fr });
 
-      const file = new MessageAttachment('./assets/' + type + '.png');
       const channel = client.channels.cache.get(channels.inscriptions);
       const event = { type, date, hour: hour + ':00' };
 
-      createEventEmbed(event).then(embed => {
+      createEventEmbed(event, msg.channel).then(
+        ([embed, file, fields, subtitle]) => {
         msg.delete();
 
         channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [embed], files: [file] })
         .then(msg => {
+          embed.footer = {
+            text: embed.footer.text + `\nID : ${msg.id}`,
+            icon_url: 'https://i.goopics.net/fc2ntk.png'
+          }
+          msg.edit({ embeds: [embed] });
           DiscordEvent.create({
             discordId: msg.id,
             title: embed.title,
+            subtitle: subtitle ? subtitle : null,
             date: parsedDate,
             formattedDate: date,
             hour: hour + ':00',
-            type: type
+            type: type,
+            fields: fields ? Buffer.from(JSON.stringify(fields)) : null
           }).then(discordEvent => {
-            react(msg, emojis.event);
-            handlePlanning();
-            setCollector(discordEvent, msg);
+            react(msg, type);
+            handlePlanning().then(() => {
+              setCollector(discordEvent, msg);
+            })
           })
           .catch((e) => {
             console.error(e);

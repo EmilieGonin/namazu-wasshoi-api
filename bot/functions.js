@@ -3,13 +3,20 @@ const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage } = requ
 const { emojis, roles, states, channels, link, activities } = require('./ressources');
 const { differenceInMilliseconds, formatDistanceToNowStrict, subHours, isBefore, isFuture, isEqual, format } = require('date-fns');
 const fr = require('date-fns/locale/fr');
+const { MessageAttachment } = require('discord.js');
 const { client } = require('./config');
 
 async function setCollector(discordEvent, msg) {
   const filter = (reaction, user) => {
-    return emojis.event.includes(
-      `<:${reaction.emoji.name}:${reaction.emoji.id}>`
-    ) && !user.bot;
+    if (activities[discordEvent.type].yesno) {
+      return emojis.event.yesno.includes(
+        `<:${reaction.emoji.name}:${reaction.emoji.id}>`
+      ) && !user.bot;
+    } else {
+      return emojis.event.default.includes(
+        `<:${reaction.emoji.name}:${reaction.emoji.id}>`
+      ) && !user.bot;
+    }
   };
 
   const collector = msg.createReactionCollector({ filter, time: getDiscordTime(discordEvent) });
@@ -21,7 +28,7 @@ async function setCollector(discordEvent, msg) {
       console.log("function ended");
       if (newFields) {
         handlePlanning();
-        createEventEmbed(discordEvent, newFields).then(embed => {
+        createEventEmbed(discordEvent, msg.channel, newFields).then(([embed]) => {
           msg.edit({ embeds: [embed] });
         })
       }
@@ -52,9 +59,22 @@ async function setCollector(discordEvent, msg) {
     // })
   })
 }
-async function react(msg, reactions) {
-  for (let reaction of reactions) {
-    await msg.react(reaction);
+async function react(msg, type, reactions) {
+  // console.log(type);
+  // console.log(emojis.event);
+  // console.log(emojis.event[type]);
+  if (reactions) {
+    for (let reaction of reactions) {
+      await msg.react(reaction);
+    }
+  } else if (activities[type].yesno) {
+    for (let reaction of emojis.event.yesno) {
+      await msg.react(reaction);
+    }
+  } else {
+    for (let reaction of emojis.event.default) {
+      await msg.react(reaction);
+    }
   }
 }
 function getDiscordTime(discordEvent) {
@@ -125,12 +145,67 @@ function getJob(user, role) {
           collector.resetTimer();
         }
       })
-
-      collector.on('end', () => {
-        console.log('collector ended');
-      })
     })
   })
+}
+// function getSubtype(channel) {
+//   return new Promise((resolve, reject) => {
+//     const embed = createEmbed("Veuillez m'indiquer le nom du jeu pour cette soirée jeux.", emojis.edit + " Configuration de la sortie");
+//     channel.send({ embeds: [embed] }).then(msg => {
+//       const filter = m => !m.author.bot;
+//       const collector = channel.createMessageCollector({ filter, time: 600000 });
+//
+//       collector.on('collect', m => {
+//         if (m.attachments) {
+//           collector.stop();
+//           resolve(m.attachments);
+//         } else {
+//           const embed = createEmbed("Je n'ai pas réussi à récupérer d'image ! " + emojis.shoi.surprise + " Veuillez en uploader une.", emojis.error + " Une erreur s'est produite");
+//
+//           user.send({ embeds: [embed] });
+//           collector.resetTimer();
+//         }
+//       })
+//     })
+//   });
+// }
+function getImage(channel) {
+  return new Promise((resolve, reject) => {
+    const embed = createEmbed("Ce type de sortie nécessite une image. Veuillez en uploader une.", emojis.edit + " Configuration de la sortie");
+    channel.send({ embeds: [embed] }).then(msg => {
+      const filter = m => !m.author.bot;
+      const collector = channel.createMessageCollector({ filter, time: 600000 });
+
+      collector.on('collect', m => {
+        console.log(m.attachments);
+        if (m.attachments) {
+          collector.stop();
+          resolve(m.attachments);
+        } else {
+          const embed = createEmbed("Je n'ai pas réussi à récupérer d'image ! " + emojis.shoi.surprise + " Veuillez en uploader une.", emojis.error + " Une erreur s'est produite");
+
+          user.send({ embeds: [embed] });
+          collector.resetTimer();
+        }
+      })
+    })
+  });
+}
+function activityPrompt(channel, field) {
+  return new Promise(function(resolve, reject) {
+    const embed = createEmbed(`Veuillez m'indiquer le texte à afficher pour le champ **${field}**.`, emojis.edit + " Configuration de la sortie");
+    channel.send({ embeds: [embed] }).then(msg => {
+      const filter = m => !m.author.bot;
+      const collector = channel.createMessageCollector({ filter, max: 1, time: 600000 });
+
+      collector.on('collect', m => {
+        const prompt = m.content;
+        msg.delete();
+        m.delete();
+        resolve(prompt);
+      })
+    })
+  });
 }
 async function handleReaction(reaction, user, discordEvent) {
   console.log("function started");
@@ -151,7 +226,7 @@ async function handleReaction(reaction, user, discordEvent) {
     }
   });
 
-  if (((stateEmoji && emoji != 'pas_dispo') || emoji == 'changer_job') && !discordEventReaction.role) {
+  if ((!activities[discordEvent.type].yesno && (stateEmoji && emoji == 'pas_dispo') || emoji == 'changer_job') && !discordEventReaction.role) {
     console.log('no role');
     const embed = createEmbed("Vous devez d'abord choisir un rôle.", emojis.error + " Une erreur s'est produite");
     user.send({ embeds: [embed] });
@@ -212,7 +287,7 @@ async function handleReaction(reaction, user, discordEvent) {
     await discordEvent.reload();
     await discordEvent.increment('roles_' + emoji);
 
-    if (!discordUser[emoji + 'Job']) {
+    if (!activities[discordEvent.type].yesno && !discordUser[emoji + 'Job']) {
       console.log('checking job');
       const job = await getJob(user, emoji);
       console.log('job checked');
@@ -233,7 +308,7 @@ async function handleReaction(reaction, user, discordEvent) {
   for (let item in discordEvent.dataValues) {
     if (item.startsWith('roles_')) {
       const role = item.replace('roles_', '');
-      const users = (await DiscordUser.findAll({
+      let users = (await DiscordUser.findAll({
         include: {
           model: DiscordEventReaction,
           where: {
@@ -242,13 +317,31 @@ async function handleReaction(reaction, user, discordEvent) {
             state: { [Op.is]: null }
           }
         }
-      })).map(item => item[role + 'Job'] + ' ' + item.discordName).join('\n');
+      })).map(item => {
+        if (item[role + 'Job']) {
+          return item[role + 'Job'] + ' ' + item.discordName;
+        } else {
+          return item.discordName;
+        }
+      });
 
-      let newField = {
-        name: '** **',
-        inline: true,
-        value: `${roles[role].emoji} **${roles[role].name}** (${discordEvent[item]})\n${users}`
-      };
+      let newField;
+
+      if (emojis[role]) {
+        users = users.join('\n');
+        newField = {
+          name: '** **',
+          inline: true,
+          value: `${roles[role].emoji} **${roles[role].name}** (${discordEvent[item]})\n${users}`
+        };
+      } else {
+        users = users.join(', ');
+        newField = {
+          name: '** **',
+          inline: false,
+          value: `${roles[role].emoji} **${roles[role].name}** : ${users}`
+        };
+      }
 
       if (discordEvent[item]) {
         newFields.push(newField);
@@ -264,10 +357,11 @@ async function handleReaction(reaction, user, discordEvent) {
           }
         }
       })).map(item => {
-        if (item.DiscordEventReactions[0].role) {
-          return item[item.DiscordEventReactions[0].role + 'Job'] + ' ' + item.discordName
+        const role = item.DiscordEventReactions[0].role;
+        if (role && item[role + 'Job']) {
+          return item[role + 'Job'] + ' ' + item.discordName;
         } else {
-          return item.discordName
+          return item.discordName;
         }
       }).join(', ');
 
@@ -397,17 +491,76 @@ function createEmbed(description, title) {
 
   return embed;
 }
-async function createEventEmbed(event, newFields) {
+async function createEventEmbed(event, channel, newFields) {
   const embed = {
+    // author: {
+    //   name: 'Consultez les messages épinglés pour obtenir de l\'aide.',
+    //   icon_url: 'https://i.goopics.net/fc2ntk.png'
+    // },
     footer: {
-      text: 'Consultez les messages épinglés pour obtenir de l\'aide.',
+      text: `Consultez les messages épinglés pour obtenir de l'aide.${event.discordId ? '\nID : ' + event.discordId : ''}`,
       icon_url: 'https://i.goopics.net/fc2ntk.png'
     }
   };
 
+  let file;
+
+  if (activities[event.type].customImage) {
+    const image = await getImage(channel);
+    file = new MessageAttachment('./assets/bann.png');
+    // embed.image = { url: "attachment://" + type + ".png" };
+  } else {
+    file = new MessageAttachment('./assets/' + event.type + '.png');
+  }
+
+  let fields = [];
+
+  if (activities[event.type].fields) {
+    if (event.fields) {
+      fields = JSON.parse(event.fields);
+    } else {
+      for (let field of activities[event.type].fields) {
+        const prompt = await activityPrompt(channel, field.name);
+
+        if (field.inline) {
+          fields.push({ name: `**${field.name}**`, value: `\`${prompt}\``, inline: true });
+        } else {
+          fields.push({ name: `**${field.name}**`, value: prompt });
+        }
+      }
+    }
+
+    fields.unshift({ name: '** **', value: '** **' });
+  }
+
   for (let i in activities[event.type]) {
     embed[i] = activities[event.type][i];
   }
+
+  let subtitle;
+
+  if (activities[event.type].subtitle) {
+    subtitle = await activityPrompt(channel, activities[event.type].subtitle);
+    embed.title = `**${embed.title} : ${subtitle}**`;
+  }
+
+  // if (activities[event.type].subtypes) {
+  //   let subtype;
+  //
+  //   if (event.subtype) {
+  //     subtype = event.subtype;
+  //   } else {
+  //     subtype = await getSubtype(channel, activities[event.type]);
+  //   }
+  //
+  //   for (let i in activities[event.type][subtype]) {
+  //     embed[i] = activities[event.type][subtype][i];
+  //   }
+  // } else {
+  //   for (let i in activities[event.type]) {
+  //     embed[i] = activities[event.type][i];
+  //   }
+  // }
 
   const basicFields = [
     { name: '** **', value: '** **' },
@@ -421,12 +574,12 @@ async function createEventEmbed(event, newFields) {
       where: { role: { [Op.not]: null }, state: { [Op.is]: null } }
     });
     basicFields[3].value = `\`${total}\``;
-    embed.fields = [...basicFields, ...newFields];
+    embed.fields = [...fields, ...basicFields, ...newFields];
   } else {
-    embed.fields = basicFields;
+    embed.fields = [...fields, ...basicFields];
   }
 
-  return embed;
+  return [embed, file, fields, subtitle];
 }
 async function sendNotification(hour, discordEvent) {
   const users = (await DiscordUser.findAll({
@@ -495,4 +648,4 @@ async function handlePlanning() {
   }
 }
 
-module.exports = { setCollector, react, getDiscordTime, getJob, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning }
+module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning }

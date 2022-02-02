@@ -20,6 +20,9 @@ const channels = {
 }
 
 const roles = {
+  dispo: {
+    name: 'Dispo', emoji: '<:Dispo:938411742575349830>'
+  },
   tank: {
     name: 'Tanks', emoji: '<:Tank:933062548046106665>'
   },
@@ -90,15 +93,23 @@ const emojis = {
     wave: '<:ShoiWave:813510412007243807>',
     wasshoi: '<:Wasshoi:813510412150505472>'
   },
-  event: [
-    roles.tank.emoji, roles.healer.emoji, roles.melee_dps.emoji,
-    roles.physical_ranged_dps.emoji, roles.magic_ranged_dps.emoji,
-    '<:Dispo_si_besoin:933068148360487023>',
-    '<:Maybe:933068124037709854>',
-    '<:Pas_dispo:933068138550018108>',
-    '<:Changer_Job:936401518364610571>',
-    '<:Rappel_par_MP:936367117597552721>'
-  ],
+  event: {
+    default: [
+      roles.tank.emoji, roles.healer.emoji, roles.melee_dps.emoji,
+      roles.physical_ranged_dps.emoji, roles.magic_ranged_dps.emoji,
+      '<:Dispo_si_besoin:933068148360487023>',
+      '<:Maybe:933068124037709854>',
+      '<:Pas_dispo:933068138550018108>',
+      '<:Changer_Job:936401518364610571>',
+      '<:Rappel_par_MP:936367117597552721>'
+    ],
+    yesno : [
+      '<:Dispo:938411742575349830>',
+      '<:Maybe:933068124037709854>',
+      '<:Pas_dispo:933068138550018108>',
+      '<:Rappel_par_MP:936367117597552721>'
+    ]
+  },
   tank: [
     '<:pld:934408826394918932>',
     '<:war:934409423806427136>',
@@ -145,6 +156,7 @@ const activities = {
   ],
   atelier_glam: {
     category: 'Ateliers',
+    yesno: true,
     color: '#faaab4',
     title: "<:glamour:938077848336498749> Atelier Glamour avec Yuuna",
     description: 'uc',
@@ -152,6 +164,7 @@ const activities = {
   },
   atelier_gold: {
     category: 'Ateliers',
+    yesno: true,
     color: '#eec671',
     title: "<:gold_saucer:938077848659451909> Atelier Gold Saucer avec Rabyte",
     description: "Viens te plonger dans l'univers magique (et dépensier) du Gold Saucer !\n\nDans cet atelier ouvert à tous, tu pourras apprendre les ficelles du farm de PGS et réaliser ton carnet d'objectifs, que ce soit grâce aux JACTAS ou à la Triple Triade, en passant par la course de Chocobo ! Viens t'amuser et devenir riche *(en PGS)* avec nous ! " + emojis.shoi.gold,
@@ -159,19 +172,21 @@ const activities = {
   },
   atelier_logs: {
     category: 'Ateliers',
+    yesno: true,
     color: '#001487',
     title: "<:ateliers:938077848441348117> Atelier Logs avec Ladisla",
     description: "Bienvenue à cette session conçue pour vous aider à approfondir vos connaissances et votre niveau d'expertise sur FFXIV ! Cet atelier abordera de nombreux sujets, que ce soit pour maîtriser votre job ou apprendre à utiliser les outils de logs.",
     image: { url: "attachment://atelier_logs.png" },
     fields: [
-      { name: ':small_blue_diamond: Programme du jour', value: "Cette session sera consacrée à la gestion des outils de groupe, et savoir comment s'accorder avec votre groupe pour mieux briller !" }
+      { name: ':small_blue_diamond:Programme du jour', value: "Cette session sera consacrée à la gestion des outils de groupe, et savoir comment s'accorder avec votre groupe pour mieux briller !" }
     ]
   },
   atelier_screen: {
     category: 'Ateliers',
+    customImage: true,
+    yesno: true,
     title: "<:screenshots:938075407821983744> Atelier Screenshots avec Nexara",
-    description: 'uc',
-    image: { url: "attachment://atelier_screen.png" }
+    description: 'uc'
   },
   cartes: {
     category: 'Autres',
@@ -182,23 +197,20 @@ const activities = {
   },
   farm_mount: {
     category: 'Clear et farm',
+    subtitle: 'Contenu de la sortie',
     color: '#7b3890',
     title: '<:farm:938081526346842153> Farm de monture',
     description: 'Essayez de regarder les vidéos avant de venir (celles de Mikoto ou Plava par exemple).',
-    image: { url: "attachment://farm_mount.png" },
-    fields: [
-      { name: ':small_blue_diamond: Contenu de la sortie', value: 'uc' }
-    ]
+    image: { url: "attachment://farm_mount.png" }
   },
   jeux: {
     category: 'Autres',
-    subtypes: true,
-    phasmophobia: {
-      color: '#ffd700',
-      title: 'Soirée jeux sur Phasmophobia',
-      description: "Venez passer une soirée détente (enfin, plus ou moins) sur Phasmophobia ! Nous pourrons créer des équipes de 4, et ceux qui souhaitent juste regarder tout le monde flipper pourront le faire grâce aux partages d'écran Discord <:ShoiEyes:893475509973954630> N'oubliez pas que vous pouvez récupérer le rôle du jeu dans <#704781275461845132> pour accéder à son salon privé !",
-      image: { url: "attachment://jeux.png" }
-    }
+    yesno: true,
+    subtitle: 'Jeu de la soirée',
+    color: '#000000',
+    title: '<:jeux:938101995225636894> Soirée jeux',
+    description: "uc",
+    image: { url: "attachment://jeux.png" }
   }
 }
 

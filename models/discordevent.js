@@ -23,6 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING
     },
+    subtitle: DataTypes.STRING,
+    fields: DataTypes.BLOB,
     date: {
       type: DataTypes.DATE,
       allowNull: false
@@ -34,6 +36,10 @@ module.exports = (sequelize, DataTypes) => {
     hour: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    roles_dispo: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
     },
     roles_tank: {
       type: DataTypes.INTEGER,

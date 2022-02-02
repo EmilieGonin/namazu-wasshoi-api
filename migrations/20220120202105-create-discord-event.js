@@ -17,6 +17,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      subtitle: {
+        type: Sequelize.STRING
+      },
+      fields: {
+        type: Sequelize.BLOB
+      },
       date: {
         allowNull: false,
         type: Sequelize.DATE
@@ -28,6 +34,10 @@ module.exports = {
       hour: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      roles_dispo: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       },
       roles_tank: {
         type: Sequelize.INTEGER,
