@@ -5,7 +5,7 @@ const { parse, format, isValid, isFuture, isBefore } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 
 const { discordRoles, emojis, channels, activities } = require('./ressources');
-const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed } = require('./functions');
+const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm } = require('./functions');
 
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const { client } = require('./config');
@@ -175,6 +175,12 @@ client.on('messageCreate', msg => {
   const string = msg.content.toLowerCase();
   const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
   if (isAdmin && (string == '!shoi clear')) {
-    msg.channel.bulkDelete(100);
+    confirm(msg, string).then(confirmed => {
+      if (confirmed) {
+        msg.channel.bulkDelete(100);
+      } else {
+        msg.delete();
+      }
+    })
   }
 })
