@@ -6,11 +6,13 @@ module.exports = () => {
       return next(e);
     } else {
       for (let file of files) {
-        fs.unlink("temp/" + file, (e) => {
-          if (e) {
-            return next(e);
-          }
-        })
+        if (file != '.gitkeep') {
+          fs.unlink("temp/" + file, (e) => {
+            if (e) {
+              return next(e);
+            }
+          })
+        }
       }
     }
   })
