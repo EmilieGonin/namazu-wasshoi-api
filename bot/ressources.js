@@ -190,7 +190,7 @@ const activities = {
     fields: [
       { name: "Description", noName: true },
       { value: "** **"},
-      { name: ':small_blue_diamond:Thème de glam', inline: true },
+      { name: ':small_blue_diamond:Thème de glam (optionnel)', inline: true },
       { name: ':small_blue_diamond:Arrêts prévus', inline: true }
     ]
   },
