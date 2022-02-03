@@ -68,13 +68,13 @@ client.on('messageCreate', msg => {
     const parsedDate = parse(string.split(' ')[3] + ':' + hour, 'dd/MM/yyyy:HH', new Date());
 
     if (!type || !parsedDate || !hour) {
-      const embed = createEmbed('Veuillez préciser un type de sortie, une date et une heure de départ.\n\n🔹**Exemple :** `!planning cartes 01/01/2022 21`', emojis.error + " Une erreur s'est produite");
+      const embed = createEmbed('Veuillez préciser un type de sortie, une date et une heure de départ.\n\n🔹**Exemple :** `!shoi add cartes 01/01/2022 21`', emojis.error + " Une erreur s'est produite");
       msg.reply({ embeds: [embed] })
       .then(() => {
         msg.delete();
       })
     } else if (parsedDate && !isValid(parsedDate)) {
-      const embed = createEmbed('Le format de la date et/ou de l\'heure est incorrect.\n\n🔹**Exemple :** `!planning cartes 01/01/2022 21`', emojis.error + " Une erreur s'est produite");
+      const embed = createEmbed('Le format de la date et/ou de l\'heure est incorrect.\n\n🔹**Exemple :** `!shoi add cartes 01/01/2022 21`', emojis.error + " Une erreur s'est produite");
       msg.reply({ embeds: [embed] })
       .then(() => {
         msg.delete();
