@@ -677,6 +677,7 @@ async function handlePlanning() {
     } catch(e) {
       if (e.httpStatus == '404') {
         const msg = await channel.send({ embeds: [embed] });
+        planning.update({ discordId: msg.id });
       }
     }
   }
