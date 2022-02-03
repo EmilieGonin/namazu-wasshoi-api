@@ -178,14 +178,21 @@ const activities = {
     description: "Bienvenue à cette session conçue pour vous aider à approfondir vos connaissances et votre niveau d'expertise sur FFXIV ! Cet atelier abordera de nombreux sujets, que ce soit pour maîtriser votre job ou apprendre à utiliser les outils de logs.",
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/atelier_logs_bxd9gu.png" },
     fields: [
-      { name: ':small_blue_diamond:Programme du jour', value: "Cette session sera consacrée à la gestion des outils de groupe, et savoir comment s'accorder avec votre groupe pour mieux briller !" }
+      { value: "** **"},
+      { name: ':small_blue_diamond:Programme du jour' }
     ]
   },
   atelier_screen: {
     category: 'Ateliers',
     yesno: true,
     title: "<:screenshots:938075407821983744> Atelier Screenshots avec Nexara",
-    description: 'uc'
+    description: 'Venez participer à une soirée dynamique GPOSE/screenshots !\n\n**__Rendez-vous devant la maison de CL pour le départ du train.__**',
+    fields: [
+      { name: "Description", noName: true },
+      { value: "** **"},
+      { name: ':small_blue_diamond:Thème de glam', inline: true },
+      { name: ':small_blue_diamond:Arrêts prévus', inline: true }
+    ]
   },
   cartes: {
     category: 'Autres',
@@ -210,6 +217,19 @@ const activities = {
     title: '<:jeux:938101995225636894> Soirée jeux',
     description: "uc",
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643841671/Gyoshoi/2022-01-28_21-42-36-465_Talim_-_Aladdin.png" }
+  },
+  event: {
+    category: 'Autres',
+    yesno: true,
+    color: "#e62e39",
+    subtitle: ':small_blue_diamond:Titre de l\'évent',
+    title: '<:event:938751365453320202> EVENT',
+    description: "**__Êtes-vous prêts pour le prochain évent de la WasshoCup ?__**",
+    fields: [
+      { name: ":small_blue_diamond:Description de l'évent", noName: true },
+      { name: ":small_blue_diamond:Règles de l'évent", value: "**Vous souhaitez vous préparer à l'avance ?**\n\n__Un peu avant le début de l'évent, vous pouvez :__\n", noName: true },
+      { value: "Nous ferons le point sur les règles au début de l'évent. Nous espérons vous voir nombreux ! <:ShoiJoy:893475411495886848>" }
+    ]
   }
 }
 

@@ -522,6 +522,45 @@ async function createEventEmbed(event, channel, newFields) {
     }
   };
 
+  for (let i in activities[event.type]) {
+    embed[i] = activities[event.type][i];
+  }
+
+  let subtitle;
+
+  if (activities[event.type].subtitle) {
+    if (event.subtitle) {
+      console.log(event.subtitle);
+      subtitle = event.subtitle;
+      embed.title = `**${event.title} : ${subtitle}**`;
+      console.log(embed.title);
+    } else {
+      subtitle = await activityPrompt(channel, activities[event.type].subtitle);
+      embed.title = `**${embed.title} : ${subtitle}**`;
+    }
+  }
+
+  let fields = [];
+
+  if (activities[event.type].fields) {
+    if (event.fields) {
+      fields = JSON.parse(event.fields);
+    } else {
+      for (let field of activities[event.type].fields) {
+        let prompt;
+        if (field.name) {
+          prompt = await activityPrompt(channel, field.name);
+        }
+
+        if (field.inline) {
+          fields.push({ name: `**${(field.noName || !field.name) ? ' ' : field.name }**`, value: `\`${prompt}\``, inline: true });
+        } else {
+          fields.push({ name: `**${(field.noName || !field.name) ? ' ' : field.name }**`, value: `${field.value ? field.value : '' }${prompt ? prompt : ''}` });
+        }
+      }
+    }
+  }
+
   let customImage;
   let customImageId;
 
@@ -534,37 +573,6 @@ async function createEventEmbed(event, channel, newFields) {
       customImage = embed.image;
       customImageId = image.id;
     }
-  }
-
-  let fields = [];
-
-  if (activities[event.type].fields) {
-    if (event.fields) {
-      fields = JSON.parse(event.fields);
-    } else {
-      for (let field of activities[event.type].fields) {
-        const prompt = await activityPrompt(channel, field.name);
-
-        if (field.inline) {
-          fields.push({ name: `**${field.name}**`, value: `\`${prompt}\``, inline: true });
-        } else {
-          fields.push({ name: `**${field.name}**`, value: prompt });
-        }
-      }
-    }
-
-    fields.unshift({ name: '** **', value: '** **' });
-  }
-
-  for (let i in activities[event.type]) {
-    embed[i] = activities[event.type][i];
-  }
-
-  let subtitle;
-
-  if (activities[event.type].subtitle) {
-    subtitle = await activityPrompt(channel, activities[event.type].subtitle);
-    embed.title = `**${embed.title} : ${subtitle}**`;
   }
 
   // if (activities[event.type].subtypes) {
