@@ -189,13 +189,13 @@ function getImage(channel) {
       const collector = channel.createMessageCollector({ filter, time: 600000 });
 
       collector.on('collect', m => {
-        if (m.attachments) {
+        if (m.attachments.size) {
           const file = m.attachments.first().attachment;
           cloudinary.uploader.upload(file, { folder: "Gyoshoi" }, (e, upload) => {
             if (e) {
               const embed = createEmbed("Je n'ai pas réussi à récupérer d'image ! " + emojis.shoi.surprise + " Veuillez en uploader une.", emojis.error + " Une erreur s'est produite");
 
-              user.send({ embeds: [embed] });
+              channel.send({ embeds: [embed] });
               collector.resetTimer();
             } else {
               msg.delete();
@@ -207,7 +207,7 @@ function getImage(channel) {
         } else {
           const embed = createEmbed("Je n'ai pas réussi à récupérer d'image ! " + emojis.shoi.surprise + " Veuillez en uploader une.", emojis.error + " Une erreur s'est produite");
 
-          user.send({ embeds: [embed] });
+          channel.send({ embeds: [embed] });
           collector.resetTimer();
         }
       })
