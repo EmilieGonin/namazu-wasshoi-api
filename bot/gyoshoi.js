@@ -3,6 +3,7 @@ const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/i
 
 const { parse, format, isValid, isFuture, isBefore } = require('date-fns');
 const fr = require('date-fns/locale/fr');
+const cloudinary = require('cloudinary').v2;
 
 const { discordRoles, emojis, channels, activities } = require('./ressources');
 const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm } = require('./functions');
@@ -30,9 +31,8 @@ client.once('ready', () => {
         if (e.httpStatus == 404) {
           console.log('message not found');
 
-          const file = new MessageAttachment('./assets/' + event.type + '.png');
           createEventEmbed(event).then(embed => {
-            channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [embed], files: [file] })
+            channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [embed] })
             .then(msg => {
               event.update({ discordId: msg.id });
               react(msg, emojis.event);
@@ -113,10 +113,10 @@ client.on('messageCreate', msg => {
       const event = { type, date, hour: hour + ':00' };
 
       createEventEmbed(event, msg.channel).then(
-        ([embed, file, fields, subtitle]) => {
+        ([embed, customImage, customImageId, fields, subtitle]) => {
         msg.delete();
 
-        channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [embed], files: [file] })
+        channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [embed] })
         .then(msg => {
           embed.footer = {
             text: embed.footer.text + `\nID : ${msg.id}`,
@@ -131,7 +131,9 @@ client.on('messageCreate', msg => {
             formattedDate: date,
             hour: hour + ':00',
             type: type,
-            fields: fields ? Buffer.from(JSON.stringify(fields)) : null
+            fields: fields ? Buffer.from(JSON.stringify(fields)) : null,
+            customImage: customImage ? Buffer.from(JSON.stringify(customImage)) : null,
+            customImageId: customImageId ? customImageId : null
           }).then(discordEvent => {
             react(msg, type);
             handlePlanning().then(() => {
@@ -164,6 +166,9 @@ client.on('messageCreate', msg => {
       const channel = client.channels.cache.get(channels.inscriptions);
       DiscordEvent.findOne({ where: { discordId: messageId } }).then(event => {
         if (event) {
+          if (event.customImageId) {
+            cloudinary.uploader.destroy(event.customImageId);
+          }
           event.destroy();
         }
         channel.messages.fetch(messageId).then(message => {

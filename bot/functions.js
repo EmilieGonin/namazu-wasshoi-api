@@ -3,6 +3,7 @@ const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage } = requ
 const { emojis, roles, states, channels, link, activities } = require('./ressources');
 const { differenceInMilliseconds, formatDistanceToNowStrict, subHours, isBefore, isFuture, isEqual, format } = require('date-fns');
 const fr = require('date-fns/locale/fr');
+const cloudinary = require('cloudinary').v2;
 const { MessageAttachment } = require('discord.js');
 const { client } = require('./config');
 
@@ -50,6 +51,9 @@ async function setCollector(discordEvent, msg) {
             channel.send(msgContent);
           }
           msg.delete();
+          if (discordEvent.customImageId) {
+            cloudinary.uploader.destroy(discordEvent.customImageId);
+          }
           discordEvent.destroy();
           handlePlanning();
         })
@@ -179,16 +183,27 @@ function getJob(user, role) {
 // }
 function getImage(channel) {
   return new Promise((resolve, reject) => {
-    const embed = createEmbed("Ce type de sortie nécessite une image. Veuillez en uploader une.", emojis.edit + " Configuration de la sortie");
+    const embed = createEmbed("Veuillez uploader une image pour la sortie.", emojis.edit + " Configuration de la sortie");
     channel.send({ embeds: [embed] }).then(msg => {
       const filter = m => !m.author.bot;
       const collector = channel.createMessageCollector({ filter, time: 600000 });
 
       collector.on('collect', m => {
-        console.log(m.attachments);
         if (m.attachments) {
-          collector.stop();
-          resolve(m.attachments);
+          const file = m.attachments.first().attachment;
+          cloudinary.uploader.upload(file, { folder: "Gyoshoi" }, (e, upload) => {
+            if (e) {
+              const embed = createEmbed("Je n'ai pas réussi à récupérer d'image ! " + emojis.shoi.surprise + " Veuillez en uploader une.", emojis.error + " Une erreur s'est produite");
+
+              user.send({ embeds: [embed] });
+              collector.resetTimer();
+            } else {
+              msg.delete();
+              m.delete();
+              collector.stop();
+              resolve({ url: upload.url, id: upload.public_id });
+            }
+          })
         } else {
           const embed = createEmbed("Je n'ai pas réussi à récupérer d'image ! " + emojis.shoi.surprise + " Veuillez en uploader une.", emojis.error + " Une erreur s'est produite");
 
@@ -501,24 +516,24 @@ function createEmbed(description, title) {
 }
 async function createEventEmbed(event, channel, newFields) {
   const embed = {
-    // author: {
-    //   name: 'Consultez les messages épinglés pour obtenir de l\'aide.',
-    //   icon_url: 'https://i.goopics.net/fc2ntk.png'
-    // },
     footer: {
       text: `Consultez les messages épinglés pour obtenir de l'aide.${event.discordId ? '\nID : ' + event.discordId : ''}`,
       icon_url: 'https://i.goopics.net/fc2ntk.png'
     }
   };
 
-  let file;
+  let customImage;
+  let customImageId;
 
-  if (activities[event.type].customImage) {
-    const image = await getImage(channel);
-    file = new MessageAttachment('./assets/bann.png');
-    // embed.image = { url: "attachment://" + type + ".png" };
-  } else {
-    file = new MessageAttachment('./assets/' + event.type + '.png');
+  if (!activities[event.type].image) {
+    if (event.customImage) {
+      embed.image = JSON.parse(event.customImage);
+    } else {
+      const image = await getImage(channel);
+      embed.image = { url: image.url };
+      customImage = embed.image;
+      customImageId = image.id;
+    }
   }
 
   let fields = [];
@@ -587,7 +602,7 @@ async function createEventEmbed(event, channel, newFields) {
     embed.fields = [...fields, ...basicFields];
   }
 
-  return [embed, file, fields, subtitle];
+  return [embed, customImage, customImageId, fields, subtitle];
 }
 async function sendNotification(hour, discordEvent) {
   const users = (await DiscordUser.findAll({

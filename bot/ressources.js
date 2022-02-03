@@ -160,7 +160,7 @@ const activities = {
     color: '#faaab4',
     title: "<:glamour:938077848336498749> Atelier Glamour avec Yuuna",
     description: 'uc',
-    image: { url: "attachment://atelier_glam.png" }
+    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/atelier_glam_tdz0xt.png" }
   },
   atelier_gold: {
     category: 'Ateliers',
@@ -168,7 +168,7 @@ const activities = {
     color: '#eec671',
     title: "<:gold_saucer:938077848659451909> Atelier Gold Saucer avec Rabyte",
     description: "Viens te plonger dans l'univers magique (et dépensier) du Gold Saucer !\n\nDans cet atelier ouvert à tous, tu pourras apprendre les ficelles du farm de PGS et réaliser ton carnet d'objectifs, que ce soit grâce aux JACTAS ou à la Triple Triade, en passant par la course de Chocobo ! Viens t'amuser et devenir riche *(en PGS)* avec nous ! " + emojis.shoi.gold,
-    image: { url: "attachment://atelier_gold.png" }
+    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/atelier_gold_cmeomv.png" }
   },
   atelier_logs: {
     category: 'Ateliers',
@@ -176,14 +176,13 @@ const activities = {
     color: '#001487',
     title: "<:ateliers:938077848441348117> Atelier Logs avec Ladisla",
     description: "Bienvenue à cette session conçue pour vous aider à approfondir vos connaissances et votre niveau d'expertise sur FFXIV ! Cet atelier abordera de nombreux sujets, que ce soit pour maîtriser votre job ou apprendre à utiliser les outils de logs.",
-    image: { url: "attachment://atelier_logs.png" },
+    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/atelier_logs_bxd9gu.png" },
     fields: [
       { name: ':small_blue_diamond:Programme du jour', value: "Cette session sera consacrée à la gestion des outils de groupe, et savoir comment s'accorder avec votre groupe pour mieux briller !" }
     ]
   },
   atelier_screen: {
     category: 'Ateliers',
-    customImage: true,
     yesno: true,
     title: "<:screenshots:938075407821983744> Atelier Screenshots avec Nexara",
     description: 'uc'
@@ -193,7 +192,7 @@ const activities = {
     color: '#ffd700',
     title: "<:cartes_aux_tresors:937406414954057768> Cartes aux trésors",
     description: "Venez vous faire un max de gils ! Essayez de récupérer votre carte journalière, ou au moins d'en apporter une.",
-    image: { url: "attachment://cartes.png" }
+    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/cartes_otush3.png" }
   },
   farm_mount: {
     category: 'Clear et farm',
@@ -201,7 +200,7 @@ const activities = {
     color: '#7b3890',
     title: '<:farm:938081526346842153> Farm de monture',
     description: 'Essayez de regarder les vidéos avant de venir (celles de Mikoto ou Plava par exemple).',
-    image: { url: "attachment://farm_mount.png" }
+    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/farm_mount_lodsab.png" }
   },
   jeux: {
     category: 'Autres',
@@ -210,7 +209,7 @@ const activities = {
     color: '#000000',
     title: '<:jeux:938101995225636894> Soirée jeux',
     description: "uc",
-    image: { url: "attachment://jeux.png" }
+    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643841671/Gyoshoi/2022-01-28_21-42-36-465_Talim_-_Aladdin.png" }
   }
 }
 

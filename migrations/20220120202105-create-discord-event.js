@@ -20,6 +20,12 @@ module.exports = {
       subtitle: {
         type: Sequelize.STRING
       },
+      customImage: {
+        type: Sequelize.BLOB
+      },
+      customImageId: {
+        type: Sequelize.STRING
+      },
       fields: {
         type: Sequelize.BLOB
       },

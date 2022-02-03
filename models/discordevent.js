@@ -26,6 +26,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     subtitle: DataTypes.STRING,
+    customImage: DataTypes.BLOB,
+    customImageId: DataTypes.STRING,
     fields: DataTypes.BLOB,
     date: {
       type: DataTypes.DATE,
