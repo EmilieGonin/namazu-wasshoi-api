@@ -52,7 +52,7 @@ client.once('ready', () => {
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
-  if (string == '!wasshoi' || (string.includes('wasshoi') && string.includes('gyoshoi'))) {
+  if (string.startsWith('!wasshoi')) {
     msg.reply('Yes yes, wasshoi !');
   }
 })
