@@ -185,6 +185,7 @@ const activities = {
   atelier_screen: {
     category: 'Ateliers',
     yesno: true,
+    color: '#FFFFFF',
     title: "<:screenshots:938075407821983744> Atelier Screenshots avec Nexara",
     description: 'Venez participer à une soirée dynamique GPOSE/screenshots !\n\n**__Rendez-vous devant la maison de CL pour le départ du train.__**',
     fields: [
