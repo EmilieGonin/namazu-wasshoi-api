@@ -714,5 +714,41 @@ function confirm(msg, command) {
     })
   });
 }
+function checkEvents() {
+  DiscordEvent.findAll().then(discordEvents => {
+    const channel = client.channels.cache.get(channels.inscriptions);
 
-module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm }
+    for (let event of discordEvents) {
+      channel.messages.fetch(event.discordId).then(msg => {
+        console.log('message found');
+        setCollector(event, msg);
+        if ((activities[event.type].yesno && msg.reactions.cache.size != 4) || (!activities[event.type].yesno && msg.reactions.cache.size != 10)) {
+          console.log('some reactions are missing');
+          msg.reactions.removeAll().then(() => {
+            react(msg, event.type);
+          })
+        }
+      }).catch(e => {
+        if (e.httpStatus == 404) {
+          console.log('message not found');
+
+          createEventEmbed(event).then(embed => {
+            channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [embed] })
+            .then(msg => {
+              event.update({ discordId: msg.id });
+              react(msg, emojis.event);
+              handlePlanning();
+              setCollector(event, msg);
+            })
+            .catch((e) => {
+              console.error(e);
+              msg.delete();
+            })
+          })
+        }
+      })
+    }
+  })
+}
+
+module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm, checkEvents }

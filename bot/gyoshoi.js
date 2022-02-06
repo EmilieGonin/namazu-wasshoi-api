@@ -6,7 +6,7 @@ const fr = require('date-fns/locale/fr');
 const cloudinary = require('cloudinary').v2;
 
 const { discordRoles, emojis, channels, activities } = require('./ressources');
-const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm } = require('./functions');
+const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm, checkEvents } = require('./functions');
 
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const { client } = require('./config');
@@ -14,40 +14,7 @@ const { client } = require('./config');
 client.once('ready', () => {
   console.log('Je suis prêt, wasshoi !');
 
-  DiscordEvent.findAll().then(discordEvents => {
-    const channel = client.channels.cache.get(channels.inscriptions);
-
-    for (let event of discordEvents) {
-      channel.messages.fetch(event.discordId).then(msg => {
-        console.log('message found');
-        setCollector(event, msg);
-        if ((activities[event.type].yesno && msg.reactions.cache.size != 4) || (!activities[event.type].yesno && msg.reactions.cache.size != 10)) {
-          console.log('some reactions are missing');
-          msg.reactions.removeAll().then(() => {
-            react(msg, event.type);
-          })
-        }
-      }).catch(e => {
-        if (e.httpStatus == 404) {
-          console.log('message not found');
-
-          createEventEmbed(event).then(embed => {
-            channel.send({ content: `<@&${discordRoles.membres}> <@&${discordRoles.jeunes_membres}>`, embeds: [embed] })
-            .then(msg => {
-              event.update({ discordId: msg.id });
-              react(msg, emojis.event);
-              handlePlanning();
-              setCollector(event, msg);
-            })
-            .catch((e) => {
-              console.error(e);
-              msg.delete();
-            })
-          })
-        }
-      })
-    }
-  })
+  checkEvents();
 })
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
