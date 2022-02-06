@@ -79,7 +79,7 @@ client.on('messageCreate', msg => {
       const channel = client.channels.cache.get(channels.inscriptions);
       const event = { type, date, hour: hour + ':00' };
 
-      createEventEmbed(event, msg.channel).then(
+      createEventEmbed(event, msg.channel, msg.author).then(
         ([embed, customImage, customImageId, fields, subtitle]) => {
         msg.delete();
 

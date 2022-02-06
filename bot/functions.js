@@ -29,7 +29,7 @@ async function setCollector(discordEvent, msg) {
       console.log("function ended");
       if (newFields) {
         handlePlanning();
-        createEventEmbed(discordEvent, msg.channel, newFields).then(([embed]) => {
+        createEventEmbed(discordEvent, msg.channel, '', newFields).then(([embed]) => {
           msg.edit({ embeds: [embed] });
         })
       }
@@ -181,11 +181,11 @@ function getJob(user, role) {
 //     })
 //   });
 // }
-function getImage(channel) {
+function getImage(channel, user) {
   return new Promise((resolve, reject) => {
     const embed = createEmbed("Veuillez uploader une image pour la sortie.", emojis.edit + " Configuration de la sortie");
     channel.send({ embeds: [embed] }).then(msg => {
-      const filter = m => !m.author.bot;
+      const filter = m => !m.author.bot && m.author == user;
       const collector = channel.createMessageCollector({ filter, time: 600000 });
 
       collector.on('collect', m => {
@@ -214,11 +214,11 @@ function getImage(channel) {
     })
   });
 }
-function activityPrompt(channel, field) {
+function activityPrompt(channel, user, field) {
   return new Promise(function(resolve, reject) {
     const embed = createEmbed(`Veuillez m'indiquer le texte à afficher pour le champ **${field}**.`, emojis.edit + " Configuration de la sortie");
     channel.send({ embeds: [embed] }).then(msg => {
-      const filter = m => !m.author.bot;
+      const filter = m => !m.author.bot && m.author == user;
       const collector = channel.createMessageCollector({ filter, max: 1, time: 600000 });
 
       collector.on('collect', m => {
@@ -514,7 +514,7 @@ function createEmbed(description, title) {
 
   return embed;
 }
-async function createEventEmbed(event, channel, newFields) {
+async function createEventEmbed(event, channel, user, newFields) {
   const embed = {
     footer: {
       text: `Consultez les messages épinglés pour obtenir de l'aide.${event.discordId ? '\nID : ' + event.discordId : ''}`,
@@ -535,7 +535,7 @@ async function createEventEmbed(event, channel, newFields) {
       embed.title = `**${event.title} : ${subtitle}**`;
       console.log(embed.title);
     } else {
-      subtitle = await activityPrompt(channel, activities[event.type].subtitle);
+      subtitle = await activityPrompt(channel, user, activities[event.type].subtitle);
       embed.title = `**${embed.title} : ${subtitle}**`;
     }
   }
@@ -549,7 +549,7 @@ async function createEventEmbed(event, channel, newFields) {
       for (let field of activities[event.type].fields) {
         let prompt;
         if (field.name) {
-          prompt = await activityPrompt(channel, field.name);
+          prompt = await activityPrompt(channel, user, field.name);
         }
 
         if (field.inline) {
@@ -568,7 +568,7 @@ async function createEventEmbed(event, channel, newFields) {
     if (event.customImage) {
       embed.image = JSON.parse(event.customImage);
     } else {
-      const image = await getImage(channel);
+      const image = await getImage(channel, user);
       embed.image = { url: image.url };
       customImage = embed.image;
       customImageId = image.id;
