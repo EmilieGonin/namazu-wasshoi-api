@@ -344,9 +344,9 @@ async function handleReaction(reaction, user, discordEvent) {
         }
       })).map(item => {
         if (item[role + 'Job']) {
-          return item[role + 'Job'] + ' ' + item.discordName;
+          return `${item[role + 'Job']} <@${item.discordId}>`;
         } else {
-          return item.discordName;
+          return `<@${item.discordId}>`;
         }
       });
 
@@ -384,9 +384,9 @@ async function handleReaction(reaction, user, discordEvent) {
       })).map(item => {
         const role = item.DiscordEventReactions[0].role;
         if (role && item[role + 'Job']) {
-          return item[role + 'Job'] + ' ' + item.discordName;
+          return `${item[role + 'Job']} <@${item.discordId}>`;
         } else {
-          return item.discordName;
+          return `<@${item.discordId}>`;
         }
       }).join(', ');
 
