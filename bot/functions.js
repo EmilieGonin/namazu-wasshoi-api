@@ -238,10 +238,10 @@ async function handleReaction(reaction, user, discordEvent) {
   const roleEmoji = discordEvent.dataValues.hasOwnProperty('roles_' + emoji);
   const stateEmoji = discordEvent.dataValues.hasOwnProperty('state_' + emoji);
 
-  const nickname = (await reaction.emoji.guild.members.fetch(user.id)).nickname;
+  // const nickname = (await reaction.emoji.guild.members.fetch(user.id)).nickname;
   const [discordUser] = await DiscordUser.findOrCreate({
     where: { discordId: user.id },
-    defaults: { discordName: nickname ? nickname : user.username }
+    defaults: { discordName: user.username }
   });
 
   const [discordEventReaction] = await DiscordEventReaction.findOrCreate({
