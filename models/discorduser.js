@@ -20,8 +20,14 @@ module.exports = (sequelize, DataTypes) => {
       unique: true
     },
     discordName: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.BLOB,
+      allowNull: false,
+      get() {
+        return this.getDataValue('discordName').toString();
+      },
+      set(value) {
+        return this.setDataValue('discordName', Buffer.from(value));
+      }
     },
     tankJob: DataTypes.STRING,
     healerJob: DataTypes.STRING,

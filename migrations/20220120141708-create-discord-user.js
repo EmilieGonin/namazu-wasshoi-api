@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       discordName: {
-        type: Sequelize.STRING,
+        type: Sequelize.BLOB,
         allowNull: false
       },
       tankJob: {
