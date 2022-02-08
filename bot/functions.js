@@ -249,7 +249,7 @@ async function handleReaction(reaction, user, discordEvent) {
     }
   });
 
-  if ((!activities[discordEvent.type].yesno && (stateEmoji && emoji == 'pas_dispo') || emoji == 'changer_job') && !discordEventReaction.role) {
+  if ((!activities[discordEvent.type].hasOwnProperty('yesno') && stateEmoji && (emoji != 'pas_dispo' || emoji != 'changer_job')) && !discordEventReaction.role) {
     console.log('no role');
     const embed = createEmbed("Vous devez d'abord choisir un rôle.", emojis.error + " Une erreur s'est produite");
     user.send({ embeds: [embed] });
