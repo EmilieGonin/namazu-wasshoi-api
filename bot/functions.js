@@ -753,7 +753,9 @@ function checkEvents() {
   })
 }
 function isAdmin(user) {
-  return user.permissions.has('administration') || user.roles.cache.has(discordRoles.officier);
+  console.log('check if is admin');
+  const permissions = user.permissions.serialize();
+  return permissions.ADMINISTRATOR || user.roles.cache.has(discordRoles.officier);
 }
 
 module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm, checkEvents, isAdmin }
