@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage } = require("../models/index");
-const { emojis, roles, states, channels, link, activities } = require('./ressources');
+const { discordRoles, emojis, roles, states, channels, link, activities } = require('./ressources');
 const { differenceInMilliseconds, formatDistanceToNowStrict, subHours, isBefore, isFuture, isEqual, format } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 const cloudinary = require('cloudinary').v2;
@@ -752,5 +752,8 @@ function checkEvents() {
     }
   })
 }
+function isAdmin(user) {
+  return user.permissions.has('administration') || user.roles.cache.has(discordRoles.officier);
+}
 
-module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm, checkEvents }
+module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm, checkEvents, isAdmin }

@@ -6,16 +6,16 @@ const fr = require('date-fns/locale/fr');
 const cloudinary = require('cloudinary').v2;
 
 const { discordRoles, emojis, channels, activities } = require('./ressources');
-const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm, checkEvents } = require('./functions');
+const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm, checkEvents, isAdmin } = require('./functions');
 
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const { client } = require('./config');
 
 client.once('ready', () => {
   console.log('Je suis prêt, wasshoi !');
-
   checkEvents();
 })
+// !wasshoi
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
@@ -27,9 +27,7 @@ client.on('messageCreate', msg => {
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
-  const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
-
-  if (string.startsWith('!shoi add') && isAdmin) {
+  if (isAdmin(msg.member) && string.startsWith('!shoi add')) {
     const type = string.split(' ')[2];
     const hour = string.split(' ')[4];
     const parsedDate = parse(string.split(' ')[3] + ':' + hour, 'dd/MM/yyyy:HH', new Date());
@@ -124,8 +122,7 @@ client.on('messageCreate', msg => {
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
-  const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
-  if (isAdmin && (string.startsWith('!shoi cancel'))) {
+  if (isAdmin(msg.member) && (string.startsWith('!shoi cancel'))) {
     const messageId = string.split(' ')[2];
     msg.delete();
 
@@ -152,8 +149,7 @@ client.on('messageCreate', msg => {
 client.on('messageCreate', msg => {
   if (msg.author.bot || msg.channel.type == 'DM') { return };
   const string = msg.content.toLowerCase();
-  const isAdmin = msg.member.roles.cache.has(discordRoles.officier);
-  if (isAdmin && (string == '!shoi clear')) {
+  if (isAdmin(msg.member) && (string == '!shoi clear')) {
     confirm(msg, string).then(confirmed => {
       if (confirmed) {
         msg.channel.bulkDelete(100);
