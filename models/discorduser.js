@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       DiscordUser.hasMany(models.DiscordEventReaction);
+      DiscordUser.belongsToMany(models.Minion, { through: 'DiscordUserMinions' });
     }
   };
   DiscordUser.init({
@@ -44,7 +45,8 @@ module.exports = (sequelize, DataTypes) => {
     notifications_1h: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
-    }
+    },
+    timerMinion: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'DiscordUser',

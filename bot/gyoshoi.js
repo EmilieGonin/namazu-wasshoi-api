@@ -1,19 +1,24 @@
 const { Op } = require("sequelize");
-const { DiscordEvent, DiscordUser, DiscordEventReaction } = require("../models/index");
+const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage, Minion } = require("../models/index");
 
 const { parse, format, isValid, isFuture, isBefore } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 const cloudinary = require('cloudinary').v2;
 
 const { discordRoles, emojis, channels, activities } = require('./ressources');
-const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm, checkEvents, isAdmin } = require('./functions');
+const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm, checkEvents, getRarity, getMinion, createInventory, isAdmin, updateMinions } = require('./functions');
 
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const { client } = require('./config');
 
 client.once('ready', () => {
   console.log('Je suis prêt, wasshoi !');
-  checkEvents();
+  checkEvents().then(() => {
+    console.log('events checked');
+  })
+  updateMinions().then(() => {
+    console.log('minions updated');
+  })
 })
 // !wasshoi
 client.on('messageCreate', msg => {
@@ -160,6 +165,42 @@ client.on('messageCreate', msg => {
           msg.delete();
         }
       })
+    }
+  };
+})
+// !shoi minion || !shoimon || !pokeshoi
+client.on('messageCreate', msg => {
+  if (!msg.author.bot && msg.channel.type != 'DM') {
+    const string = msg.content.toLowerCase();
+    if (string == '!shoi minion' || string == '!shoimon' || string == '!pokeshoi') {
+      const channel = msg.channel;
+      const user = msg.author;
+      msg.delete();
+      getMinion(channel, user);
+    }
+  };
+})
+// !shoi collection || !shoi list
+client.on('messageCreate', msg => {
+  if (!msg.author.bot && msg.channel.type != 'DM') {
+    const string = msg.content.toLowerCase();
+    if (string == '!shoi collection' || string == '!shoi list') {
+      const channel = msg.channel;
+      const user = msg.author;
+      msg.delete();
+      createInventory(channel, user);
+    }
+  };
+})
+// !shoi update
+client.on('messageCreate', msg => {
+  if (!msg.author.bot && msg.channel.type != 'DM') {
+    const string = msg.content.toLowerCase();
+    if ((string == '!shoi update') && isAdmin(msg.member)) {
+      const channel = msg.channel;
+      msg.delete();
+      console.log("update");
+      updateMinions(channel);
     }
   };
 })

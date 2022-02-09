@@ -145,7 +145,10 @@ const emojis = {
   rappel: '<:Rappel_par_MP:936367117597552721>',
   true: '<:true:937343578714275901>',
   false: '<:false:937343578424873002>',
-  inscrits: '<:Inscrits:933695822028226601>'
+  inscrits: '<:Inscrits:933695822028226601>',
+  inventory: [
+    '◀️', '▶️'
+  ]
 }
 
 const activities = {
@@ -210,15 +213,6 @@ const activities = {
     description: 'Essayez de regarder les vidéos avant de venir (celles de Mikoto ou Plava par exemple).',
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/farm_mount_lodsab.png" }
   },
-  jeux: {
-    category: 'Autres',
-    yesno: true,
-    subtitle: 'Jeu de la soirée',
-    color: '#000000',
-    title: '<:jeux:938101995225636894> Soirée jeux',
-    description: "uc",
-    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643841671/Gyoshoi/2022-01-28_21-42-36-465_Talim_-_Aladdin.png" }
-  },
   event: {
     category: 'Autres',
     yesno: true,
@@ -231,7 +225,49 @@ const activities = {
       { name: ":small_blue_diamond:Règles de l'évent", value: "**Vous souhaitez vous préparer à l'avance ?**\n\n__Un peu avant le début de l'évent, vous pouvez :__\n", noName: true },
       { value: "Nous ferons le point sur les règles au début de l'évent. Nous espérons vous voir nombreux ! <:ShoiJoy:893475411495886848>" }
     ]
+  },
+  jeux: {
+    category: 'Autres',
+    yesno: true,
+    subtitle: 'Jeu de la soirée',
+    color: '#000000',
+    title: '<:jeux:938101995225636894> Soirée jeux',
+    description: "uc",
+    // image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643841671/Gyoshoi/2022-01-28_21-42-36-465_Talim_-_Aladdin.png" }
   }
 }
 
-module.exports = { guild, link, discordRoles, channels, roles, states, emojis, activities };
+const rarities = [
+  {
+    name: "Légendaire",
+    emoji: '<:legendaire:940610155085717504>',
+    color: '#ff8000',
+    icon: 'https://i.goopics.net/18iyan.png'
+  },
+  {
+    name: "Epique",
+    emoji: '<:epique:940611836636700673>',
+    color: '#A335EE',
+    icon: 'https://i.goopics.net/dv1ap3.png'
+  },
+  {
+    name: "Rare",
+    emoji: '<:rare:940611837186175028>',
+    color: '#5290c1',
+    icon: 'https://i.goopics.net/trn39v.png'
+  },
+  {
+    name: "Inhabituelle",
+    emoji: '<:inhabituelle:940611836980650034>',
+    color: '#4bb062',
+    icon: 'https://i.goopics.net/hq3ttr.png'
+  },
+  {
+    name: "Commune",
+    emoji: '<:commune:940611836976447499>',
+    color: '#585954',
+    icon: 'https://i.goopics.net/jtv9tu.png'
+  }
+];
+
+module.exports = { guild, link, discordRoles, channels, roles, states, emojis, activities, rarities };
