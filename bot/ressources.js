@@ -30,21 +30,21 @@ const roles = {
     name: 'Healers', emoji: '<:Healer:933062562076057671>'
   },
   melee_dps: {
-    name: 'DPS de mêlée', emoji: '<:Melee_DPS:933062571836182548>'
+    name: 'DPS mêlée', emoji: '<:Melee_DPS:933062571836182548>'
   },
   physical_ranged_dps: {
-    name: 'DPS à distance physiques',
+    name: 'DPS distants',
     emoji: '<:Physical_Ranged_DPS:933062582326136872>'
   },
   magic_ranged_dps: {
-    name: 'DPS à distance magiques',
+    name: 'DPS magiques',
     emoji: '<:Magic_Ranged_DPS:933062594158276659>'
   }
 }
 
 const states = {
   dispo_si_besoin: {
-    name: 'Dispo si besoin',
+    name: 'Si besoin',
     emoji: '<:Dispo_si_besoin:933068148360487023>'
   },
   maybe: {
