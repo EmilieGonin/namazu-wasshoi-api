@@ -204,7 +204,7 @@ router.post("/:id", auth, multer, async (req, res, next) => {
   .catch((e) => next(e));
 
   if (data.Profile || data.deleteFile) {
-    const [profile] = await Profile.findOrCreate({
+    const [profile, created] = await Profile.findOrCreate({
       where: { UserId: req.params.id }
     }).catch((e) => next(e));
 
