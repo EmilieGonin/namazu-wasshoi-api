@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   Profile.init({
     avatar: DataTypes.STRING,
+    avatar_public_id: DataTypes.STRING,
     name: DataTypes.STRING,
     discord: {
       type: DataTypes.STRING,
