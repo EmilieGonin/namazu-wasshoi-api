@@ -13,7 +13,7 @@ router.get("/", auth, async (req, res, next) => {
   const users = await User.findAll({
     include: [{
       model: Profile,
-      attributes: { exclude: ["UserId", "bio", "avatar", "mic"] }
+      attributes: { exclude: ["UserId", "bio", "avatar", "avatar_public_id", "mic"] }
     }, {
       model: Character
     }]
