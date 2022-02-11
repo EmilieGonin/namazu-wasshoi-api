@@ -154,7 +154,7 @@ router.post("/login", async (req, res, next) => {
     include: [ Profile, Character ]
   }).catch(() => res.status(401).json({ error: "Connexion impossible." }));
 
-  if (await user.Character.hasExpired()) {
+  if (user.Character && await user.Character.hasExpired()) {
     await user.Character.getCharacter();
   }
 
