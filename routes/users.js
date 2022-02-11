@@ -154,22 +154,26 @@ router.post("/login", async (req, res, next) => {
     include: [ Profile, Character ]
   }).catch(() => res.status(401).json({ error: "Connexion impossible." }));
 
-  if (user.Character && await user.Character.hasExpired()) {
-    await user.Character.getCharacter();
-  }
+  if (user) {
+    if (await user.Character.hasExpired()) {
+      await user.Character.getCharacter();
+    }
 
-  if (await user.passwordIsValid(req.body.password)) {
-    res.status(200).json({
-      message: "Connexion réussie !",
-      user: user,
-      token: jwt.sign(
-        { userId: user.id },
-        process.env.SECRET
-      )
-    });
-  }
-  else {
-    return res.status(401).json({ error: "Mot de passe incorrect." });
+    if (await user.passwordIsValid(req.body.password)) {
+      res.status(200).json({
+        message: "Connexion réussie !",
+        user: user,
+        token: jwt.sign(
+          { userId: user.id },
+          process.env.SECRET
+        )
+      });
+    }
+    else {
+      return res.status(401).json({ error: "Mot de passe incorrect." });
+    }
+  } else {
+    return res.status(404).json({ error: "Compte introuvable." });
   }
 });
 
