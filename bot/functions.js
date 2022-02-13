@@ -821,13 +821,7 @@ async function getMinion(channel, user) {
 
     let duration;
 
-    if (hours) {
-      duration = `${hours}, ${minutes} et ${seconds}`;
-    } else if (minutes) {
-      duration = `${minutes} et ${seconds}`;
-    } else {
-      duration = seconds;
-    }
+    duration = `${hours ? hours : ''}${hours && minutes && seconds ? ', ' : hours && (minutes || seconds) ? ' et ' : ''}${minutes ? minutes : ''}${minutes && seconds ? ' et ' + seconds : seconds ? seconds : ''}`;
 
     const embed = createEmbed(`${emojis.error} ${user}, vous devez attendre encore ${duration} avant de pouvoir réutiliser cette commande.`);
     channel.send({ embeds: [embed] });
