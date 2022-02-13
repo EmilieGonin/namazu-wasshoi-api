@@ -305,7 +305,7 @@ async function handleReaction(reaction, user, discordEvent) {
       console.log('state, removing it');
       await discordEvent.decrement('state_' + discordEventReaction.state);
       discordEventReaction.state = null;
-    } else if (!discordEventReaction.state && discordEventReaction.role && (discordEventReaction.role != emoji)) {
+    } else if (!discordEventReaction.state && discordEventReaction.role) {
       console.log('no state but already role, removing old one');
       console.log(discordEventReaction.role);
       await discordEvent.decrement('roles_' + discordEventReaction.role);
