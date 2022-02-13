@@ -785,7 +785,7 @@ async function getMinion(channel, user) {
 
     if (minion) {
       const searchLink = 'https://lalachievements.com/fr/minions/';
-      const embed = createEmbed(`${user}, vous avez obtenu la mascotte [**${minion.name}**](${searchLink}${minion.id}) !`, `${rarities[minion.rarity - 1].emoji} Mascotte ${rarities[minion.rarity - 1].name.toLowerCase()}`);
+      const embed = createEmbed(`${user}, vous avez obtenu la mascotte **[${minion.name}](${searchLink}${minion.id})** !`, `${rarities[minion.rarity - 1].emoji} Mascotte ${rarities[minion.rarity - 1].name.toLowerCase()}`);
       embed.image = { url: minion.icon };
       embed.color = rarities[minion.rarity - 1].color;
 
