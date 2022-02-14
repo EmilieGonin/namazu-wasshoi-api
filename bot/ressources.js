@@ -210,7 +210,7 @@ const activities = {
     subtitle: 'Contenu de la sortie',
     color: '#7b3890',
     title: '<:farm:938081526346842153> Farm de monture',
-    description: 'Essayez de regarder les vidéos avant de venir (celles de Mikoto ou Plava par exemple).',
+    description: 'Essayez de regarder un guide avant de venir, même si le contenu est "vieux". Vous pouvez visionner les vidéos de Mikoto ou Plava, par exemple.',
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/farm_mount_lodsab.png" }
   },
   event: {
@@ -232,7 +232,7 @@ const activities = {
     subtitle: 'Jeu de la soirée',
     color: '#000000',
     title: '<:jeux:938101995225636894> Soirée jeux',
-    description: "uc",
+    description: "Venez passez une soirée chill entre namazu !\n\nCeux qui le souhaitent pourront afficher leur partie en stream sur Discord, pour que les personnes ne souhaitant pas spécialement jouer puissent tout de même venir et participer à la soirée en tant que spectateur. " + emojis.shoi.kawaii,
     // image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643841671/Gyoshoi/2022-01-28_21-42-36-465_Talim_-_Aladdin.png" }
   }
 }
