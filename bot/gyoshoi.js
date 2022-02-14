@@ -23,20 +23,14 @@ client.once('ready', () => {
     console.log('minions updated');
   })
 })
-// !wasshoi
 client.on('messageCreate', msg => {
   if (!msg.author.bot && msg.channel.type != 'DM') {
     const string = msg.content.toLowerCase();
     if (string.startsWith('!wasshoi')) {
+      // !wasshoi
       msg.reply('Yes yes, wasshoi !');
-    }
-  };
-})
-// !shoi add type date hour
-client.on('messageCreate', msg => {
-  if (!msg.author.bot && msg.channel.type != 'DM') {
-    const string = msg.content.toLowerCase();
-    if (string.startsWith('!shoi add') && isAdmin(msg.member)) {
+    } else if (string.startsWith('!shoi add') && isAdmin(msg.member)) {
+      // !shoi add type date hour
       const type = string.split(' ')[2];
       const hour = string.split(' ')[4];
       const parsedDate = parse(string.split(' ')[3] + ':' + hour, 'dd/MM/yyyy:HH', new Date());
@@ -125,14 +119,8 @@ client.on('messageCreate', msg => {
           })
         })
       }
-    }
-  };
-})
-// !shoi cancel messageId
-client.on('messageCreate', msg => {
-  if (!msg.author.bot && msg.channel.type != 'DM') {
-    const string = msg.content.toLowerCase();
-    if (string.startsWith('!shoi cancel') && isAdmin(msg.member)) {
+    } else if (string.startsWith('!shoi cancel') && isAdmin(msg.member)) {
+      // !shoi cancel messageId
       const messageId = string.split(' ')[2];
       msg.delete();
 
@@ -153,14 +141,8 @@ client.on('messageCreate', msg => {
           })
         })
       }
-    }
-  };
-})
-// !shoi clear
-client.on('messageCreate', msg => {
-  if (!msg.author.bot && msg.channel.type != 'DM') {
-    const string = msg.content.toLowerCase();
-    if ((string == '!shoi clear') && isAdmin(msg.member)) {
+    } else if ((string == '!shoi clear') && isAdmin(msg.member)) {
+      // !shoi clear
       confirm(msg, string).then(confirmed => {
         if (confirmed) {
           msg.channel.bulkDelete(100);
@@ -168,38 +150,20 @@ client.on('messageCreate', msg => {
           msg.delete();
         }
       })
-    }
-  };
-})
-// !shoi minion || !shoimon || !pokeshoi
-client.on('messageCreate', msg => {
-  if (!msg.author.bot && msg.channel.type != 'DM') {
-    const string = msg.content.toLowerCase();
-    if (string == '!shoi minion' || string == '!shoimon' || string == '!pokeshoi') {
+    } else if (string == '!shoi minion' || string == '!shoimon' || string == '!pokeshoi') {
+      // !shoi minion || !shoimon || !pokeshoi
       const channel = msg.channel;
       const user = msg.author;
       msg.delete();
       getMinion(channel, user);
-    }
-  };
-})
-// !shoi collection || !shoi list
-client.on('messageCreate', msg => {
-  if (!msg.author.bot && msg.channel.type != 'DM') {
-    const string = msg.content.toLowerCase();
-    if (string == '!shoi collection' || string == '!shoi list') {
+    } else if (string == '!shoi collection' || string == '!shoi list') {
+      // !shoi collection || !shoi list
       const channel = msg.channel;
       const user = msg.author;
       msg.delete();
       createInventory(channel, user);
-    }
-  };
-})
-// !shoi update
-client.on('messageCreate', msg => {
-  if (!msg.author.bot && msg.channel.type != 'DM') {
-    const string = msg.content.toLowerCase();
-    if ((string == '!shoi update') && isAdmin(msg.member)) {
+    } else if ((string == '!shoi update') && isAdmin(msg.member)) {
+      // !shoi update
       const channel = msg.channel;
       msg.delete();
       console.log("update");
