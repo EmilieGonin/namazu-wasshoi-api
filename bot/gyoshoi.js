@@ -15,6 +15,9 @@ client.once('ready', () => {
   console.log('Je suis prêt, wasshoi !');
   checkEvents().then(() => {
     console.log('events checked');
+    handlePlanning().then(() => {
+      console.log('planning handled');
+    })
   })
   updateMinions().then(() => {
     console.log('minions updated');
