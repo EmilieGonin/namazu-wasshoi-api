@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       DiscordEvent.hasMany(models.DiscordEventReaction, {
         onDelete: 'CASCADE'
+      })
+      DiscordEvent.hasMany(models.DiscordVote, {
+        onDelete: 'CASCADE'
       });
     }
   };

@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       DiscordUser.hasMany(models.DiscordEventReaction);
+      DiscordUser.hasMany(models.DiscordVote);
       DiscordUser.belongsToMany(models.Minion, { through: 'DiscordUserMinions' });
     }
   };

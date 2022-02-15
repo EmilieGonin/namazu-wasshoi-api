@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage, Minion, DiscordUserMinion, sequelize } = require("../models/index");
+const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage, Minion, DiscordUserMinion, DiscordVote, sequelize } = require("../models/index");
 const { discordRoles, emojis, roles, states, channels, link, activities, rarities } = require('./ressources');
 const { differenceInMilliseconds, formatDistanceToNowStrict, addHours, subHours, isBefore, isFuture, isEqual, format, formatDuration, intervalToDuration } = require('date-fns');
 const fr = require('date-fns/locale/fr');
@@ -324,6 +324,21 @@ async function handleReaction(reaction, user, discordEvent) {
       user.send({ embeds: [embed] });
       discordUser[emoji + 'Job'] = job;
     }
+
+    if (discordEvent.subtitle.startsWith('!')) {
+      let vote = await DiscordVote.findOne({ where:
+        { DiscordEventId: discordEvent.id, DiscordUserId: discordUser.id }
+      })
+
+      if (!vote) {
+        vote = await getVote(discordEvent, user);
+        await DiscordVote.create({
+          DiscordUserId: discordUser.id,
+          DiscordEventId: discordEvent.id,
+          vote
+        });
+      }
+    }
   }
 
   await discordEvent.reload();
@@ -404,10 +419,50 @@ async function handleReaction(reaction, user, discordEvent) {
     }
   }
 
+  if (discordEvent.subtitle && discordEvent.subtitle.startsWith('!')) {
+    const poll = discordEvent.subtitle.replace('!', '').split(',');
+
+    let votes = [];
+
+    for (let option of poll) {
+      const count = await discordEvent.countDiscordVotes({
+        where: { vote: { [Op.regexp]: option } }
+      });
+      if (count > 0) {
+        votes.push(`:small_blue_diamond:${option} (${count})`);
+      }
+    }
+
+    votes = votes.join('\n');
+
+    let newField = {
+      name: '** **',
+      inline: false,
+      value: `**Votes pour le contenu**\n${votes}`
+    };
+
+    newFields.push(newField);
+  }
+
   return newFields;
 }
 async function handleEnd(discordEvent) {
-  //Logs
+  //Votes
+  let votes = [];
+  if (discordEvent.subtitle && discordEvent.subtitle.startsWith('!')) {
+    const poll = discordEvent.subtitle.replace('!', '').split(',');
+
+    for (let option of poll) {
+      const count = await discordEvent.countDiscordVotes({
+        where: { vote: { [Op.regexp]: option } }
+      });
+      if (count > 0) {
+        votes.push(`:small_blue_diamond:${option} (${count})`);
+      }
+    }
+
+    votes = votes.join('\n');
+  }
 
   //Mentions
   const users = (await DiscordUser.findAll({
@@ -439,6 +494,10 @@ async function handleEnd(discordEvent) {
 
   if (usersDispo) {
     msg = msg + `\n\n${states.dispo_si_besoin.emoji} **${states.dispo_si_besoin.name}** : ${usersDispo}`;
+   }
+
+   if (votes.length) {
+     msg = msg + `\n\n**Total des votes**\n${votes}`;
    }
 
   return msg;
@@ -535,13 +594,15 @@ async function createEventEmbed(event, channel, user, newFields) {
 
   if (activities[event.type].subtitle) {
     if (event.subtitle) {
-      console.log(event.subtitle);
       subtitle = event.subtitle;
-      embed.title = `**${event.title} : ${subtitle}**`;
-      console.log(embed.title);
     } else {
       subtitle = await activityPrompt(channel, user, activities[event.type].subtitle);
-      embed.title = `**${embed.title} : ${subtitle}**`;
+    }
+
+    if (subtitle.startsWith('!')) {
+      embed.title = event.title ? event.title : embed.title;
+    } else {
+      embed.title = event.title ? event.title : `${embed.title} : ${subtitle}`;
     }
   }
 
@@ -613,6 +674,11 @@ async function createEventEmbed(event, channel, user, newFields) {
     embed.fields = [...fields, ...basicFields, ...newFields];
   } else {
     embed.fields = [...fields, ...basicFields];
+  }
+
+  if (subtitle && subtitle.startsWith('!')) {
+    const poll = subtitle.replace('!', '').split(',').join(', ');
+    embed.fields.push({ name: '** **', value: '**Le contenu de cette sortie est soumis à un vote parmi les choix suivants : **' + poll + '.' });
   }
 
   return [embed, customImage, customImageId, fields, subtitle];
@@ -961,6 +1027,40 @@ async function updateMinions(channel) {
       channel.send({ embeds: [embed] });
     }
   })
+}
+function getVote(discordEvent, user) {
+  return new Promise((resolve, reject) => {
+    const poll = discordEvent.subtitle.replace('!', '').split(',');
+    const pollList = poll.map((item, index) => `\`${index + 1}\` ${item}`).join('\n');
+    const embed = createEmbed(`Répondez avec le numéro du contenu de votre choix.\n\n${pollList}\n\nVous pouvez spécifier plusieurs numéros dans le même message, séparés par une virgule.\n\nExemple : \`1,2,3\``, emojis.edit + " Vote du contenu pour la sortie");
+    user.send({ embeds: [embed] }).then(msg => {
+      const filter = m => !m.author.bot;
+      const collector = user.dmChannel.createMessageCollector({ filter, time: 600000 });
+
+      collector.on('collect', m => {
+        const options = m.content.split(',');
+        let votes = [];
+
+        for (let option of options) {
+          if (poll[option - 1]) {
+            votes.push(poll[option - 1]);
+          }
+        }
+
+        if (votes.length) {
+          const embed = createEmbed(`Votre vote a bien été pris en compte !`, emojis.update + " Vote réussi");
+          user.send({ embeds: [embed] });
+          collector.stop();
+          resolve(votes.join(','));
+        } else {
+          const embed = createEmbed("Je n'ai pas compris votre réponse ! " + emojis.shoi.surprise + '\n\n' + pollList, emojis.error + " Une erreur s'est produite");
+
+          user.send({ embeds: [embed] });
+          collector.resetTimer();
+        }
+      })
+    })
+  });
 }
 
 module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm, checkEvents, getRarity, getMinion, createInventory, getInventory, isAdmin, updateMinions }
