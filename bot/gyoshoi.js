@@ -28,7 +28,15 @@ client.once('ready', () => {
 client.on('messageCreate', msg => {
   if (!msg.author.bot && msg.channel.type != 'DM') {
     const string = msg.content.toLowerCase();
-    const command = msg.content.toLowerCase().split(' ')[1];
+    let command;
+    if (string.startsWith('!')) {
+      let command = msg.content.toLowerCase().replace('!', '').replace('shoi', '');
+      if (command.startsWith(' ')) {
+        command = command.replace(' ', '');
+      }
+      command = command.split(' ')[0];
+    }
+    console.log(`Commande utilisée : ${command}`);
     if (string.startsWith('!wasshoi')) {
       // !wasshoi
       msg.reply('Yes yes, wasshoi !');
