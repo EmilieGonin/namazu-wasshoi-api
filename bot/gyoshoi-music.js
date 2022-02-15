@@ -89,7 +89,8 @@ module.exports = music = {
         }
       });
       player.on('error', e => {
-        error("La vidéo en cours a été stoppée suite à une erreur de lecture.");
+				const channel = client.channels.cache.get(channels.musique);
+        error(channel, "La vidéo en cours a été stoppée suite à une erreur de lecture.");
         console.error(e)
       });
     }
@@ -140,7 +141,8 @@ module.exports = music = {
       const embed = createEmbed(`${current}\n\n${queue.length ? songs.join('\n') : 'Aucune autre piste dans la liste de lecture.'}`, emojis.shoi.sing + ' Liste de lecture');
       channel.send({ embeds: [embed] })
     } else {
-      error("Aucune liste de lecture.");
+			const channel = client.channels.cache.get(channels.musique);
+      error(channel, "Aucune liste de lecture.");
     }
   }
 }
