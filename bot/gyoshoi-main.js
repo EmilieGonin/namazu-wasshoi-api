@@ -9,5 +9,8 @@ module.exports = main = {
         msg.delete();
       }
     })
+  },
+  test: () => {
+    console.log('test');
   }
 }

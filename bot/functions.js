@@ -1067,8 +1067,5 @@ function error(target, string) {
 
   target.send({ embeds: [embed] });
 }
-async function test() {
-  console.log('test');
-}
 
-module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm, checkEvents, getRarity, getMinion, createInventory, getInventory, isAdmin, updateMinions, error, test }
+module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm, checkEvents, getRarity, getMinion, createInventory, getInventory, isAdmin, updateMinions, error }
