@@ -1,14 +1,15 @@
 const { Op } = require("sequelize");
-const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage, Minion } = require("../models/index");
+const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage, DiscordGuild, Minion } = require("../models/index");
 
 const { parse, format, isValid, isFuture, isBefore } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 const cloudinary = require('cloudinary').v2;
 
 const { discordRoles, emojis, channels, activities } = require('./ressources');
-const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm, checkEvents, getRarity, getMinion, createInventory, isAdmin, updateMinions } = require('./functions');
+const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm, checkEvents, getRarity, getMinion, createInventory, isAdmin, updateMinions, error } = require('./functions');
 
 const main = require('./gyoshoi-main');
+const music = require('./gyoshoi-music');
 
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const { client } = require('./config');
@@ -25,9 +26,10 @@ client.once('ready', () => {
     console.log('minions updated');
   })
 })
-client.on('messageCreate', msg => {
+client.on('messageCreate', async msg => {
   if (!msg.author.bot && msg.channel.type != 'DM') {
     const string = msg.content.toLowerCase();
+    const content = msg.content;
     let command;
     if (string.startsWith('!')) {
       let command = msg.content.toLowerCase().replace('!', '').replace('shoi', '');
@@ -37,6 +39,9 @@ client.on('messageCreate', msg => {
       command = command.split(' ')[0];
     }
     console.log(`Commande utilisée : ${command}`);
+    const [guild] = await DiscordGuild.findOrCreate({
+      where: { discordId: msg.guildId }
+    });
     if (string.startsWith('!wasshoi')) {
       // !wasshoi
       msg.reply('Yes yes, wasshoi !');
@@ -173,6 +178,16 @@ client.on('messageCreate', msg => {
       msg.delete();
       console.log("update");
       updateMinions(channel);
+    } else if (music.hasOwnProperty(command)) {
+      const song = content.split(' ')[2];
+
+      if (!msg.member.voice.channelId) {
+        error(msg.channel, 'Vous devez être dans un salon vocal pour utiliser cette commande.');
+      } else {
+        music[command](guild, msg, song);
+      }
+
+      msg.delete();
     }
   };
 })
