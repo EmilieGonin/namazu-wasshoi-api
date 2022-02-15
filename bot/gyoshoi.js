@@ -32,7 +32,7 @@ client.on('messageCreate', async msg => {
     const content = msg.content;
     let command;
     if (string.startsWith('!')) {
-      let command = msg.content.toLowerCase().replace('!', '').replace('shoi', '');
+      command = string.replace('!', '').replace('shoi', '');
       if (command.startsWith(' ')) {
         command = command.replace(' ', '');
       }
