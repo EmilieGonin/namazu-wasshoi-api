@@ -8,6 +8,8 @@ const cloudinary = require('cloudinary').v2;
 const { discordRoles, emojis, channels, activities } = require('./ressources');
 const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm, checkEvents, getRarity, getMinion, createInventory, isAdmin, updateMinions } = require('./functions');
 
+const main = require('./gyoshoi-main');
+
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const { client } = require('./config');
 
@@ -26,6 +28,7 @@ client.once('ready', () => {
 client.on('messageCreate', msg => {
   if (!msg.author.bot && msg.channel.type != 'DM') {
     const string = msg.content.toLowerCase();
+    const command = msg.content.toLowerCase().split(' ')[1];
     if (string.startsWith('!wasshoi')) {
       // !wasshoi
       msg.reply('Yes yes, wasshoi !');
@@ -141,15 +144,9 @@ client.on('messageCreate', msg => {
           })
         })
       }
-    } else if ((string == '!shoi clear') && isAdmin(msg.member)) {
+    } else if (main.hasOwnProperty(command) && isAdmin(msg.member)) {
       // !shoi clear
-      confirm(msg, string).then(confirmed => {
-        if (confirmed) {
-          msg.channel.bulkDelete(100);
-        } else {
-          msg.delete();
-        }
-      })
+      main[command](msg);
     } else if (string == '!shoi minion' || string == '!shoimon' || string == '!pokeshoi') {
       // !shoi minion || !shoimon || !pokeshoi
       const channel = msg.channel;
