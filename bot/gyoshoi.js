@@ -37,8 +37,8 @@ client.on('messageCreate', async msg => {
         command = command.replace(' ', '');
       }
       command = command.split(' ')[0];
+      console.log(`Commande utilisée : ${command}`);
     }
-    console.log(`Commande utilisée : ${command}`);
     const [guild] = await DiscordGuild.findOrCreate({
       where: { discordId: msg.guildId }
     });
