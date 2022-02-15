@@ -1062,5 +1062,13 @@ function getVote(discordEvent, user) {
     })
   });
 }
+function error(target, string) {
+  const embed = createEmbed(string, emojis.error + " Une erreur s'est produite");
 
-module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm, checkEvents, getRarity, getMinion, createInventory, getInventory, isAdmin, updateMinions }
+  target.send({ embeds: [embed] });
+}
+async function test() {
+  console.log('test');
+}
+
+module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm, checkEvents, getRarity, getMinion, createInventory, getInventory, isAdmin, updateMinions, error, test }
