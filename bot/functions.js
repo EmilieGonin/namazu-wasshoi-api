@@ -1066,5 +1066,9 @@ function error(target, string) {
   const embed = createEmbed(emojis.error + ' ' + string);
   target.send({ embeds: [embed] });
 }
+function update(target, string) {
+  const embed = createEmbed(emojis.update + ' ' + string);
+  target.send({ embeds: [embed] });
+}
 
-module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm, checkEvents, getRarity, getMinion, createInventory, getInventory, isAdmin, updateMinions, error }
+module.exports = { setCollector, react, getDiscordTime, getJob, getImage, handleReaction, handleEnd, createEmbed, createEventEmbed, handlePlanning, confirm, checkEvents, getRarity, getMinion, createInventory, getInventory, isAdmin, updateMinions, error, update }
