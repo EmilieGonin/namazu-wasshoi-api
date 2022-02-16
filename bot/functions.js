@@ -56,7 +56,7 @@ async function setCollector(discordEvent, msg) {
           if (discordEvent.customImageId) {
             cloudinary.uploader.destroy(discordEvent.customImageId);
           }
-          discordEvent.destroy.then(() => {
+          discordEvent.destroy().then(() => {
             handlePlanning();
           })
         })
