@@ -1063,8 +1063,7 @@ function getVote(discordEvent, user) {
   });
 }
 function error(target, string) {
-  const embed = createEmbed(string, emojis.error + " Une erreur s'est produite");
-
+  const embed = createEmbed(emojis.error + ' ' + string);
   target.send({ embeds: [embed] });
 }
 
