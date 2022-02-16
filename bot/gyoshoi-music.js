@@ -73,6 +73,16 @@ module.exports = music = {
 					const embed = createEmbed(`La vidéo **[${datas.videoDetails.title}](${datas.videoDetails.video_url})** a été ajoutée à la liste de lecture.`);
 					channel.send({ embeds: [embed] })
 				})
+			} else if (!song && guild.queue && player.state.status != 'playing') {
+				console.log(`player is ${player.state.status}`);
+				if (player.state.status == 'paused') {
+					player.unpause();
+					const channel = client.channels.cache.get(channels.musique);
+					const embed = createEmbed("La lecture a repris.");
+					channel.send({ embeds: [embed] })
+				} else {
+					playSong(guild.queue[0]);
+				}
 			} else {
 				console.log('music already playing');
 				error(msg.channel, 'La lecture est déjà en cours.\n\nVous pouvez ajouter une vidéo à la liste de lecture en précisant un lien YouTube.\n\nExemple: `!shoi play https://www.youtube.com/watch...`');
