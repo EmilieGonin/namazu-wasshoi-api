@@ -4,14 +4,15 @@ const {
 	createAudioPlayer,
 	createAudioResource,
 	joinVoiceChannel,
-  getVoiceConnection
+  getVoiceConnection,
+	VoiceConnectionStatus
 } = require('@discordjs/voice');
 const { client } = require('./config');
 const ytdl = require('ytdl-core');
 const player = createAudioPlayer();
 
 const { emojis, channels } = require('./ressources');
-const { createEmbed, error } = require('./functions');
+const { createEmbed, error, update } = require('./functions');
 
 function playSong(song) {
   console.log('playing next');
@@ -25,42 +26,63 @@ function playSong(song) {
     channel.send({ embeds: [embed] })
   })
 }
+function connect(msg) {
+	console.log('joining voice channel');
+	const connection = joinVoiceChannel({
+		channelId: msg.member.voice.channelId,
+		guildId: msg.guildId,
+		adapterCreator: msg.guild.voiceAdapterCreator
+	});
+	connection.subscribe(player);
+	return connection;
+}
 
 module.exports = music = {
   play: (guild, msg, song) => {
-    if (!song) {
-      error(msg.channel, 'Vous devez préciser un lien YouTube.\n\nExemple: `!shoi play https://www.youtube.com/watch...`');
-    } else if (!ytdl.validateURL(song)) {
+    if (!song && !guild.queue) {
+      error(msg.channel, 'La liste de lecture est vide.\n\nVous devez ajouter une vidéo en précisant un lien YouTube.\n\nExemple: `!shoi play https://www.youtube.com/watch...`');
+    } else if (song && !ytdl.validateURL(song)) {
       error(msg.channel, 'Le lien YouTube est incorrect.');
     } else {
-      const connection = getVoiceConnection(guild.discordId);
-      if (guild.playing && connection) {
-        console.log('song added to queue');
-        const queue = [...guild.queue, song];
-        guild.update({ queue });
-        ytdl.getBasicInfo(song).then(datas => {
-          const channel = client.channels.cache.get(channels.musique);
-          const embed = createEmbed(`La vidéo **[${datas.videoDetails.title}](${datas.videoDetails.video_url})** a été ajoutée à la liste de lecture.`);
-          channel.send({ embeds: [embed] })
-        })
-      } else {
-        const connection = joinVoiceChannel({
-          channelId: msg.member.voice.channelId,
-          guildId: msg.guildId,
-          adapterCreator: msg.guild.voiceAdapterCreator,
-        });
-        connection.subscribe(player);
-        const queue = guild.queue ? [...guild.queue, song] : [ song ];
-        guild.update({ playing: true, queue }).then(() => {
-          console.log(guild.queue);
-          playSong(queue[0]);
-        })
-      }
+			const connected = msg.member.voice.channel.members.has(client.user.id);
+			let connection = getVoiceConnection(guild.discordId);
+			console.log(`connected: ${connected}\nconnection: ${connection ? true : false}`);
 
-      player.on(AudioPlayerStatus.Idle, () => {
+			if (!connected || !connection) {
+				connection = connect(msg);
+
+				if (song) {
+					console.log('creating new queue with song');
+					guild.update({ queue: [song] }).then(() => {
+	          console.log(guild.queue);
+	          playSong(song);
+	        })
+				} else {
+					console.log('resume guild queue');
+					console.log(guild.queue);
+					playSong(guild.queue[0]);
+				}
+			} else if (song && guild.queue) {
+				console.log('song added to queue');
+				const queue = [...guild.queue, song];
+				guild.update({ queue }).then(() => {
+					console.log(guild.queue);
+				});
+				ytdl.getBasicInfo(song).then(datas => {
+					const channel = client.channels.cache.get(channels.musique);
+					const embed = createEmbed(`La vidéo **[${datas.videoDetails.title}](${datas.videoDetails.video_url})** a été ajoutée à la liste de lecture.`);
+					channel.send({ embeds: [embed] })
+				})
+			} else {
+				console.log('music already playing');
+				error(msg.channel, 'La lecture est déjà en cours.\n\nVous pouvez ajouter une vidéo à la liste de lecture en précisant un lien YouTube.\n\nExemple: `!shoi play https://www.youtube.com/watch...`');
+			}
+
+			player.on(AudioPlayerStatus.Idle, () => {
         console.log('idle');
-        const connection = getVoiceConnection(guild.discordId);
-        if (connection) {
+				const connected = msg.member.voice.channel.members.has(client.user.id);
+				const connection = getVoiceConnection(guild.discordId);
+        if (connection && connected) {
           guild.reload().then(() => {
             const queue = guild.queue ? [...guild.queue] : [];
             queue.shift();
@@ -72,9 +94,7 @@ module.exports = music = {
             } else {
               console.log('stop');
               guild.queue = null;
-              guild.playing = false;
               guild.save().then(() => {
-                const connection = getVoiceConnection(guild.discordId);
                 if (connection) {
                   connection.destroy();
                 }
@@ -84,52 +104,93 @@ module.exports = music = {
         } else {
           console.log('no connection, stopping');
           guild.queue = null;
-          guild.playing = false;
-          guild.save();
+          guild.save().then(() => {
+						const channel = client.channels.cache.get(channels.musique);
+						error(channel, "La lecture a été stoppée et la liste de lecture vidée.");
+					})
         }
       });
       player.on('error', e => {
 				const channel = client.channels.cache.get(channels.musique);
-        error(channel, "La vidéo en cours a été stoppée suite à une erreur de lecture.");
+        error(channel, "La vidéo en cours a été stoppée suite à une erreur de lecture. Veuillez réessayer.");
         console.error(e)
       });
-    }
+			connection.on(VoiceConnectionStatus.Disconnected, () => {
+				console.log('voice connection disconnected');
+				if (guild.queue) {
+					connect(msg);
+				}
+			})
+		}
   },
   pause: () => {
-    player.pause()
+    player.pause();
+		const channel = client.channels.cache.get(channels.musique);
+		const embed = createEmbed("La lecture a été mise en pause.");
+		channel.send({ embeds: [embed] })
   },
   resume: () => {
     player.unpause();
+		const channel = client.channels.cache.get(channels.musique);
+		const embed = createEmbed("La lecture a repris.");
+		channel.send({ embeds: [embed] })
   },
   unpause: () => {
     player.unpause();
+		const channel = client.channels.cache.get(channels.musique);
+		const embed = createEmbed("La lecture a repris.");
+		channel.send({ embeds: [embed] })
   },
   stop: (guild) => {
-    guild.queue = null;
-    guild.save().then(() => {
-      player.stop();
-    })
+		console.log(player.state.status);
+		if (player.state.status == 'playing') {
+			guild.queue = null;
+	    guild.save().then(() => {
+	      player.stop();
+	    })
+		} else {
+			const channel = client.channels.cache.get(channels.musique);
+      error(channel, "Aucune piste n'est est en cours de lecture.");
+		}
   },
+	clear: (guild) => {
+		if (!guild.queue) {
+			const channel = client.channels.cache.get(channels.musique);
+      error(channel, "La liste de lecture est déjà vide.");
+		} else {
+			guild.queue = [guild.queue[0]];
+			guild.save().then(() => {
+				const channel = client.channels.cache.get(channels.musique);
+				update(channel, "La liste de lecture a été vidée à l'exception de la piste en cours.");
+			})
+		}
+	},
   skip: (guild) => {
-    const queue = guild.queue ? [...guild.queue] : [];
-    queue.shift();
+		if (guild.queue) {
+			const queue = [...guild.queue];
+	    queue.shift();
 
-    if (queue.length) {
-      guild.update({ queue }).then(() => {
-        playSong(queue[0]);
-      })
-    } else {
-      player.stop();
-    }
+			const channel = client.channels.cache.get(channels.musique);
+
+	    if (queue.length) {
+	      guild.update({ queue }).then(() => {
+					console.log(guild.queue);
+	        playSong(queue[0]);
+	      })
+				update(channel, "La chanson actuelle a été skip.");
+	    } else {
+				update(channel, "La chanson actuelle a été skip. La liste de lecture est désormais vide.");
+	      player.stop();
+	    }
+		} else {
+			const channel = client.channels.cache.get(channels.musique);
+			error(channel, "Aucune chanson n'est présente dans la liste de lecture.")
+		}
   },
   playlist: async (guild) => {
     if (guild.queue) {
       const songs = [];
       const queue = [...guild.queue];
-      queue.shift();
-      let current = guild.queue.slice(0, 1);
-      const datas = await ytdl.getBasicInfo(current);
-      current = `En train d'écouter **[${datas.videoDetails.title}](${datas.videoDetails.video_url})**.`;
 
       for (let song of queue) {
         const datas = await ytdl.getBasicInfo(song).then(datas => {
@@ -138,11 +199,11 @@ module.exports = music = {
       }
 
       const channel = client.channels.cache.get(channels.musique);
-      const embed = createEmbed(`${current}\n\n${queue.length ? songs.join('\n') : 'Aucune autre piste dans la liste de lecture.'}`, emojis.shoi.sing + ' Liste de lecture');
+      const embed = createEmbed(songs.join('\n'), emojis.shoi.sing + ' Liste de lecture');
       channel.send({ embeds: [embed] })
     } else {
 			const channel = client.channels.cache.get(channels.musique);
-      error(channel, "Aucune liste de lecture.");
+      error(channel, "Aucune piste n'est présente dans la liste de lecture.");
     }
   }
 }
