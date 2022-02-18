@@ -23,8 +23,9 @@ function playSong(guild) {
 
   ytdl.getBasicInfo(song).then(datas => {
     const channel = client.channels.cache.get(channels.musique);
-    const embed = createEmbed(`En train d'écouter **[${datas.videoDetails.title}](${datas.videoDetails.video_url})**.`);
+    const embed = createEmbed(`${emojis.shoi.sing} En train d'écouter **[${datas.videoDetails.title}](${datas.videoDetails.video_url})**.`);
     channel.send({ embeds: [embed] })
+		client.user.setActivity(datas.videoDetails.title, { type: 'LISTENING', url: datas.videoDetails.video_url });
   })
 }
 function connect(msg, guild) {
@@ -72,6 +73,7 @@ function connect(msg, guild) {
 	return connection;
 }
 function disconnect(guild) {
+	client.user.setActivity('');
 	const connection = getVoiceConnection(guild.discordId);
 	guild.queue = null;
 	guild.save().then(() => {
