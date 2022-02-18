@@ -14,7 +14,8 @@ const player = createAudioPlayer();
 const { emojis, channels } = require('./ressources');
 const { createEmbed, error, update } = require('./functions');
 
-function playSong(song) {
+function playSong(guild) {
+	const song = guild.queue[0];
   console.log('playing next');
   const stream = ytdl(song, { filter: 'audioonly' });
   const next = createAudioResource(stream, { inputType: StreamType.Arbitrary });
@@ -26,7 +27,7 @@ function playSong(song) {
     channel.send({ embeds: [embed] })
   })
 }
-function connect(msg) {
+function connect(msg, guild) {
 	console.log('joining voice channel');
 	const connection = joinVoiceChannel({
 		channelId: msg.member.voice.channelId,
@@ -34,7 +35,50 @@ function connect(msg) {
 		adapterCreator: msg.guild.voiceAdapterCreator
 	});
 	connection.subscribe(player);
+
+	player.on(AudioPlayerStatus.Idle, () => {
+		console.log('idle');
+		guild.reload().then(() => {
+			const queue = guild.queue ? [...guild.queue] : [];
+			queue.shift();
+
+			if (queue.length) {
+				guild.update({ queue }).then(() => {
+					playSong(guild);
+				})
+			} else {
+				console.log('stop');
+				disconnect(guild);
+			}
+		})
+	});
+	player.on('error', e => {
+		const channel = client.channels.cache.get(channels.musique);
+		error(channel, "La vidéo en cours a été stoppée suite à une erreur de lecture. Veuillez réessayer.");
+		console.error(e)
+	});
+
+	connection.on(VoiceConnectionStatus.Disconnected, () => {
+		console.log('voice connection disconnected');
+		if (guild.queue) {
+			joinVoiceChannel({
+				channelId: msg.member.voice.channelId,
+				guildId: msg.guildId,
+				adapterCreator: msg.guild.voiceAdapterCreator
+			});
+		}
+	})
+
 	return connection;
+}
+function disconnect(guild) {
+	const connection = getVoiceConnection(guild.discordId);
+	guild.queue = null;
+	guild.save().then(() => {
+		player.removeAllListeners();
+		connection.destroy();
+	})
+	.catch(e => console.error(e));
 }
 
 module.exports = music = {
@@ -49,18 +93,19 @@ module.exports = music = {
 			console.log(`connected: ${connected}\nconnection: ${connection ? true : false}`);
 
 			if (!connected || !connection) {
-				connection = connect(msg);
+				console.log('connection not found');
+				connection = connect(msg, guild);
 
 				if (song) {
 					console.log('creating new queue with song');
 					guild.update({ queue: [song] }).then(() => {
 	          console.log(guild.queue);
-	          playSong(song);
+	          playSong(guild);
 	        })
 				} else {
 					console.log('resume guild queue');
 					console.log(guild.queue);
-					playSong(guild.queue[0]);
+					playSong(guild);
 				}
 			} else if (song && guild.queue) {
 				console.log('song added to queue');
@@ -81,56 +126,12 @@ module.exports = music = {
 					const embed = createEmbed("La lecture a repris.");
 					channel.send({ embeds: [embed] })
 				} else {
-					playSong(guild.queue[0]);
+					playSong(guild);
 				}
 			} else {
 				console.log('music already playing');
 				error(msg.channel, 'La lecture est déjà en cours.\n\nVous pouvez ajouter une vidéo à la liste de lecture en précisant un lien YouTube.\n\nExemple: `!shoi play https://www.youtube.com/watch...`');
 			}
-
-			player.on(AudioPlayerStatus.Idle, () => {
-        console.log('idle');
-				const connected = msg.member.voice.channel.members.has(client.user.id);
-				const connection = getVoiceConnection(guild.discordId);
-        if (connection && connected) {
-          guild.reload().then(() => {
-            const queue = guild.queue ? [...guild.queue] : [];
-            queue.shift();
-
-            if (queue.length) {
-              guild.update({ queue }).then(() => {
-                playSong(queue[0]);
-              })
-            } else {
-              console.log('stop');
-              guild.queue = null;
-              guild.save().then(() => {
-                if (connection) {
-                  connection.destroy();
-                }
-              })
-            }
-          })
-        } else {
-          console.log('no connection, stopping');
-          guild.queue = null;
-          guild.save().then(() => {
-						const channel = client.channels.cache.get(channels.musique);
-						error(channel, "La lecture a été stoppée et la liste de lecture vidée.");
-					})
-        }
-      });
-      player.on('error', e => {
-				const channel = client.channels.cache.get(channels.musique);
-        error(channel, "La vidéo en cours a été stoppée suite à une erreur de lecture. Veuillez réessayer.");
-        console.error(e)
-      });
-			connection.on(VoiceConnectionStatus.Disconnected, () => {
-				console.log('voice connection disconnected');
-				if (guild.queue) {
-					connect(msg);
-				}
-			})
 		}
   },
   pause: () => {
@@ -185,7 +186,7 @@ module.exports = music = {
 	    if (queue.length) {
 	      guild.update({ queue }).then(() => {
 					console.log(guild.queue);
-	        playSong(queue[0]);
+	        playSong(guild);
 	      })
 				update(channel, "La chanson actuelle a été skip.");
 	    } else {
