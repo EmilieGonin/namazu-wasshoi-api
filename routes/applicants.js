@@ -1,5 +1,5 @@
 const { Applicant, Profile, Character, User } = require("../models/index");
-const { client } = require("../bot/gyoshoi");
+const { client } = require("../bot/config");
 const express = require('express');
 const router = express.Router();
 const auth = require("../middlewares/auth");

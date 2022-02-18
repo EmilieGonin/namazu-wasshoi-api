@@ -4,6 +4,7 @@ const app = express();
 const port = process.env.PORT || "3000";
 const emptyTemp = require("./middlewares/emptyTemp");
 require('./helpers/festivalJobs');
+require('./bot/gyoshoi');
 
 app.use(cors({
 	origin: "*",
