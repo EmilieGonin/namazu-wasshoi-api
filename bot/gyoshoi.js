@@ -179,13 +179,14 @@ client.on('messageCreate', async msg => {
       console.log("update");
       updateMinions(channel);
     } else if (music.hasOwnProperty(command)) {
-      const song = content.split(' ')[2];
-
-      if (!msg.member.voice.channelId) {
-        error(msg.channel, 'Vous devez être dans un salon vocal pour utiliser cette commande.');
-      } else {
-        music[command](guild, msg, song);
-      }
+      // const song = content.split(' ')[2];
+      //
+      // if (!msg.member.voice.channelId) {
+      //   error(msg.channel, 'Vous devez être dans un salon vocal pour utiliser cette commande.');
+      // } else {
+      //   music[command](guild, msg, song);
+      // }
+      error(msg.channel, "Les commandes musicales sont temporairement désactivées.")
 
       msg.delete();
     }
