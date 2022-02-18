@@ -489,7 +489,7 @@ async function handleEnd(discordEvent) {
   let msg = '';
 
   if (users) {
-    msg = `🔹**C'est l'heure de la sortie !**\n${users}`;
+    msg = `🔹**C'est l'heure de la sortie ${discordEvent.title} !**\n${users}`;
   }
 
   if (usersDispo) {
