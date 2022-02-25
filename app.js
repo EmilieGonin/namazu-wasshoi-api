@@ -6,6 +6,8 @@ const emptyTemp = require("./middlewares/emptyTemp");
 require('./helpers/festivalJobs');
 require('./bot/gyoshoi');
 
+console.log(`Version Node utilisée : ${process.version}.`);
+
 app.use(cors({
 	origin: "*",
 	credentials: true,

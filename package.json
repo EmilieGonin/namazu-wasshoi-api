@@ -15,8 +15,8 @@
     "url": "https://github.com/EmilieGonin/namazu-wasshoi-api"
   },
   "engines": {
-    "node": ">=16.9.0",
-    "npm": "8.1.1"
+    "node": "16.14.x",
+    "npm": "latest"
   },
   "dependencies": {
     "@discordjs/opus": "^0.5.3",
