@@ -20,7 +20,11 @@ console.log(generateDependencyReport());
 function playSong(guild) {
 	const song = guild.queue[0];
   console.log('playing next');
-  const stream = ytdl(song, { filter: 'audioonly' });
+  const stream = ytdl(song, {
+		filter: 'audioonly',
+		quality: 'highestaudio',
+		highWaterMark: 1 << 25
+	});
   const next = createAudioResource(stream, { inputType: StreamType.Arbitrary });
   player.play(next);
 
@@ -60,6 +64,7 @@ function connect(msg, guild) {
 		const channel = client.channels.cache.get(channels.musique);
 		error(channel, "La vidéo en cours a été stoppée suite à une erreur de lecture. Veuillez réessayer.");
 		console.error(e)
+		console.log(player.state.resource.playbackDuration);
 	});
 
 	connection.on(VoiceConnectionStatus.Disconnected, () => {
