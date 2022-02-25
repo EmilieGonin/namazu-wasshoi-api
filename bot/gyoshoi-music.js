@@ -5,7 +5,8 @@ const {
 	createAudioResource,
 	joinVoiceChannel,
   getVoiceConnection,
-	VoiceConnectionStatus
+	VoiceConnectionStatus,
+	generateDependencyReport
 } = require('@discordjs/voice');
 const { client } = require('./config');
 const ytdl = require('ytdl-core');
@@ -13,6 +14,8 @@ const player = createAudioPlayer();
 
 const { emojis, channels } = require('./ressources');
 const { createEmbed, error, update } = require('./functions');
+
+console.log(generateDependencyReport());
 
 function playSong(guild) {
 	const song = guild.queue[0];
