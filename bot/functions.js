@@ -856,8 +856,13 @@ function getVote(discordEvent, user) {
     })
   });
 }
-function error(target, string) {
+function error(target, string, fields) {
   const embed = createEmbed(emojis.error + ' ' + string);
+
+  if (fields) {
+    embed.fields = fields;
+  }
+
   target.send({ embeds: [embed] });
 }
 function update(target, string) {
