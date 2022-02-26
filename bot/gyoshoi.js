@@ -1,12 +1,12 @@
 const { Op } = require("sequelize");
-const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage, DiscordGuild, Minion } = require("../models/index");
+const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage, DiscordGuild } = require("../models/index");
 
 const { parse, format, isValid, isFuture, isBefore } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 const cloudinary = require('cloudinary').v2;
 
 const { discordRoles, emojis, channels, activities } = require('./ressources');
-const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm, checkEvents, getRarity, getMinion, createInventory, isAdmin, updateMinions, error } = require('./functions');
+const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm, checkEvents, isAdmin, error } = require('./functions');
 
 const main = require('./gyoshoi-main');
 const minion = require('./gyoshoi-minion');
