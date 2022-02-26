@@ -308,7 +308,7 @@ async function handleReaction(reaction, user, discordEvent) {
       discordUser[emoji + 'Job'] = job;
     }
 
-    if (discordEvent.subtitle.startsWith('!')) {
+    if (discordEvent.subtitle && discordEvent.subtitle.startsWith('!')) {
       let vote = await DiscordVote.findOne({ where:
         { DiscordEventId: discordEvent.id, DiscordUserId: discordUser.id }
       })
