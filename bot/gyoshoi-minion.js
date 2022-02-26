@@ -224,7 +224,7 @@ module.exports = minion = {
       });
 
       collector.on('end', () => {
-        console.log('ended');
+        console.log('inventory collector ended');
         msg.delete().catch(e => {
           if (e.httpStatus == 404) {
             console.log('message not found');
