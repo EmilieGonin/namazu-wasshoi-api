@@ -87,9 +87,7 @@ module.exports = minion = {
 
     if (!discordUser.timerMinion || !isFuture(discordUser.timerMinion) || testing) {
       const random = (Math.random() * 100).toFixed(1);
-      console.log(random);
       const rarity = roll(random);
-      console.log(rarity);
 
       const [minion] = await Minion.findAll({
         where: { rarity: rarity },
@@ -137,8 +135,6 @@ module.exports = minion = {
 
       duration = `${hours ? hours : ''}${hours && minutes && seconds ? ', ' : hours && (minutes || seconds) ? ' et ' : ''}${minutes ? minutes : ''}${minutes && seconds ? ' et ' + seconds : seconds ? seconds : ''}`;
 
-      // const embed = createEmbed(`${emojis.error} ${user}, vous devez attendre encore ${duration} avant de pouvoir réutiliser cette commande.`);
-      // channel.send({ embeds: [embed] });
       error(channel, `${user}, vous devez attendre encore ${duration} avant de pouvoir réutiliser cette commande.`);
     }
   },
