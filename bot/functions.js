@@ -28,7 +28,6 @@ async function setCollector(discordEvent, msg) {
     reaction.users.remove(user);
     handleReaction(reaction, user, discordEvent)
     .then(newFields => {
-      console.log("function ended");
       if (newFields) {
         handlePlanning();
         createEventEmbed(discordEvent, msg.channel, '', newFields).then(([embed]) => {
@@ -234,7 +233,6 @@ function activityPrompt(channel, user, field) {
   });
 }
 async function handleReaction(reaction, user, discordEvent) {
-  console.log("function started");
   const emoji = reaction.emoji.name.toLowerCase();
   console.log("emoji used : " + emoji);
   const emojiCode = `<:${reaction.emoji.name}:${reaction.emoji.id}>`
