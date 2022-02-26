@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     healerJob: DataTypes.STRING,
     melee_dpsJob: DataTypes.STRING,
     physical_ranged_dpsJob: DataTypes.STRING,
+    magic_ranged_dpsJob: DataTypes.STRING,
     notifications_24h: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
