@@ -141,9 +141,6 @@ module.exports = minion = {
   mon: (channel, user) => {
     minion.minion(channel, user);
   },
-  poke: (channel, user) => {
-    minion.minion(channel, user);
-  },
   update: async (channel) => {
     const minionsList = [];
     const minions = await xivapi.data.list("Companion", { limit: 3000 });
