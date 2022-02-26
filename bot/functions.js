@@ -301,7 +301,7 @@ async function handleReaction(reaction, user, discordEvent) {
     if (!activities[discordEvent.type].yesno && !discordUser[emoji + 'Job']) {
       console.log('checking job');
       const job = await getJob(user, emoji);
-      console.log('job checked');
+      console.log(`job checked : ${job}`);
       const embed = createEmbed(`Désormais, votre rôle de ${emojiCode} sera automatiquement lié au job ${job}.`, emojis.update + " Mise à jour du job");
 
       user.send({ embeds: [embed] });
