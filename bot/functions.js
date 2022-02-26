@@ -300,19 +300,6 @@ async function handleReaction(reaction, user, discordEvent) {
     await discordEvent.increment('state_' + emoji);
   } else if (roleEmoji) {
     console.log('-role-');
-    if (discordEventReaction.state) {
-      console.log('state, removing it');
-      await discordEvent.decrement('state_' + discordEventReaction.state);
-      discordEventReaction.state = null;
-    } else if (!discordEventReaction.state && discordEventReaction.role) {
-      console.log('no state but already role, removing old one');
-      console.log(discordEventReaction.role);
-      await discordEvent.decrement('roles_' + discordEventReaction.role);
-    }
-    discordEventReaction.role = emoji;
-    await discordEvent.reload();
-    await discordEvent.increment('roles_' + emoji);
-
     if (!activities[discordEvent.type].yesno && !discordUser[emoji + 'Job']) {
       console.log('checking job');
       const job = await getJob(user, emoji);
@@ -337,6 +324,19 @@ async function handleReaction(reaction, user, discordEvent) {
         });
       }
     }
+
+    if (discordEventReaction.state) {
+      console.log('state, removing it');
+      await discordEvent.decrement('state_' + discordEventReaction.state);
+      discordEventReaction.state = null;
+    } else if (!discordEventReaction.state && discordEventReaction.role) {
+      console.log('no state but already role, removing old one');
+      console.log(discordEventReaction.role);
+      await discordEvent.decrement('roles_' + discordEventReaction.role);
+    }
+    discordEventReaction.role = emoji;
+    await discordEvent.reload();
+    await discordEvent.increment('roles_' + emoji);
   }
 
   await discordEvent.reload();
