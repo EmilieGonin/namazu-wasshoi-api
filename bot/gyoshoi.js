@@ -9,6 +9,7 @@ const { discordRoles, emojis, channels, activities } = require('./ressources');
 const { setCollector, react, getDiscordTime, handlePlanning, handleReaction, handleEnd, createEmbed, createEventEmbed, confirm, checkEvents, getRarity, getMinion, createInventory, isAdmin, updateMinions, error } = require('./functions');
 
 const main = require('./gyoshoi-main');
+const minion = require('./gyoshoi-minion');
 const music = require('./gyoshoi-music');
 
 const { MessageEmbed, MessageAttachment } = require('discord.js');
@@ -22,7 +23,7 @@ client.once('ready', () => {
       console.log('planning handled');
     })
   })
-  updateMinions().then(() => {
+  minion.update().then(() => {
     console.log('minions updated');
   })
 })
@@ -160,24 +161,9 @@ client.on('messageCreate', async msg => {
     } else if (main.hasOwnProperty(command) && isAdmin(msg.member)) {
       // !shoi clear
       main[command](msg);
-    } else if (string == '!shoi minion' || string == '!shoimon' || string == '!pokeshoi') {
-      // !shoi minion || !shoimon || !pokeshoi
-      const channel = msg.channel;
-      const user = msg.author;
+    } else if (minion.hasOwnProperty(command)) {
+      minion[command](msg.channel, msg.author);
       msg.delete();
-      getMinion(channel, user);
-    } else if (string == '!shoi collection' || string == '!shoi list') {
-      // !shoi collection || !shoi list
-      const channel = msg.channel;
-      const user = msg.author;
-      msg.delete();
-      createInventory(channel, user);
-    } else if ((string == '!shoi update') && isAdmin(msg.member)) {
-      // !shoi update
-      const channel = msg.channel;
-      msg.delete();
-      console.log("update");
-      updateMinions(channel);
     } else if (music.hasOwnProperty(command)) {
       const song = content.split(' ')[2];
 
