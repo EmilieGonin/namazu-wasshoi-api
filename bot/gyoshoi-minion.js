@@ -117,6 +117,7 @@ module.exports = minion = {
         } else {
           discordUser.addMinion(minion);
         }
+        console.log(`Mascotte ${rarities[minion.rarity - 1].name.toLowerCase()} obtenue : ${minion.name} (${random})`);
         channel.send({ embeds: [embed] });
       } else {
         console.log("minion not found, trying again");
