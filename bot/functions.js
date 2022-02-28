@@ -33,6 +33,10 @@ async function setCollector(discordEvent, msg) {
         })
       }
     })
+    .catch(e => {
+      console.error(e);
+      error(user, `Une erreur s'est produite. Veuillez réessayez.`);
+    })
   });
 
   collector.on('end', () => {
