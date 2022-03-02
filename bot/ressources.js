@@ -17,7 +17,8 @@ const channels = {
   inscriptions: env ? '841025816556863509' : devChannel,
   rassemblement: env ? '677984271159263282' : devChannel,
   musique: env ? '912120512694603816' : devChannel,
-  logs: env ? '707735383177166858' : devChannel
+  logs: env ? '707735383177166858' : devChannel,
+  spoiler: env ? '781192851450495026' : devChannel
 }
 
 const roles = {
@@ -214,6 +215,13 @@ const activities = {
     description: 'Essayez de regarder un guide avant de venir, même si le contenu est "vieux". Vous pouvez visionner les vidéos de Mikoto ou Plava, par exemple.',
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/farm_mount_lodsab.png" }
   },
+  leveling: {
+    category: 'Clear et farm',
+    color: '#e3a6f1',
+    title: '<:fate:938078284984512583> Session leveling',
+    description: "Nous irons faire des roulettes, puis l'un des contenus permettant de gagner de l'expérience rapidement : donjons, aléas, bozja/zadnor.",
+    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1646217035/Gyoshoi/2022-01-05_16-10-52-503_Neneko_Aki_vkinlc.png" }
+  },
   event: {
     category: 'Autres',
     yesno: true,
@@ -235,6 +243,14 @@ const activities = {
     title: '<:jeux:938101995225636894> Soirée jeux',
     description: "Venez passez une soirée chill entre namazu !\n\nCeux qui le souhaitent pourront afficher leur partie en stream sur Discord, pour que les personnes ne souhaitant pas spécialement jouer puissent tout de même venir et participer à la soirée en tant que spectateur. " + emojis.shoi.kawaii,
     // image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643841671/Gyoshoi/2022-01-28_21-42-36-465_Talim_-_Aladdin.png" }
+  },
+  liveletter: {
+    category: 'Autres',
+    yesno: true,
+    color: '#babfc5',
+    title: '<:event:938751365453320202> Liveletter',
+    description: "Venez assister à la Liveletter entre namazu, que ce soit en direct ou en rediffusion ! N'oubliez pas de partager les informations de la Liveletter dans le salon <#" + channels.spoiler + "> uniquement !",
+    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1646215634/Gyoshoi/liveletter_custom_npzasg.png" }
   }
 }
 
