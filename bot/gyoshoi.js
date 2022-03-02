@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
 const { DiscordEvent, DiscordUser, DiscordEventReaction, DiscordMessage, DiscordGuild } = require("../models/index");
 
-const { parse, format, isValid, isFuture, isBefore } = require('date-fns');
+const { parse, format, isValid, isFuture, isBefore, getYear } = require('date-fns');
 const fr = require('date-fns/locale/fr');
 const cloudinary = require('cloudinary').v2;
 
@@ -50,17 +50,19 @@ client.on('messageCreate', async msg => {
       if (string.startsWith('!shoi add') && isAdmin(msg.member)) {
         // !shoi add type date hour
         const type = string.split(' ')[2];
-        const hour = string.split(' ')[4];
-        const parsedDate = parse(string.split(' ')[3] + ':' + hour, 'dd/MM/yyyy:HH', new Date());
+        const hour = string.split(' ')[4] ? string.split(' ')[4] : 21;
+        const date = string.split(' ')[3];
+        const formattedDate = date && date.length == 10 ? date : date + '/' + getYear(new Date());
+        const parsedDate = parse(formattedDate + ':' + hour, 'dd/MM/yyyy:HH', new Date());
 
-        if (!type || !parsedDate || !hour) {
-          const embed = createEmbed('Veuillez préciser un type de sortie, une date et une heure de départ.\n\n🔹**Exemple :** `!shoi add cartes 01/01/2022 21`', emojis.error + " Une erreur s'est produite");
+        if (!type || !date) {
+          const embed = createEmbed('Veuillez préciser un type de sortie et une date valide.\nPar défaut, la sortie sera datée de cette année et programmée pour 21h.\n\n🔹**Exemple :** `!shoi add cartes 01/01/2023 16` ou `!shoi add cartes 01/12`', emojis.error + " Une erreur s'est produite");
           msg.reply({ embeds: [embed] })
           .then(() => {
             msg.delete();
           })
         } else if (parsedDate && !isValid(parsedDate)) {
-          const embed = createEmbed('Le format de la date et/ou de l\'heure est incorrect.\n\n🔹**Exemple :** `!shoi add cartes 01/01/2022 21`', emojis.error + " Une erreur s'est produite");
+          const embed = createEmbed('Le format de la date et/ou de l\'heure est incorrect.\n\n🔹**Exemple :** `!shoi add cartes 01/01/2023 16` ou `!shoi add cartes 01/12`', emojis.error + " Une erreur s'est produite");
           msg.reply({ embeds: [embed] })
           .then(() => {
             msg.delete();
