@@ -40,7 +40,7 @@ async function setCollector(discordEvent, msg) {
   });
 
   collector.on('end', () => {
-    console.log('ended');
+    console.log('event collector ended');
     DiscordEvent.findOne({
       where: { discordId: msg.id }
     }).then(discordEvent => {
