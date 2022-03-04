@@ -177,7 +177,7 @@ client.on('messageCreate', async msg => {
 
         msg.delete();
       } else {
-        error(msg.channel, `La commande ${string} n'a pas été reconnue.`);
+        error(msg.channel, `La commande **${string}** n'a pas été reconnue.`);
       }
     }
   };
