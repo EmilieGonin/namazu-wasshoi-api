@@ -486,19 +486,25 @@ async function handleEnd(discordEvent) {
     }
   })).map(item => `<@${item.discordId}>`).join(' ');
 
+  const usersMaybe = (await DiscordUser.findAll({
+    include: {
+      model: DiscordEventReaction,
+      where: {
+        DiscordEventId: discordEvent.id,
+        state: 'maybe'
+      }
+    }
+  })).map(item => `<@${item.discordId}>`).join(' ');
+
   let msg = '';
 
-  if (users) {
-    msg = `🔹**C'est l'heure de la sortie ${discordEvent.title} !**\n${users}`;
+  if (users || usersDispo || usersMaybe) {
+    msg = `🔹**C'est l'heure de la sortie ${discordEvent.title} !**\n${users ? users : "Aucun membre ne s'est inscrit."}${usersDispo || usersMaybe ? '\n' : ''}${usersDispo ? `\n${states.dispo_si_besoin.emoji} **${states.dispo_si_besoin.name}** : ${usersDispo}` : ''}${usersMaybe ? `\n${states.maybe.emoji} **${states.maybe.name}** : ${usersMaybe}` : ''}`;
   }
 
-  if (usersDispo) {
-    msg = msg + `\n\n${states.dispo_si_besoin.emoji} **${states.dispo_si_besoin.name}** : ${usersDispo}`;
-   }
-
-   if (votes.length) {
-     msg = msg + `\n\n**Total des votes**\n${votes}`;
-   }
+  if (votes.length) {
+    msg = msg + `\n\n**Total des votes**\n${votes}`;
+  }
 
   return msg;
 }
