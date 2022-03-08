@@ -222,6 +222,14 @@ const activities = {
     description: "Nous irons faire des roulettes, puis l'un des contenus permettant de gagner de l'expérience rapidement : donjons, aléas, bozja/zadnor.",
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1646217035/Gyoshoi/2022-01-05_16-10-52-503_Neneko_Aki_vkinlc.png" }
   },
+  apero: {
+    category: 'Autres',
+    yesno: true,
+    color: "#de7fa2",
+    title: '<:screenshots:938075407821983744> Soirée apéro/FFXIV',
+    description: "Nous vous donnons rendez-vous en vocal et sur Final Fantasy XIV pour une soirée chill en votre compagnie !\n\nNous ferons du contenu FFXIV sans prise de tête (roulettes, raids en alliance, aléas, au choix !) tout en discutant sur Discord. Ceux qui le souhaitent pourront être présents en visio ! Nous en profiterons pour faire les présentations si des nouveaux namazu nous rejoignent. Pour immortaliser la soirée, nous ferons sans doute quelques screenshots tous ensemble !\n\n*Les boissons sont bien entendu optionnelles - consommez avec modération !*",
+    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1646748215/Gyoshoi/2020-08-21_15-32-26_Maya_Celestia_Up_tfjnmp.png" }
+  },
   event: {
     category: 'Autres',
     yesno: true,
