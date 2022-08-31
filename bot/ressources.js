@@ -12,15 +12,6 @@ const discordRoles = {
   jeunes_membres: env ? '675344539724152843' : devRole,
 }
 
-const channels = {
-  planning: env ? '894607375271604224' : devChannel,
-  inscriptions: env ? '841025816556863509' : devChannel,
-  rassemblement: env ? '677984271159263282' : devChannel,
-  musique: env ? '912120512694603816' : devChannel,
-  logs: env ? '707735383177166858' : devChannel,
-  spoiler: env ? '781192851450495026' : devChannel
-}
-
 const roles = {
   dispo: {
     name: 'Dispo', emoji: '<:Dispo:938411742575349830>'
@@ -89,7 +80,7 @@ const emojis = {
     peek: '<:ShoiPeek:893476129535561748>',
     punk: '<:ShoiPunk:893476000510394388>',
     scream: '<:ShoiScream:893476161043169290>',
-    sing: '<:ShoiSing:893475635534655529>',
+    sing: '<:ShoiSing:1014591930526617740>',
     surprise: '<:ShoiSurprise:893475550549659698>',
     think: '<:ShoiThink:813510412254838865>',
     wave: '<:ShoiWave:813510412007243807>',
@@ -184,7 +175,7 @@ const activities = {
     category: 'Autres',
     yesno: true,
     color: 0xde7fa2,
-    title: '<:screenshots:938075407821983744> Soirée apéro/FFXIV',
+    title: '<:jeux:938101995225636894> Soirée apéro/FFXIV',
     description: "Nous vous donnons rendez-vous en vocal et sur Final Fantasy XIV pour une soirée chill en votre compagnie !\n\nNous ferons du contenu FFXIV sans prise de tête (roulettes, raids en alliance, aléas, au choix !) tout en discutant sur Discord. Ceux qui le souhaitent pourront être présents en visio ! Nous en profiterons pour faire les présentations si des nouveaux namazu nous rejoignent. Pour immortaliser la soirée, nous ferons sans doute quelques screenshots tous ensemble !\n\n*Les boissons sont bien entendu optionnelles - consommez avec modération !*",
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1646748215/Gyoshoi/2020-08-21_15-32-26_Maya_Celestia_Up_tfjnmp.png" }
   },
@@ -215,7 +206,7 @@ const activities = {
     yesno: true,
     color: 0xbabfc5,
     title: '<:event:938751365453320202> Liveletter',
-    description: "Venez assister à la Liveletter entre namazu, que ce soit en direct ou en rediffusion ! N'oubliez pas de partager les informations de la Liveletter dans le salon <#" + channels.spoiler + "> uniquement !",
+    description: "Venez assister à la Liveletter entre namazu, que ce soit en direct ou en rediffusion !",
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1646215634/Gyoshoi/liveletter_custom_npzasg.png" }
   }
 }
@@ -253,4 +244,4 @@ const rarities = [
   }
 ];
 
-module.exports = { guild, link, discordRoles, channels, roles, states, emojis, activities, rarities };
+module.exports = { guild, link, discordRoles, roles, states, emojis, activities, rarities };
