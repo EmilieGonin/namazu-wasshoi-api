@@ -155,54 +155,12 @@ const emojis = {
 
 const activities = {
   categories: [
-    { name: 'Ateliers', emoji: '<:ateliers:938077848441348117>' },
     { name: 'Clear et farm', emoji: '<:farm:938081526346842153>' },
     { name: 'Autres', emoji: '<:autres:938078545178148884>' }
   ],
-  atelier_glam: {
-    category: 'Ateliers',
-    yesno: true,
-    color: '#faaab4',
-    title: "<:glamour:938077848336498749> Atelier Glamour avec Yuuna",
-    description: 'uc',
-    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/atelier_glam_tdz0xt.png" }
-  },
-  atelier_gold: {
-    category: 'Ateliers',
-    yesno: true,
-    color: '#eec671',
-    title: "<:gold_saucer:938077848659451909> Atelier Gold Saucer avec Rabyte",
-    description: "Viens te plonger dans l'univers magique (et dépensier) du Gold Saucer !\n\nDans cet atelier ouvert à tous, tu pourras apprendre les ficelles du farm de PGS et réaliser ton carnet d'objectifs, que ce soit grâce aux JACTAS ou à la Triple Triade, en passant par la course de Chocobo ! Viens t'amuser et devenir riche *(en PGS)* avec nous ! " + emojis.shoi.gold,
-    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/atelier_gold_cmeomv.png" }
-  },
-  atelier_logs: {
-    category: 'Ateliers',
-    yesno: true,
-    color: '#001487',
-    title: "<:ateliers:938077848441348117> Atelier Logs avec Ladisla",
-    description: "Bienvenue à cette session conçue pour vous aider à approfondir vos connaissances et votre niveau d'expertise sur FFXIV ! Cet atelier abordera de nombreux sujets, que ce soit pour maîtriser votre job ou apprendre à utiliser les outils de logs.",
-    image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/atelier_logs_bxd9gu.png" },
-    fields: [
-      { value: "** **"},
-      { name: ':small_blue_diamond:Programme du jour' }
-    ]
-  },
-  atelier_screen: {
-    category: 'Ateliers',
-    yesno: true,
-    color: '#FFFFFF',
-    title: "<:screenshots:938075407821983744> Atelier Screenshots avec Nexara",
-    description: 'Venez participer à une soirée dynamique GPOSE/screenshots !\n\n**__Rendez-vous devant la maison de CL pour le départ du train.__**',
-    fields: [
-      { name: "Description", noName: true },
-      { value: "** **"},
-      { name: ':small_blue_diamond:Thème de glam (optionnel)', inline: true },
-      { name: ':small_blue_diamond:Arrêts prévus', inline: true }
-    ]
-  },
   cartes: {
     category: 'Autres',
-    color: '#ffd700',
+    color: 0xffd700,
     title: "<:cartes_aux_tresors:937406414954057768> Cartes aux trésors",
     description: "Venez vous faire un max de gils ! Essayez de récupérer votre carte journalière, ou au moins d'en apporter une.",
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/cartes_otush3.png" }
@@ -210,14 +168,14 @@ const activities = {
   farm_mount: {
     category: 'Clear et farm',
     subtitle: 'Contenu de la sortie',
-    color: '#7b3890',
+    color: 0x7b3890,
     title: '<:farm:938081526346842153> Farm de monture',
     description: 'Essayez de regarder un guide avant de venir, même si le contenu est "vieux". Vous pouvez visionner les vidéos de Mikoto ou Plava, par exemple.',
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643843222/Gyoshoi/farm_mount_lodsab.png" }
   },
   leveling: {
     category: 'Clear et farm',
-    color: '#e3a6f1',
+    color: 0xe3a6f1,
     title: '<:fate:938078284984512583> Session leveling',
     description: "Nous irons faire des roulettes, puis l'un des contenus permettant de gagner de l'expérience rapidement : donjons, aléas, bozja/zadnor.",
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1646217035/Gyoshoi/2022-01-05_16-10-52-503_Neneko_Aki_vkinlc.png" }
@@ -225,7 +183,7 @@ const activities = {
   apero: {
     category: 'Autres',
     yesno: true,
-    color: "#de7fa2",
+    color: 0xde7fa2,
     title: '<:screenshots:938075407821983744> Soirée apéro/FFXIV',
     description: "Nous vous donnons rendez-vous en vocal et sur Final Fantasy XIV pour une soirée chill en votre compagnie !\n\nNous ferons du contenu FFXIV sans prise de tête (roulettes, raids en alliance, aléas, au choix !) tout en discutant sur Discord. Ceux qui le souhaitent pourront être présents en visio ! Nous en profiterons pour faire les présentations si des nouveaux namazu nous rejoignent. Pour immortaliser la soirée, nous ferons sans doute quelques screenshots tous ensemble !\n\n*Les boissons sont bien entendu optionnelles - consommez avec modération !*",
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1646748215/Gyoshoi/2020-08-21_15-32-26_Maya_Celestia_Up_tfjnmp.png" }
@@ -233,7 +191,7 @@ const activities = {
   event: {
     category: 'Autres',
     yesno: true,
-    color: "#e62e39",
+    color: 0xe62e39,
     subtitle: ':small_blue_diamond:Titre de l\'évent',
     title: '<:event:938751365453320202> EVENT',
     description: "**__Êtes-vous prêts pour le prochain évent de la WasshoCup ?__**",
@@ -247,7 +205,7 @@ const activities = {
     category: 'Autres',
     yesno: true,
     subtitle: 'Jeu de la soirée',
-    color: '#000000',
+    color: 0x000000,
     title: '<:jeux:938101995225636894> Soirée jeux',
     description: "Venez passez une soirée chill entre namazu !\n\nCeux qui le souhaitent pourront afficher leur partie en stream sur Discord, pour que les personnes ne souhaitant pas spécialement jouer puissent tout de même venir et participer à la soirée en tant que spectateur. " + emojis.shoi.kawaii,
     // image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1643841671/Gyoshoi/2022-01-28_21-42-36-465_Talim_-_Aladdin.png" }
@@ -255,7 +213,7 @@ const activities = {
   liveletter: {
     category: 'Autres',
     yesno: true,
-    color: '#babfc5',
+    color: 0xbabfc5,
     title: '<:event:938751365453320202> Liveletter',
     description: "Venez assister à la Liveletter entre namazu, que ce soit en direct ou en rediffusion ! N'oubliez pas de partager les informations de la Liveletter dans le salon <#" + channels.spoiler + "> uniquement !",
     image: { url: "https://res.cloudinary.com/hh2lzr1uk/image/upload/v1646215634/Gyoshoi/liveletter_custom_npzasg.png" }
@@ -266,31 +224,31 @@ const rarities = [
   {
     name: "Légendaire",
     emoji: '<:legendaire:940610155085717504>',
-    color: '#ff8000',
+    color: 0xff8000,
     icon: 'https://i.goopics.net/18iyan.png'
   },
   {
     name: "Epique",
     emoji: '<:epique:940611836636700673>',
-    color: '#A335EE',
+    color: 0xA335EE,
     icon: 'https://i.goopics.net/dv1ap3.png'
   },
   {
     name: "Rare",
     emoji: '<:rare:940611837186175028>',
-    color: '#5290c1',
+    color: 0x5290c1,
     icon: 'https://i.goopics.net/trn39v.png'
   },
   {
     name: "Inhabituelle",
     emoji: '<:inhabituelle:940611836980650034>',
-    color: '#4bb062',
+    color: 0x4bb062,
     icon: 'https://i.goopics.net/hq3ttr.png'
   },
   {
     name: "Commune",
     emoji: '<:commune:940611836976447499>',
-    color: '#585954',
+    color: 0x585954,
     icon: 'https://i.goopics.net/jtv9tu.png'
   }
 ];
