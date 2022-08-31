@@ -771,8 +771,8 @@ function confirm(msg, command) {
   return new Promise((resolve, reject) => {
     const embed = createEmbed("Êtes-vous sûr de vouloir faire ça ?\n\n**Commande utilisée :** " + command, ":warning: Attention !");
     msg.reply({ embeds: [embed] }).then(msg => {
-      msg.react('<:yes:938458732591976549>').then(() => {
-        msg.react('<:no:938458732294193163>');
+      msg.react('<:yes:1014594584774459444>').then(() => {
+        msg.react('<:no:1014594685815234570>');
       })
       const filter = (reaction, user) => ['yes', 'no'].includes(reaction.emoji.name) && !user.bot;
       const collector = msg.createReactionCollector({ filter, max: 1, time: 600000 });
