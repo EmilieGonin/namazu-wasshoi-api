@@ -17,7 +17,7 @@ const { createEmbed, error, update } = require('./functions');
 
 console.log(generateDependencyReport());
 
-function playSong(guild) {
+function playSong(guild, msg) {
 	const song = guild.queue[0];
   console.log('playing next');
   const stream = ytdl(song, {
@@ -29,9 +29,8 @@ function playSong(guild) {
   player.play(next);
 
   ytdl.getBasicInfo(song).then(datas => {
-    const channel = client.channels.cache.get(channels.musique);
     const embed = createEmbed(`${emojis.shoi.sing} En train d'écouter **[${datas.videoDetails.title}](${datas.videoDetails.video_url})**.`);
-    channel.send({ embeds: [embed] })
+    msg.channel.send({ embeds: [embed] })
 		client.user.setActivity(datas.videoDetails.title, { type: 'LISTENING', url: datas.videoDetails.video_url });
   })
 }
@@ -108,15 +107,12 @@ module.exports = music = {
 
 				if (song) {
 					console.log('creating new queue with song');
-					guild.update({ queue: [song] }).then(() => {
-	          console.log(guild.queue);
-	          playSong(guild);
-	        })
+					guild.update({ queue: [song] });
 				} else {
 					console.log('resume guild queue');
-					console.log(guild.queue);
-					playSong(guild);
 				}
+				console.log(guild.queue);
+				playSong(guild, msg);
 			} else if (song && guild.queue) {
 				console.log('song added to queue');
 				const queue = [...guild.queue, song];
@@ -124,19 +120,15 @@ module.exports = music = {
 					console.log(guild.queue);
 				});
 				ytdl.getBasicInfo(song).then(datas => {
-					const channel = client.channels.cache.get(channels.musique);
 					const embed = createEmbed(`La vidéo **[${datas.videoDetails.title}](${datas.videoDetails.video_url})** a été ajoutée à la liste de lecture.`);
-					channel.send({ embeds: [embed] })
+					msg.channel.send({ embeds: [embed] })
 				})
 			} else if (!song && guild.queue && player.state.status != 'playing') {
 				console.log(`player is ${player.state.status}`);
 				if (player.state.status == 'paused') {
-					player.unpause();
-					const channel = client.channels.cache.get(channels.musique);
-					const embed = createEmbed("La lecture a repris.");
-					channel.send({ embeds: [embed] })
+					music.resume(guild, msg)
 				} else {
-					playSong(guild);
+					playSong(guild, msg);
 				}
 			} else {
 				console.log('music already playing');
@@ -144,25 +136,20 @@ module.exports = music = {
 			}
 		}
   },
-  pause: () => {
+  pause: (guild, msg) => {
     player.pause();
-		const channel = client.channels.cache.get(channels.musique);
 		const embed = createEmbed("La lecture a été mise en pause.");
-		channel.send({ embeds: [embed] })
+		msg.channel.send({ embeds: [embed] })
   },
-  resume: () => {
+  resume: (guild, msg) => {
     player.unpause();
-		const channel = client.channels.cache.get(channels.musique);
 		const embed = createEmbed("La lecture a repris.");
-		channel.send({ embeds: [embed] })
+		msg.channel.send({ embeds: [embed] })
   },
-  unpause: () => {
-    player.unpause();
-		const channel = client.channels.cache.get(channels.musique);
-		const embed = createEmbed("La lecture a repris.");
-		channel.send({ embeds: [embed] })
+  unpause: (guild, msg) => {
+    music.resume(guild, msg)
   },
-  stop: (guild) => {
+  stop: (guild, msg) => {
 		console.log(player.state.status);
 		if (player.state.status == 'playing') {
 			guild.queue = null;
@@ -170,45 +157,39 @@ module.exports = music = {
 	      player.stop();
 	    })
 		} else {
-			const channel = client.channels.cache.get(channels.musique);
-      error(channel, "Aucune piste n'est est en cours de lecture.");
+      error(msg.channel, "Aucune piste n'est est en cours de lecture.");
 		}
   },
-	clear: (guild) => {
+	clear: (guild, msg) => {
 		if (!guild.queue) {
-			const channel = client.channels.cache.get(channels.musique);
-      error(channel, "La liste de lecture est déjà vide.");
+      error(msg.channel, "La liste de lecture est déjà vide.");
 		} else {
 			guild.queue = [guild.queue[0]];
 			guild.save().then(() => {
-				const channel = client.channels.cache.get(channels.musique);
-				update(channel, "La liste de lecture a été vidée à l'exception de la piste en cours.");
+				update(msg.channel, "La liste de lecture a été vidée à l'exception de la piste en cours.");
 			})
 		}
 	},
-  skip: (guild) => {
+  skip: (guild, msg) => {
 		if (guild.queue) {
 			const queue = [...guild.queue];
 	    queue.shift();
 
-			const channel = client.channels.cache.get(channels.musique);
-
 	    if (queue.length) {
 	      guild.update({ queue }).then(() => {
 					console.log(guild.queue);
-	        playSong(guild);
+	        playSong(guild, msg);
 	      })
-				update(channel, "La chanson actuelle a été skip.");
+				update(msg.channel, "La chanson actuelle a été skip.");
 	    } else {
-				update(channel, "La chanson actuelle a été skip. La liste de lecture est désormais vide.");
+				update(msg.channel, "La chanson actuelle a été skip. La liste de lecture est désormais vide.");
 	      player.stop();
 	    }
 		} else {
-			const channel = client.channels.cache.get(channels.musique);
-			error(channel, "Aucune chanson n'est présente dans la liste de lecture.")
+			error(msg.channel, "Aucune chanson n'est présente dans la liste de lecture.")
 		}
   },
-  playlist: async (guild) => {
+  playlist: async (guild, msg) => {
     if (guild.queue) {
       const songs = [];
       const queue = [...guild.queue];
@@ -219,12 +200,10 @@ module.exports = music = {
         })
       }
 
-      const channel = client.channels.cache.get(channels.musique);
       const embed = createEmbed(songs.join('\n'), emojis.shoi.sing + ' Liste de lecture');
-      channel.send({ embeds: [embed] })
+      msg.channel.send({ embeds: [embed] })
     } else {
-			const channel = client.channels.cache.get(channels.musique);
-      error(channel, "Aucune piste n'est présente dans la liste de lecture.");
+      error(msg.channel, "Aucune piste n'est présente dans la liste de lecture.");
     }
   }
 }
