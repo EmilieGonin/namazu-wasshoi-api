@@ -577,7 +577,7 @@ function optOut(user) {
 }
 function createEmbed(description, title) {
   const embed = {
-    color: "#e62e39",
+    color: 0xe62e39,
     title: title ? title : '',
     description: description
   }
