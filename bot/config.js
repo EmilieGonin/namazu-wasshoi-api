@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits } = require('discord.js');
+const discordToken = process.env.GYOSHOI;
 
 const client = new Client({
   intents: [
@@ -12,7 +13,6 @@ const client = new Client({
   ]
 });
 
-const discordToken = process.env.WASSHOBOT_KEY;
 client.login(discordToken);
 
 module.exports = { client };
